@@ -119,6 +119,15 @@ export function Layers(props: IconProps) {
   );
 }
 
+export function LogOut(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+      <path d="M11 12h8M16 8.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+    </Icon>
+  );
+}
+
 export function Sparkles(props: IconProps) {
   return (
     <Icon {...props}>

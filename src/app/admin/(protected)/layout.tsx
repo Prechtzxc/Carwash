@@ -1,10 +1,14 @@
 import type { ReactNode } from "react";
 
 import { AdminNavigation } from "@/components/admin-navigation";
+import { AdminUserControl } from "@/components/admin-user-control";
 import { BrandMark } from "@/components/brand-mark";
 import { CircleDashed } from "@/components/icons";
+import { requireAdminProfile } from "@/lib/auth/admin";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const profile = await requireAdminProfile();
+
   return (
     <div className="min-h-screen bg-[#f4f8f7]">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 flex-col border-r border-white/8 bg-[#0d202c] lg:flex">
@@ -21,8 +25,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <CircleDashed className="h-4 w-4" />
             </span>
             <div>
-              <p className="text-xs font-semibold text-white">Phase 1 foundation</p>
-              <p className="mt-1 text-[0.7rem] leading-5 text-slate-400">Preview environment</p>
+               <p className="text-xs font-semibold text-white">Phase 3 foundation</p>
+               <p className="mt-1 text-[0.7rem] leading-5 text-slate-400">Catalog configuration</p>
             </div>
           </div>
         </div>
@@ -34,10 +38,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#829196]">Admin console</p>
             <p className="mt-1 text-sm font-semibold text-[#28424d]">Operations workspace</p>
           </div>
-          <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#dce8e4] bg-[#f7fbfa] px-3.5 text-xs font-semibold text-[#5d7075]">
-            <span className="h-2 w-2 rounded-full bg-[#29b49d]" />
-            Preview mode
-          </span>
+          <AdminUserControl fullName={profile.full_name} role={profile.role} />
         </header>
 
         <div className="border-b border-[#dce8e4] bg-[#edf4f1] px-4 py-3 lg:hidden">

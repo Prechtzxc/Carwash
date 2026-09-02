@@ -12,7 +12,7 @@ export default function Home() {
           <nav aria-label="Site navigation" className="flex items-center gap-1 sm:gap-2">
             <Link className="hidden min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-[#5f7278] transition-colors hover:bg-white hover:text-[#10222e] sm:inline-flex sm:px-4" href="/check-in">Customer check-in</Link>
             <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#102c38] px-3 text-xs font-bold text-white shadow-[0_8px_20px_rgba(16,44,56,0.12)] transition-colors hover:bg-[#173e4d] sm:px-5 sm:text-sm" href="/admin">
-              Admin preview
+              Admin sign in
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </nav>
@@ -32,7 +32,7 @@ export default function Home() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#cbdcd8] bg-white px-6 text-sm font-bold text-[#28424d] transition-colors hover:border-[#9acdc3] hover:bg-[#f8fbfa]" href="/admin">
-                Explore admin shell
+                Admin sign in
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>

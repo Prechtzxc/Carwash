@@ -61,7 +61,7 @@ export function AdminModulePlaceholder({
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-[#a8eee2]">
             <ClipboardCheck className="h-5 w-5" />
           </div>
-          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#8fc9c0]">Phase 1 status</p>
+          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#8fc9c0]">Phase 2 status</p>
           <h2 className="mt-2 text-xl font-bold tracking-[-0.03em]">Placeholder ready to extend.</h2>
           <p className="mt-3 text-sm leading-6 text-slate-300">This screen is intentionally free of business data, calculations, and actions for now.</p>
         </div>

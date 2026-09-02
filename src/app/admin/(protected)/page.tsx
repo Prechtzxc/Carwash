@@ -12,8 +12,8 @@ export default function AdminDashboardPage() {
         <div className="absolute -bottom-28 right-24 h-60 w-60 rounded-full border-[24px] border-[#2bb6a2]/10" />
         <div className="relative max-w-2xl">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#8fe7da]">Admin overview</p>
-          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.05em] sm:text-4xl lg:text-[2.85rem]">A clear view of the wash floor starts here.</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">RinsePoint gives the team a calm operational home for the customer journey and the work that follows it.</p>
+          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.05em] sm:text-4xl lg:text-[2.85rem]">Carwash Admin Dashboard</h1>
+          <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">Your authenticated workspace for the Sales, Clients, Inventory, and catalog configuration areas.</p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <span className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#1b685f] px-4 text-xs font-semibold text-[#c2fff5]">
               <CheckCircle className="h-4 w-4" />
@@ -21,9 +21,13 @@ export default function AdminDashboardPage() {
             </span>
             <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 text-xs font-semibold text-slate-300">
               <span className="h-2 w-2 rounded-full bg-[#f2c46d]" />
-              No live data connected
+              No business data connected
             </span>
           </div>
+          <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#b9fff2] transition-colors hover:text-white" href="/admin/catalog">
+            Configure catalog and pricing
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
         <div className="relative mt-10 grid max-w-lg grid-cols-2 gap-3 sm:absolute sm:bottom-10 sm:right-8 sm:mt-0 sm:w-[310px] lg:right-10">
           <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur-sm">
@@ -45,7 +49,7 @@ export default function AdminDashboardPage() {
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#0d8278]">Workspace modules</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#10222e]">Everything has a place.</h2>
           </div>
-          <p className="max-w-sm text-sm leading-6 text-[#708085] sm:text-right">The admin shell stays intentionally focused on the three modules that matter.</p>
+          <p className="max-w-sm text-sm leading-6 text-[#708085] sm:text-right">The main navigation stays focused on three operational modules; catalog settings live separately.</p>
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {adminNavigation.map((item) => (
@@ -74,16 +78,17 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f5f1] text-[#0d8278]"><ShieldCheck className="h-5 w-5" /></span>
             <div>
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#829196]">Phase 1 scope</p>
-              <h2 className="mt-1 text-lg font-bold tracking-[-0.025em] text-[#10222e]">A stable starting point.</h2>
+             <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#829196]">Foundation status</p>
+             <h2 className="mt-1 text-lg font-bold tracking-[-0.025em] text-[#10222e]">A secure base to build on.</h2>
             </div>
           </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {[
-              "Customer check-in shell",
-              "Responsive admin shell",
-              "Backend connection planned",
-            ].map((item) => (
+           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+             {[
+               "Customer check-in shell",
+               "Responsive admin shell",
+               "Supabase auth foundation",
+               "Catalog configuration",
+             ].map((item) => (
               <div className="rounded-xl bg-[#f4f8f7] p-4" key={item}>
                 <CheckCircle className="h-4 w-4 text-[#0d9f91]" />
                 <p className="mt-3 text-sm font-semibold leading-5 text-[#36525a]">{item}</p>
