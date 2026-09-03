@@ -67,7 +67,7 @@ npx supabase db push
 
 Do not run both methods for the same migration unless the CLI migration history confirms it has not already been applied.
 
-The catalog migration seeds vehicle categories with these documented defaults: `Sedan` and `Hatchback` -> `small`, `MPV` -> `medium`, `SUV` -> `large`, and `Pickup` and `Van` -> `xl`. It also seeds the example services `Basic Wash`, `Premium Wash`, `Interior Vacuum`, `Wax`, and `Tire Shine`, but no service prices. Prices remain empty for an operator to configure.
+The catalog migration seeds vehicle categories with these documented defaults: `Sedan` and `Hatchback` -> `small`, `MPV` -> `medium`, `SUV` -> `large`, and `Pickup` and `Van` -> `xl`. It also seeds the example services `Basic Wash`, `Premium Wash`, `Interior Vacuum`, `Wax`, and `Tire Shine`, but no service prices. Prices are stored in Philippine Peso (PHP) and remain empty for an operator to configure.
 
 ### Create the first Auth user
 

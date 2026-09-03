@@ -13,7 +13,7 @@ create table public.vehicle_categories (
   updated_at timestamptz not null default timezone('utc', now()),
   constraint vehicle_categories_name_not_blank check (char_length(btrim(name)) between 1 and 80),
   constraint vehicle_categories_description_length check (description is null or char_length(description) <= 240),
-  constraint vehicle_categories_sort_order_nonnegative check (sort_order >= 0)
+  constraint vehicle_categories_sort_order_valid check (sort_order between 0 and 9999)
 );
 
 create table public.services (
@@ -26,7 +26,7 @@ create table public.services (
   updated_at timestamptz not null default timezone('utc', now()),
   constraint services_name_not_blank check (char_length(btrim(name)) between 1 and 80),
   constraint services_description_length check (description is null or char_length(description) <= 240),
-  constraint services_sort_order_nonnegative check (sort_order >= 0)
+  constraint services_sort_order_valid check (sort_order between 0 and 9999)
 );
 
 create table public.service_prices (
@@ -45,6 +45,7 @@ comment on table public.vehicle_categories is 'Configurable vehicle categories a
 comment on column public.vehicle_categories.size_class is 'Default size used to select service pricing for this category.';
 comment on table public.services is 'Configurable wash and add-on services.';
 comment on table public.service_prices is 'One configurable price per service and vehicle size class.';
+comment on column public.service_prices.price is 'Price amount in Philippine Peso, stored with two decimal places.';
 
 create unique index vehicle_categories_name_lower_key
   on public.vehicle_categories (lower(name));
@@ -119,7 +120,7 @@ alter table public.vehicle_categories enable row level security;
 alter table public.services enable row level security;
 alter table public.service_prices enable row level security;
 
-revoke all on table public.vehicle_categories, public.services, public.service_prices from anon, authenticated;
+revoke all on table public.vehicle_categories, public.services, public.service_prices from PUBLIC, anon, authenticated;
 grant usage on type public.vehicle_size to authenticated;
 
 grant select on table public.vehicle_categories to authenticated;

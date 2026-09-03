@@ -456,7 +456,12 @@ function ServiceSection({ services, canManage }: { services: ServiceDto[]; canMa
 
 function formatPrice(price: number) {
   const amount = Number(price);
-  return Number.isFinite(amount) ? amount.toFixed(2) : "Unavailable";
+  return Number.isFinite(amount) ? `PHP ${amount.toFixed(2)}` : "Unavailable";
+}
+
+function formatPriceInput(price: number) {
+  const amount = Number(price);
+  return Number.isFinite(amount) ? amount.toFixed(2) : "";
 }
 
 function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: string; sizeClass: VehicleSize; price?: ServicePriceDto; canManage: boolean }) {
@@ -492,7 +497,7 @@ function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: stri
           aria-describedby={state.fieldErrors.price ? priceErrorId : undefined}
           aria-invalid={Boolean(state.fieldErrors.price)}
           className={`${inputClass} min-w-0`}
-          defaultValue={price ? formatPrice(price.price) : ""}
+          defaultValue={price ? formatPriceInput(price.price) : ""}
           id={`${prefix}-price`}
           inputMode="decimal"
           min={0}
@@ -502,7 +507,7 @@ function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: stri
           step="0.01"
           type="number"
         />
-        <span className="shrink-0 text-xs font-bold uppercase tracking-[0.1em] text-[#899797]">amount</span>
+        <span className="shrink-0 text-xs font-bold uppercase tracking-[0.1em] text-[#899797]">PHP</span>
       </div>
       <FieldError id={priceErrorId} message={state.fieldErrors.price} />
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -535,7 +540,7 @@ function PricingSection({ services, prices, canManage }: { services: ServiceDto[
       />
       <div className="mt-5 flex items-start gap-3 rounded-2xl border border-[#f0dfb8] bg-[#fff8e8] p-4 text-sm leading-6 text-[#796239]">
         <CircleDashed className="mt-0.5 h-5 w-5 shrink-0 text-[#b88635]" />
-        <p>Prices are stored by size class without assuming a currency or adding checkout behavior.</p>
+        <p>Prices are stored by size class in Philippine Peso (PHP). This phase configures catalog values only.</p>
       </div>
       {!canManage && <div className="mt-4"><StaffReadOnlyNote /></div>}
       <div className="mt-4 space-y-4">
