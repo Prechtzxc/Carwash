@@ -638,6 +638,13 @@ export type Database = {
         };
         Returns: Json;
       };
+      get_admin_sales_report: {
+        Args: {
+          p_start_date?: string | null;
+          p_end_date?: string | null;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       app_role: AppRole;

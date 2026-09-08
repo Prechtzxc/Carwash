@@ -88,11 +88,6 @@ export type AdminTransactionDashboardData = {
   recentSubmissions: AdminTransaction[];
 };
 
-export type AdminSalesSummary = {
-  totalSales: number;
-  completedCount: number;
-};
-
 export type AdminTransactionReviewPageData = {
   transaction: AdminTransaction;
   catalog: AdminTransactionCatalog;
@@ -378,22 +373,5 @@ export async function getAdminTransactionReviewPageData(id: string): Promise<Adm
   return {
     transaction,
     catalog: await getAdminTransactionCatalog(supabase),
-  };
-}
-
-export async function getAdminSalesSummary(): Promise<AdminSalesSummary> {
-  const supabase = await getAdminClient();
-  const { data, error } = await supabase
-    .from("transactions")
-    .select("total")
-    .eq("status", "completed");
-
-  if (error) {
-    throw new Error("Sales data could not be loaded.");
-  }
-
-  return {
-    totalSales: (data ?? []).reduce((sum, transaction) => sum + transaction.total, 0),
-    completedCount: data?.length ?? 0,
   };
 }

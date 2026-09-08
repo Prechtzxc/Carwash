@@ -1,56 +1,113 @@
-import Link from "next/link";
+import { AdminSalesDashboard } from "@/components/admin-sales-dashboard";
+import {
+  getAdminSalesReport,
+  salesFilterKeys,
+  type SalesFilterKey,
+  type SalesFilterSelection,
+} from "@/lib/sales/data";
 
-import { ArrowRight, ChartLine, CheckCircle } from "@/components/icons";
-import { getAdminSalesSummary } from "@/lib/transactions/data";
+type SalesSearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-function formatCurrency(value: number) {
-  return `PHP ${Number(value).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function searchParamValue(searchParams: Record<string, string | string[] | undefined>, key: string) {
+  const value = searchParams[key];
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-export default async function SalesPage() {
-  const summary = await getAdminSalesSummary();
+function isSalesFilterKey(value: string): value is SalesFilterKey {
+  return (salesFilterKeys as readonly string[]).includes(value);
+}
 
-  return (
-    <div className="space-y-8">
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-2xl">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#0d8278]">Sales</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-[-0.045em] text-[#10222e] sm:text-4xl">Sales begin when work is complete.</h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[#64757a]">Total sales uses the authoritative transaction total for completed transactions only.</p>
-        </div>
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#dff6f0] text-[#0d8278] ring-1 ring-[#c7ebe3]">
-          <ChartLine className="h-8 w-8" />
-        </div>
-      </header>
+function isIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
 
-      <section className="grid gap-4 md:grid-cols-[1.4fr_0.6fr]">
-        <div className="rounded-2xl border border-[#ccebe3] bg-[#e9f8f4] p-6 shadow-[0_12px_35px_rgba(35,73,70,0.05)] sm:p-7">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#0d8278]">Total sales</p>
-          <p className="mt-3 text-4xl font-black tracking-[-0.055em] text-[#102c38] sm:text-5xl">{formatCurrency(summary.totalSales)}</p>
-          <p className="mt-3 text-sm leading-6 text-[#52706e]">Sum of <code className="rounded bg-white/70 px-1.5 py-0.5 text-xs font-bold text-[#36525a]">transactions.total</code> where status is completed.</p>
-        </div>
-        <div className="rounded-2xl border border-[#dce8e4] bg-white p-6 shadow-[0_12px_35px_rgba(35,73,70,0.05)] sm:p-7">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#829196]">Completed transactions</p>
-          <p className="mt-3 text-4xl font-black tracking-[-0.055em] text-[#102c38]">{summary.completedCount}</p>
-          <p className="mt-3 text-sm leading-6 text-[#6b7b7f]">Each completed transaction is counted once.</p>
-        </div>
-      </section>
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
 
-      <section className="flex flex-col gap-4 rounded-2xl border border-dashed border-[#b9d4ce] bg-[#edf8f5] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div className="flex items-start gap-4">
-          <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#0d8278] shadow-sm">
-            <CheckCircle className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#0d8278]">Operational total</p>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f6d6c]">Pending, confirmed, and cancelled transactions are excluded until the completion operation succeeds.</p>
-          </div>
-        </div>
-        <Link className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 self-start rounded-xl bg-white px-4 text-xs font-bold text-[#0d8278] shadow-sm transition-colors hover:bg-[#f7fffc] sm:self-auto" href="/admin">
-          View ready transactions
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </section>
-    </div>
-  );
+function shiftDate(value: string, days: number) {
+  const date = new Date(`${value}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function manilaToday() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Asia/Manila",
+    year: "numeric",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function resolveSelection(searchParams: Record<string, string | string[] | undefined>): SalesFilterSelection {
+  const requestedKey = searchParamValue(searchParams, "range");
+  const key = isSalesFilterKey(requestedKey) ? requestedKey : "all";
+  const today = manilaToday();
+
+  if (key === "custom") {
+    const fromValue = searchParamValue(searchParams, "from");
+    const toValue = searchParamValue(searchParams, "to");
+
+    if (!isIsoDate(fromValue) || !isIsoDate(toValue)) {
+      return {
+        key,
+        label: "Custom date range",
+        startDate: null,
+        endDate: null,
+        fromValue,
+        toValue,
+        error: "Choose a valid start and end date for the custom range.",
+      };
+    }
+
+    if (fromValue > toValue) {
+      return {
+        key,
+        label: "Custom date range",
+        startDate: null,
+        endDate: null,
+        fromValue,
+        toValue,
+        error: "The start date cannot be after the end date.",
+      };
+    }
+
+    return {
+      key,
+      label: `${fromValue} to ${toValue}`,
+      startDate: fromValue,
+      endDate: toValue,
+      fromValue,
+      toValue,
+      error: null,
+    };
+  }
+
+  if (key === "today") {
+    return { key, label: "Today", startDate: today, endDate: today, fromValue: "", toValue: "", error: null };
+  }
+
+  if (key === "week") {
+    const dayOfWeek = new Date(`${today}T00:00:00.000Z`).getUTCDay();
+    const monday = shiftDate(today, -((dayOfWeek + 6) % 7));
+    return { key, label: "This Week", startDate: monday, endDate: today, fromValue: "", toValue: "", error: null };
+  }
+
+  if (key === "month") {
+    return { key, label: "This Month", startDate: `${today.slice(0, 7)}-01`, endDate: today, fromValue: "", toValue: "", error: null };
+  }
+
+  return { key: "all", label: "All Time", startDate: null, endDate: null, fromValue: "", toValue: "", error: null };
+}
+
+export default async function SalesPage({ searchParams }: { searchParams: SalesSearchParams }) {
+  const selection = resolveSelection(await searchParams);
+  const report = await getAdminSalesReport(selection.startDate, selection.endDate);
+
+  return <AdminSalesDashboard report={report} selection={selection} />;
 }
