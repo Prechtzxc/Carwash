@@ -91,6 +91,15 @@ export function CircleDashed(props: IconProps) {
   );
 }
 
+export function Clock(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M12 7.5v5l3.2 1.9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+    </Icon>
+  );
+}
+
 export function ClipboardCheck(props: IconProps) {
   return (
     <Icon {...props}>

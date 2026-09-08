@@ -1,10 +1,14 @@
 import Link from "next/link";
 
+import { AdminTransactionDashboard } from "@/components/admin-transaction-dashboard";
 import { ArrowRight, ArrowUpRight, CarFront, CheckCircle, ShieldCheck, Sparkles } from "@/components/icons";
 import { NavigationIcon } from "@/components/navigation-icon";
 import { adminNavigation } from "@/lib/navigation";
+import { getAdminTransactionDashboardData } from "@/lib/transactions/data";
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const transactionData = await getAdminTransactionDashboardData();
+
   return (
     <div className="space-y-8">
       <section className="relative overflow-hidden rounded-[1.75rem] bg-[#102c38] px-6 py-8 text-white shadow-[0_20px_50px_rgba(16,44,56,0.16)] sm:px-8 sm:py-10 lg:px-10">
@@ -13,7 +17,7 @@ export default function AdminDashboardPage() {
         <div className="relative max-w-2xl">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#8fe7da]">Admin overview</p>
           <h1 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.05em] sm:text-4xl lg:text-[2.85rem]">Carwash Admin Dashboard</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">Your authenticated workspace for the Sales, Clients, Inventory, and catalog configuration areas.</p>
+          <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">Your authenticated workspace for incoming customer check-ins and the Sales, Clients, Inventory, and catalog configuration areas.</p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <span className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#1b685f] px-4 text-xs font-semibold text-[#c2fff5]">
               <CheckCircle className="h-4 w-4" />
@@ -21,7 +25,7 @@ export default function AdminDashboardPage() {
             </span>
             <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 text-xs font-semibold text-slate-300">
               <span className="h-2 w-2 rounded-full bg-[#f2c46d]" />
-              No business data connected
+              Customer submissions connected
             </span>
           </div>
           <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#b9fff2] transition-colors hover:text-white" href="/admin/catalog">
@@ -42,6 +46,8 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </section>
+
+      <AdminTransactionDashboard data={transactionData} />
 
       <section>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

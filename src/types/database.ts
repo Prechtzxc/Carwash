@@ -1,5 +1,14 @@
 import type { AppRole } from "@/types/auth";
 import type { VehicleSize } from "@/types/catalog";
+import type { InventoryItemType, InventoryMovementType, InventoryUnit } from "@/types/inventory";
+
+export type Json =
+  | boolean
+  | null
+  | number
+  | string
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export type Database = {
   public: {
@@ -105,6 +114,420 @@ export type Database = {
           },
         ];
       };
+      inventory_items: {
+        Row: {
+          id: string;
+          name: string;
+          item_type: InventoryItemType;
+          unit: InventoryUnit;
+          current_stock: number;
+          minimum_stock: number;
+          selling_price: number | null;
+          description: string | null;
+          active: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          item_type: InventoryItemType;
+          unit: InventoryUnit;
+          minimum_stock?: number;
+          selling_price?: number | null;
+          description?: string | null;
+          active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          item_type?: InventoryItemType;
+          unit?: InventoryUnit;
+          minimum_stock?: number;
+          selling_price?: number | null;
+          description?: string | null;
+          active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      inventory_movements: {
+        Row: {
+          id: string;
+          inventory_item_id: string;
+          movement_type: InventoryMovementType;
+          quantity: number;
+          stock_before: number;
+          stock_after: number;
+          reference_type: string | null;
+          reference_id: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          inventory_item_id: string;
+          movement_type: InventoryMovementType;
+          quantity: number;
+          stock_before: number;
+          stock_after: number;
+          reference_type?: string | null;
+          reference_id?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          inventory_item_id?: string;
+          movement_type?: InventoryMovementType;
+          quantity?: number;
+          stock_before?: number;
+          stock_after?: number;
+          reference_type?: string | null;
+          reference_id?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_inventory_item_id_fkey";
+            columns: ["inventory_item_id"];
+            isOneToOne: false;
+            referencedRelation: "inventory_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      service_inventory_requirements: {
+        Row: {
+          id: string;
+          service_id: string;
+          inventory_item_id: string;
+          quantity_required: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          service_id: string;
+          inventory_item_id: string;
+          quantity_required: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          service_id?: string;
+          inventory_item_id?: string;
+          quantity_required?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "service_inventory_requirements_service_id_fkey";
+            columns: ["service_id"];
+            isOneToOne: false;
+            referencedRelation: "services";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "service_inventory_requirements_inventory_item_id_fkey";
+            columns: ["inventory_item_id"];
+            isOneToOne: false;
+            referencedRelation: "inventory_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      customers: {
+        Row: {
+          id: string;
+          first_name: string;
+          last_name: string;
+          mobile_number: string;
+          mobile_number_normalized: string;
+          email: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          first_name: string;
+          last_name: string;
+          mobile_number: string;
+          mobile_number_normalized: string;
+          email?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          first_name?: string;
+          last_name?: string;
+          mobile_number?: string;
+          mobile_number_normalized?: string;
+          email?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      customer_vehicles: {
+        Row: {
+          id: string;
+          customer_id: string;
+          vehicle_category_id: string;
+          plate_number: string | null;
+          plate_number_normalized: string | null;
+          make: string | null;
+          model: string | null;
+          color: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          customer_id: string;
+          vehicle_category_id: string;
+          plate_number?: string | null;
+          plate_number_normalized?: string | null;
+          make?: string | null;
+          model?: string | null;
+          color?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          customer_id?: string;
+          vehicle_category_id?: string;
+          plate_number?: string | null;
+          plate_number_normalized?: string | null;
+          make?: string | null;
+          model?: string | null;
+          color?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customer_vehicles_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customer_vehicles_vehicle_category_id_fkey";
+            columns: ["vehicle_category_id"];
+            isOneToOne: false;
+            referencedRelation: "vehicle_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      transactions: {
+        Row: {
+          id: string;
+          transaction_number: string;
+          idempotency_key: string;
+          customer_id: string;
+          vehicle_id: string;
+          customer_name_snapshot: string;
+          vehicle_category_name_snapshot: string;
+          plate_number_snapshot: string | null;
+          make_snapshot: string | null;
+          model_snapshot: string | null;
+          color_snapshot: string | null;
+          status: "pending" | "confirmed" | "completed" | "cancelled";
+          service_subtotal: number;
+          product_subtotal: number;
+          total: number;
+          created_at: string;
+          updated_at: string;
+          confirmed_at: string | null;
+          cancelled_at: string | null;
+          cancellation_reason: string | null;
+          completed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          transaction_number: string;
+          idempotency_key: string;
+          customer_id: string;
+          vehicle_id: string;
+          customer_name_snapshot: string;
+          vehicle_category_name_snapshot: string;
+          plate_number_snapshot?: string | null;
+          make_snapshot?: string | null;
+          model_snapshot?: string | null;
+          color_snapshot?: string | null;
+          status?: "pending" | "confirmed" | "completed" | "cancelled";
+          service_subtotal?: number;
+          product_subtotal?: number;
+          total?: number;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          cancelled_at?: string | null;
+          cancellation_reason?: string | null;
+          completed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          transaction_number?: string;
+          idempotency_key?: string;
+          customer_id?: string;
+          vehicle_id?: string;
+          customer_name_snapshot?: string;
+          vehicle_category_name_snapshot?: string;
+          plate_number_snapshot?: string | null;
+          make_snapshot?: string | null;
+          model_snapshot?: string | null;
+          color_snapshot?: string | null;
+          status?: "pending" | "confirmed" | "completed" | "cancelled";
+          service_subtotal?: number;
+          product_subtotal?: number;
+          total?: number;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          cancelled_at?: string | null;
+          cancellation_reason?: string | null;
+          completed_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "transactions_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "transactions_vehicle_id_fkey";
+            columns: ["vehicle_id"];
+            isOneToOne: false;
+            referencedRelation: "customer_vehicles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      transaction_services: {
+        Row: {
+          id: string;
+          transaction_id: string;
+          service_id: string;
+          service_name_snapshot: string;
+          size_class_snapshot: VehicleSize;
+          unit_price: number;
+          quantity: number;
+          line_total: number;
+          line_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          transaction_id: string;
+          service_id: string;
+          service_name_snapshot: string;
+          size_class_snapshot: VehicleSize;
+          unit_price: number;
+          quantity?: number;
+          line_total: number;
+          line_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          transaction_id?: string;
+          service_id?: string;
+          service_name_snapshot?: string;
+          size_class_snapshot?: VehicleSize;
+          unit_price?: number;
+          quantity?: number;
+          line_total?: number;
+          line_order?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "transaction_services_transaction_id_fkey";
+            columns: ["transaction_id"];
+            isOneToOne: false;
+            referencedRelation: "transactions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "transaction_services_service_id_fkey";
+            columns: ["service_id"];
+            isOneToOne: false;
+            referencedRelation: "services";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      transaction_products: {
+        Row: {
+          id: string;
+          transaction_id: string;
+          inventory_item_id: string;
+          product_name_snapshot: string;
+          unit_price: number;
+          quantity: number;
+          line_total: number;
+          line_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          transaction_id: string;
+          inventory_item_id: string;
+          product_name_snapshot: string;
+          unit_price: number;
+          quantity: number;
+          line_total: number;
+          line_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          transaction_id?: string;
+          inventory_item_id?: string;
+          product_name_snapshot?: string;
+          unit_price?: number;
+          quantity?: number;
+          line_total?: number;
+          line_order?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "transaction_products_transaction_id_fkey";
+            columns: ["transaction_id"];
+            isOneToOne: false;
+            referencedRelation: "transactions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "transaction_products_inventory_item_id_fkey";
+            columns: ["inventory_item_id"];
+            isOneToOne: false;
+            referencedRelation: "inventory_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           id: string;
@@ -137,11 +560,92 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      apply_inventory_movement: {
+        Args: {
+          p_inventory_item_id: string;
+          p_movement_type: InventoryMovementType;
+          p_quantity: number;
+          p_notes?: string | null;
+        };
+        Returns: {
+          id: string;
+          inventory_item_id: string;
+          movement_type: InventoryMovementType;
+          quantity: number;
+          stock_before: number;
+          stock_after: number;
+          reference_type: string | null;
+          reference_id: string | null;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+      };
+      get_public_check_in_catalog: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      submit_public_check_in: {
+        Args: {
+          p_idempotency_key: string;
+          p_first_name: string;
+          p_last_name: string;
+          p_mobile_number: string;
+          p_email?: string | null;
+          p_vehicle_category_id?: string | null;
+          p_plate_number?: string | null;
+          p_make?: string | null;
+          p_model?: string | null;
+          p_color?: string | null;
+          p_service_ids?: string[] | null;
+          p_product_lines?: Json;
+        };
+        Returns: Json;
+      };
+      revise_pending_transaction: {
+        Args: {
+          p_transaction_id: string;
+          p_first_name: string;
+          p_last_name: string;
+          p_mobile_number: string;
+          p_email: string | null;
+          p_vehicle_category_id: string;
+          p_plate_number: string | null;
+          p_make: string | null;
+          p_model: string | null;
+          p_color: string | null;
+          p_service_ids: string[];
+          p_product_lines: Json;
+        };
+        Returns: Json;
+      };
+      confirm_pending_transaction: {
+        Args: {
+          p_transaction_id: string;
+        };
+        Returns: Json;
+      };
+      cancel_transaction: {
+        Args: {
+          p_transaction_id: string;
+          p_reason?: string | null;
+        };
+        Returns: Json;
+      };
+      complete_confirmed_transaction: {
+        Args: {
+          p_transaction_id: string;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       app_role: AppRole;
       vehicle_size: VehicleSize;
+      inventory_item_type: InventoryItemType;
+      inventory_unit: InventoryUnit;
+      inventory_movement_type: InventoryMovementType;
+      transaction_status: "pending" | "confirmed" | "completed" | "cancelled";
     };
     CompositeTypes: {
       [_ in never]: never;

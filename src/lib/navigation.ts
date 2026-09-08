@@ -17,6 +17,6 @@ export const adminNavigation = [
     label: "Inventory",
     href: "/admin/inventory",
     icon: "inventory",
-    description: "A future view of shop products and stock.",
+    description: "Track items, stock movements, and minimum levels.",
   },
 ] as const satisfies readonly AdminNavigationItem[];

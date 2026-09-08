@@ -5,14 +5,12 @@ import { useRouter } from "next/navigation";
 
 import { LogOut } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
-import type { AppRole } from "@/types/auth";
 
 type AdminUserControlProps = {
   fullName: string | null;
-  role: AppRole;
 };
 
-export function AdminUserControl({ fullName, role }: AdminUserControlProps) {
+export function AdminUserControl({ fullName }: AdminUserControlProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -47,7 +45,6 @@ export function AdminUserControl({ fullName, role }: AdminUserControlProps) {
     <div className="flex items-center gap-2 sm:gap-3">
       <div className="max-w-24 text-right sm:max-w-40">
         <p className="truncate text-xs font-bold text-[#28424d]">{displayName}</p>
-        <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-[#829196]">{role}</p>
       </div>
       <button
         aria-label="Log out"

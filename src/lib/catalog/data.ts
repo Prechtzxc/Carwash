@@ -1,6 +1,5 @@
 import { requireAdminProfile } from "@/lib/auth/admin";
 import { createClient } from "@/lib/supabase/server";
-import type { AppRole } from "@/types/auth";
 import type { Database } from "@/types/database";
 
 type CategoryRow = Database["public"]["Tables"]["vehicle_categories"]["Row"];
@@ -12,14 +11,13 @@ export type ServiceDto = Pick<ServiceRow, "id" | "name" | "description" | "activ
 export type ServicePriceDto = Pick<PriceRow, "id" | "service_id" | "size_class" | "price" | "active">;
 
 export type CatalogData = {
-  role: AppRole;
   categories: VehicleCategoryDto[];
   services: ServiceDto[];
   prices: ServicePriceDto[];
 };
 
 export async function getCatalogData(): Promise<CatalogData> {
-  const profile = await requireAdminProfile();
+  await requireAdminProfile();
   const supabase = await createClient();
 
   if (!supabase) {
@@ -48,7 +46,6 @@ export async function getCatalogData(): Promise<CatalogData> {
   }
 
   return {
-    role: profile.role,
     categories: categoriesResult.data ?? [],
     services: servicesResult.data ?? [],
     prices: pricesResult.data ?? [],

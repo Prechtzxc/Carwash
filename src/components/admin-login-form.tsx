@@ -19,7 +19,7 @@ function getInitialErrorMessage(error: AdminLoginFormProps["initialError"]) {
   }
 
   if (error === "unauthorized") {
-    return "Please sign in with an active admin or staff account.";
+    return "Please sign in with the active admin account.";
   }
 
   return null;

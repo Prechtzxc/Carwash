@@ -25,8 +25,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
               <CircleDashed className="h-4 w-4" />
             </span>
             <div>
-               <p className="text-xs font-semibold text-white">Phase 3 foundation</p>
-               <p className="mt-1 text-[0.7rem] leading-5 text-slate-400">Catalog configuration</p>
+                <p className="text-xs font-semibold text-white">Phase 4 foundation</p>
+                <p className="mt-1 text-[0.7rem] leading-5 text-slate-400">Inventory and catalog configuration</p>
             </div>
           </div>
         </div>
@@ -38,7 +38,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#829196]">Admin console</p>
             <p className="mt-1 text-sm font-semibold text-[#28424d]">Operations workspace</p>
           </div>
-          <AdminUserControl fullName={profile.full_name} role={profile.role} />
+          <AdminUserControl fullName={profile.full_name} />
         </header>
 
         <div className="border-b border-[#dce8e4] bg-[#edf4f1] px-4 py-3 lg:hidden">

@@ -1,1 +1,1 @@
-export type AppRole = "admin" | "staff";
+export type AppRole = "admin";

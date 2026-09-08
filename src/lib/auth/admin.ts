@@ -32,7 +32,7 @@ export async function requireAdminProfile() {
     profileError ||
     !profile ||
     !profile.active ||
-    (profile.role !== "admin" && profile.role !== "staff")
+    profile.role !== "admin"
   ) {
     redirectToLogin("unauthorized");
   }

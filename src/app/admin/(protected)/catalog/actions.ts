@@ -4,20 +4,11 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { requireAdminProfile } from "@/lib/auth/admin";
+import type { FormActionState } from "@/lib/form-action-state";
 import { createClient } from "@/lib/supabase/server";
 import { vehicleSizes } from "@/types/catalog";
 
-export type CatalogActionState = {
-  status: "idle" | "success" | "error";
-  message: string;
-  fieldErrors: Record<string, string>;
-};
-
-export const initialCatalogActionState: CatalogActionState = {
-  status: "idle",
-  message: "",
-  fieldErrors: {},
-};
+export type CatalogActionState = FormActionState;
 
 const sortOrderField = z
   .string()

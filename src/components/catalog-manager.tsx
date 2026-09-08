@@ -9,11 +9,9 @@ import {
   CheckCircle,
   CircleDashed,
   Layers,
-  ShieldCheck,
   Sparkles,
 } from "@/components/icons";
 import {
-  initialCatalogActionState,
   saveServiceAction,
   saveServicePriceAction,
   saveVehicleCategoryAction,
@@ -22,7 +20,9 @@ import {
   type CatalogActionState,
 } from "@/app/admin/(protected)/catalog/actions";
 import type { ServiceDto, ServicePriceDto, VehicleCategoryDto } from "@/lib/catalog/data";
-import type { AppRole } from "@/types/auth";
+import { initialFormActionState } from "@/lib/form-action-state";
+import type { InventoryRecipeData } from "@/lib/inventory/data";
+import { ServiceRequirementsManager } from "@/components/service-requirements-manager";
 import { vehicleSizeLabels, vehicleSizes, type VehicleSize } from "@/types/catalog";
 
 const inputClass =
@@ -30,10 +30,10 @@ const inputClass =
 const labelClass = "text-xs font-bold uppercase tracking-[0.12em] text-[#607378]";
 
 type CatalogManagerProps = {
-  role: AppRole;
   categories: VehicleCategoryDto[];
   services: ServiceDto[];
   prices: ServicePriceDto[];
+  recipeData: InventoryRecipeData;
 };
 
 function ActionFeedback({ state }: { state: CatalogActionState }) {
@@ -136,18 +136,9 @@ function SectionHeading({ index, title, description, count }: { index: string; t
   );
 }
 
-function StaffReadOnlyNote() {
-  return (
-    <div className="flex items-start gap-3 rounded-2xl border border-[#ccebe3] bg-[#effaf7] p-4 text-sm leading-6 text-[#52706e]">
-      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#0d8278]" />
-      <p>Staff access is read-only. An active admin can edit catalog settings and prices.</p>
-    </div>
-  );
-}
-
 function StatusToggle({ entity, id, active }: { entity: "category" | "service"; id: string; active: boolean }) {
   const action = entity === "category" ? toggleVehicleCategoryAction : toggleServiceAction;
-  const [state, formAction] = useActionState(action, initialCatalogActionState);
+  const [state, formAction] = useActionState(action, initialFormActionState);
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -164,7 +155,7 @@ function StatusToggle({ entity, id, active }: { entity: "category" | "service"; 
 }
 
 function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
-  const [state, formAction] = useActionState(saveVehicleCategoryAction, initialCatalogActionState);
+  const [state, formAction] = useActionState(saveVehicleCategoryAction, initialFormActionState);
   const prefix = category ? `category-${category.id}` : "new-category";
   const nameErrorId = `${prefix}-name-error`;
   const descriptionErrorId = `${prefix}-description-error`;
@@ -195,8 +186,8 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-name`}>Name</label>
             <input
-              aria-describedby={state.fieldErrors.name ? nameErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors.name)}
+              aria-describedby={state.fieldErrors?.name ? nameErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.name)}
               className={`${inputClass} mt-2`}
               defaultValue={category?.name ?? ""}
               id={`${prefix}-name`}
@@ -205,13 +196,13 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
               placeholder="e.g. Sedan"
               required
             />
-            <FieldError id={nameErrorId} message={state.fieldErrors.name} />
+            <FieldError id={nameErrorId} message={state.fieldErrors?.name} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-sort-order`}>Sort order</label>
             <input
-              aria-describedby={state.fieldErrors.sortOrder ? sortOrderErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors.sortOrder)}
+              aria-describedby={state.fieldErrors?.sortOrder ? sortOrderErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.sortOrder)}
               className={`${inputClass} mt-2`}
               defaultValue={category?.sort_order ?? 0}
               id={`${prefix}-sort-order`}
@@ -223,7 +214,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
               step={1}
               type="number"
             />
-            <FieldError id={sortOrderErrorId} message={state.fieldErrors.sortOrder} />
+            <FieldError id={sortOrderErrorId} message={state.fieldErrors?.sortOrder} />
           </div>
         </div>
 
@@ -231,8 +222,8 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-description`}>Description</label>
             <textarea
-              aria-describedby={state.fieldErrors.description ? descriptionErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors.description)}
+              aria-describedby={state.fieldErrors?.description ? descriptionErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.description)}
               className={`${inputClass} mt-2 min-h-24 resize-y py-3`}
               defaultValue={category?.description ?? ""}
               id={`${prefix}-description`}
@@ -241,7 +232,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
               placeholder="Optional operator-facing description"
               rows={3}
             />
-            <FieldError id={descriptionErrorId} message={state.fieldErrors.description} />
+            <FieldError id={descriptionErrorId} message={state.fieldErrors?.description} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-size-class`}>Default size</label>
@@ -268,27 +259,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
   );
 }
 
-function CategoryReadOnly({ category }: { category: VehicleCategoryDto }) {
-  return (
-    <article className="rounded-2xl border border-[#dce8e4] bg-white p-5 shadow-[0_12px_35px_rgba(35,73,70,0.03)] sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-bold tracking-[-0.025em] text-[#10222e]">{category.name}</h3>
-            <StatusBadge active={category.active} />
-          </div>
-          <p className="mt-2 text-sm leading-6 text-[#6b7b7f]">{category.description || "No description provided."}</p>
-        </div>
-        <span className="rounded-lg bg-[#f3f7f5] px-3 py-2 text-xs font-bold text-[#607378]">
-          {vehicleSizeLabels[category.size_class]} size
-        </span>
-      </div>
-      <p className="mt-4 text-xs font-semibold text-[#899797]">Sort order {category.sort_order}</p>
-    </article>
-  );
-}
-
-function CategorySection({ categories, canManage }: { categories: VehicleCategoryDto[]; canManage: boolean }) {
+function CategorySection({ categories }: { categories: VehicleCategoryDto[] }) {
   return (
     <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="vehicle-categories">
       <SectionHeading
@@ -297,17 +268,12 @@ function CategorySection({ categories, canManage }: { categories: VehicleCategor
         index="01"
         title="Vehicle categories"
       />
-      {!canManage && <div className="mt-5"><StaffReadOnlyNote /></div>}
-      {canManage && (
-        <div className="mt-5">
-          <CategoryEditor />
-        </div>
-      )}
+      <div className="mt-5">
+        <CategoryEditor />
+      </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {categories.length > 0 ? (
-          categories.map((category) => (
-            canManage ? <CategoryEditor category={category} key={category.id} /> : <CategoryReadOnly category={category} key={category.id} />
-          ))
+          categories.map((category) => <CategoryEditor category={category} key={category.id} />)
         ) : (
           <div className="rounded-2xl border border-dashed border-[#b9d4ce] bg-white p-6 text-sm leading-6 text-[#6b7b7f] lg:col-span-2">
             No vehicle categories are configured yet.
@@ -319,7 +285,7 @@ function CategorySection({ categories, canManage }: { categories: VehicleCategor
 }
 
 function ServiceEditor({ service }: { service?: ServiceDto }) {
-  const [state, formAction] = useActionState(saveServiceAction, initialCatalogActionState);
+  const [state, formAction] = useActionState(saveServiceAction, initialFormActionState);
   const prefix = service ? `service-${service.id}` : "new-service";
   const nameErrorId = `${prefix}-name-error`;
   const descriptionErrorId = `${prefix}-description-error`;
@@ -350,8 +316,8 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-name`}>Name</label>
             <input
-              aria-describedby={state.fieldErrors.name ? nameErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors.name)}
+              aria-describedby={state.fieldErrors?.name ? nameErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.name)}
               className={`${inputClass} mt-2`}
               defaultValue={service?.name ?? ""}
               id={`${prefix}-name`}
@@ -360,13 +326,13 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
               placeholder="e.g. Basic Wash"
               required
             />
-            <FieldError id={nameErrorId} message={state.fieldErrors.name} />
+            <FieldError id={nameErrorId} message={state.fieldErrors?.name} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-sort-order`}>Sort order</label>
             <input
-              aria-describedby={state.fieldErrors.sortOrder ? sortOrderErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors.sortOrder)}
+              aria-describedby={state.fieldErrors?.sortOrder ? sortOrderErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.sortOrder)}
               className={`${inputClass} mt-2`}
               defaultValue={service?.sort_order ?? 0}
               id={`${prefix}-sort-order`}
@@ -378,15 +344,15 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
               step={1}
               type="number"
             />
-            <FieldError id={sortOrderErrorId} message={state.fieldErrors.sortOrder} />
+            <FieldError id={sortOrderErrorId} message={state.fieldErrors?.sortOrder} />
           </div>
         </div>
 
         <div>
           <label className={labelClass} htmlFor={`${prefix}-description`}>Description</label>
           <textarea
-            aria-describedby={state.fieldErrors.description ? descriptionErrorId : undefined}
-            aria-invalid={Boolean(state.fieldErrors.description)}
+              aria-describedby={state.fieldErrors?.description ? descriptionErrorId : undefined}
+              aria-invalid={Boolean(state.fieldErrors?.description)}
             className={`${inputClass} mt-2 min-h-24 resize-y py-3`}
             defaultValue={service?.description ?? ""}
             id={`${prefix}-description`}
@@ -395,7 +361,7 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
             placeholder="Optional operator-facing description"
             rows={3}
           />
-          <FieldError id={descriptionErrorId} message={state.fieldErrors.description} />
+          <FieldError id={descriptionErrorId} message={state.fieldErrors?.description} />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 border-t border-[#edf2f0] pt-4">
@@ -407,24 +373,7 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
   );
 }
 
-function ServiceReadOnly({ service }: { service: ServiceDto }) {
-  return (
-    <article className="rounded-2xl border border-[#dce8e4] bg-white p-5 shadow-[0_12px_35px_rgba(35,73,70,0.03)] sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-bold tracking-[-0.025em] text-[#10222e]">{service.name}</h3>
-            <StatusBadge active={service.active} />
-          </div>
-          <p className="mt-2 text-sm leading-6 text-[#6b7b7f]">{service.description || "No description provided."}</p>
-        </div>
-        <span className="rounded-lg bg-[#f3f7f5] px-3 py-2 text-xs font-bold text-[#607378]">Order {service.sort_order}</span>
-      </div>
-    </article>
-  );
-}
-
-function ServiceSection({ services, canManage }: { services: ServiceDto[]; canManage: boolean }) {
+function ServiceSection({ services }: { services: ServiceDto[] }) {
   return (
     <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="services">
       <SectionHeading
@@ -433,17 +382,12 @@ function ServiceSection({ services, canManage }: { services: ServiceDto[]; canMa
         index="02"
         title="Services"
       />
-      {!canManage && <div className="mt-5"><StaffReadOnlyNote /></div>}
-      {canManage && (
-        <div className="mt-5">
-          <ServiceEditor />
-        </div>
-      )}
+      <div className="mt-5">
+        <ServiceEditor />
+      </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {services.length > 0 ? (
-          services.map((service) => (
-            canManage ? <ServiceEditor key={service.id} service={service} /> : <ServiceReadOnly key={service.id} service={service} />
-          ))
+          services.map((service) => <ServiceEditor key={service.id} service={service} />)
         ) : (
           <div className="rounded-2xl border border-dashed border-[#b9d4ce] bg-white p-6 text-sm leading-6 text-[#6b7b7f] lg:col-span-2">
             No services are configured yet. Add a service before setting prices.
@@ -454,33 +398,15 @@ function ServiceSection({ services, canManage }: { services: ServiceDto[]; canMa
   );
 }
 
-function formatPrice(price: number) {
-  const amount = Number(price);
-  return Number.isFinite(amount) ? `PHP ${amount.toFixed(2)}` : "Unavailable";
-}
-
 function formatPriceInput(price: number) {
   const amount = Number(price);
   return Number.isFinite(amount) ? amount.toFixed(2) : "";
 }
 
-function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: string; sizeClass: VehicleSize; price?: ServicePriceDto; canManage: boolean }) {
-  const [state, formAction] = useActionState(saveServicePriceAction, initialCatalogActionState);
+function PriceCell({ serviceId, sizeClass, price }: { serviceId: string; sizeClass: VehicleSize; price?: ServicePriceDto }) {
+  const [state, formAction] = useActionState(saveServicePriceAction, initialFormActionState);
   const prefix = `${serviceId}-${sizeClass}`;
   const priceErrorId = `${prefix}-price-error`;
-
-  if (!canManage) {
-    return (
-      <div className="rounded-xl border border-[#e3ece8] bg-[#fbfdfc] p-4">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#607378]">{vehicleSizeLabels[sizeClass]}</p>
-          {price && <StatusBadge active={price.active} />}
-        </div>
-        <p className="mt-5 text-xl font-bold tracking-[-0.03em] text-[#18323c]">{price ? formatPrice(price.price) : "Not set"}</p>
-        <p className="mt-1 text-xs text-[#899797]">{price ? "Configured amount" : "No price configured"}</p>
-      </div>
-    );
-  }
 
   return (
     <form action={formAction} className="rounded-xl border border-[#e3ece8] bg-[#fbfdfc] p-4">
@@ -494,8 +420,8 @@ function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: stri
       </div>
       <div className="mt-3 flex items-center gap-2">
         <input
-          aria-describedby={state.fieldErrors.price ? priceErrorId : undefined}
-          aria-invalid={Boolean(state.fieldErrors.price)}
+          aria-describedby={state.fieldErrors?.price ? priceErrorId : undefined}
+          aria-invalid={Boolean(state.fieldErrors?.price)}
           className={`${inputClass} min-w-0`}
           defaultValue={price ? formatPriceInput(price.price) : ""}
           id={`${prefix}-price`}
@@ -509,7 +435,7 @@ function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: stri
         />
         <span className="shrink-0 text-xs font-bold uppercase tracking-[0.1em] text-[#899797]">PHP</span>
       </div>
-      <FieldError id={priceErrorId} message={state.fieldErrors.price} />
+      <FieldError id={priceErrorId} message={state.fieldErrors?.price} />
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <label className="sr-only" htmlFor={`${prefix}-active`}>Price status</label>
         <select className={`${inputClass} min-h-9 flex-1 px-2.5 text-xs`} defaultValue={String(price?.active ?? true)} id={`${prefix}-active`} name="active">
@@ -525,7 +451,7 @@ function PriceCell({ serviceId, sizeClass, price, canManage }: { serviceId: stri
   );
 }
 
-function PricingSection({ services, prices, canManage }: { services: ServiceDto[]; prices: ServicePriceDto[]; canManage: boolean }) {
+function PricingSection({ services, prices }: { services: ServiceDto[]; prices: ServicePriceDto[] }) {
   function findPrice(serviceId: string, sizeClass: VehicleSize) {
     return prices.find((price) => price.service_id === serviceId && price.size_class === sizeClass);
   }
@@ -542,7 +468,6 @@ function PricingSection({ services, prices, canManage }: { services: ServiceDto[
         <CircleDashed className="mt-0.5 h-5 w-5 shrink-0 text-[#b88635]" />
         <p>Prices are stored by size class in Philippine Peso (PHP). This phase configures catalog values only.</p>
       </div>
-      {!canManage && <div className="mt-4"><StaffReadOnlyNote /></div>}
       <div className="mt-4 space-y-4">
         {services.length > 0 ? (
           services.map((service) => (
@@ -560,7 +485,6 @@ function PricingSection({ services, prices, canManage }: { services: ServiceDto[
               <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {vehicleSizes.map((sizeClass) => (
                   <PriceCell
-                    canManage={canManage}
                     key={sizeClass}
                     price={findPrice(service.id, sizeClass)}
                     serviceId={service.id}
@@ -580,8 +504,7 @@ function PricingSection({ services, prices, canManage }: { services: ServiceDto[
   );
 }
 
-export function CatalogManager({ categories, prices, role, services }: CatalogManagerProps) {
-  const canManage = role === "admin";
+export function CatalogManager({ categories, prices, recipeData, services }: CatalogManagerProps) {
   const activeCategories = categories.filter((category) => category.active).length;
   const activeServices = services.filter((service) => service.active).length;
 
@@ -597,11 +520,11 @@ export function CatalogManager({ categories, prices, role, services }: CatalogMa
         </div>
         <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-[#dce8e4] bg-white px-4 py-3 shadow-[0_10px_30px_rgba(35,73,70,0.04)]">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e5f5f1] text-[#0d8278]">
-            {canManage ? <Sparkles className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+            <Sparkles className="h-5 w-5" />
           </span>
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#829196]">Access level</p>
-            <p className="mt-1 text-sm font-bold text-[#28424d]">{canManage ? "Admin editing" : "Staff read-only"}</p>
+            <p className="mt-1 text-sm font-bold text-[#28424d]">Admin editing</p>
           </div>
         </div>
       </header>
@@ -643,9 +566,10 @@ export function CatalogManager({ categories, prices, role, services }: CatalogMa
         </div>
       </section>
 
-      <CategorySection canManage={canManage} categories={categories} />
-      <ServiceSection canManage={canManage} services={services} />
-      <PricingSection canManage={canManage} prices={prices} services={services} />
+      <CategorySection categories={categories} />
+      <ServiceSection services={services} />
+      <PricingSection prices={prices} services={services} />
+      <ServiceRequirementsManager {...recipeData} />
 
       <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#829196]">
         <CheckCircle className="h-4 w-4 text-[#0d9f91]" />
