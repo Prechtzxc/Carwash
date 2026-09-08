@@ -645,6 +645,42 @@ export type Database = {
         };
         Returns: Json;
       };
+      get_admin_client_directory: {
+        Args: {
+          p_search?: string | null;
+          p_page?: number;
+          p_page_size?: number;
+          p_sort?: string;
+        };
+        Returns: Json;
+      };
+      get_admin_client_detail: {
+        Args: {
+          p_customer_id: string;
+        };
+        Returns: Json;
+      };
+      update_admin_customer_profile: {
+        Args: {
+          p_customer_id: string;
+          p_first_name: string;
+          p_last_name: string;
+          p_mobile_number: string;
+          p_email?: string | null;
+        };
+        Returns: Json;
+      };
+      update_admin_customer_vehicle: {
+        Args: {
+          p_vehicle_id: string;
+          p_vehicle_category_id: string;
+          p_plate_number?: string | null;
+          p_make?: string | null;
+          p_model?: string | null;
+          p_color?: string | null;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       app_role: AppRole;
