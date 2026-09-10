@@ -137,6 +137,15 @@ export function LogOut(props: IconProps) {
   );
 }
 
+export function QrCode(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
+      <path d="M14 14h3v3h-3zM20 14v3M17 20h3M14 20v-3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+    </Icon>
+  );
+}
+
 export function Sparkles(props: IconProps) {
   return (
     <Icon {...props}>

@@ -111,6 +111,12 @@ type DatabaseError = {
   message?: string;
 };
 
+function isNetworkError(error: DatabaseError) {
+  const message = error.message?.toLowerCase() ?? "";
+
+  return message.includes("failed to fetch") || message.includes("network") || message.includes("fetch failed") || message.includes("timeout");
+}
+
 function formString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
@@ -150,6 +156,10 @@ function failure(message: string, fieldErrors: Record<string, string> = {}): Che
 }
 
 function databaseFailure(error: DatabaseError): CheckInActionState {
+  if (isNetworkError(error)) {
+    return failure("We could not reach the wash team. Check your connection and try again. Your form is still here.");
+  }
+
   if (error.message?.includes("too large")) {
     return failure("The estimated total is too large to submit.");
   }
@@ -159,6 +169,17 @@ function databaseFailure(error: DatabaseError): CheckInActionState {
   }
 
   console.error("Public check-in submission failed.", error.code ?? "Unknown database error");
+  return failure("We could not submit your request. Please try again.");
+}
+
+function unexpectedFailure(error: unknown): CheckInActionState {
+  const databaseError = error instanceof Error ? { message: error.message } : {};
+
+  if (isNetworkError(databaseError)) {
+    return failure("We could not reach the wash team. Check your connection and try again. Your form is still here.");
+  }
+
+  console.error("Public check-in submission failed unexpectedly.");
   return failure("We could not submit your request. Please try again.");
 }
 
@@ -187,26 +208,42 @@ export async function submitPublicCheckInAction(
     return validationFailure(parsed.error);
   }
 
-  const supabase = await createClient();
+  let supabase: Awaited<ReturnType<typeof createClient>>;
+
+  try {
+    supabase = await createClient();
+  } catch (error) {
+    return unexpectedFailure(error);
+  }
 
   if (!supabase) {
     return failure("Check-in is temporarily unavailable. Please try again later.");
   }
 
-  const { data, error } = await supabase.rpc("submit_public_check_in", {
-    p_idempotency_key: parsed.data.idempotencyKey,
-    p_first_name: parsed.data.firstName,
-    p_last_name: parsed.data.lastName,
-    p_mobile_number: parsed.data.mobileNumber,
-    p_email: parsed.data.email,
-    p_vehicle_category_id: parsed.data.vehicleCategoryId,
-    p_plate_number: parsed.data.plateNumber,
-    p_make: parsed.data.make,
-    p_model: parsed.data.model,
-    p_color: parsed.data.color,
-    p_service_ids: parsed.data.serviceIds,
-    p_product_lines: parsed.data.productLines as Json,
-  });
+  let data: unknown;
+  let error: DatabaseError | null;
+
+  try {
+    const result = await supabase.rpc("submit_public_check_in", {
+      p_idempotency_key: parsed.data.idempotencyKey,
+      p_first_name: parsed.data.firstName,
+      p_last_name: parsed.data.lastName,
+      p_mobile_number: parsed.data.mobileNumber,
+      p_email: parsed.data.email,
+      p_vehicle_category_id: parsed.data.vehicleCategoryId,
+      p_plate_number: parsed.data.plateNumber,
+      p_make: parsed.data.make,
+      p_model: parsed.data.model,
+      p_color: parsed.data.color,
+      p_service_ids: parsed.data.serviceIds,
+      p_product_lines: parsed.data.productLines as Json,
+    });
+
+    data = result.data;
+    error = result.error;
+  } catch (caught) {
+    return unexpectedFailure(caught);
+  }
 
   if (error) {
     return databaseFailure(error);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { AdminTransactionDashboard } from "@/components/admin-transaction-dashboard";
-import { ArrowRight, ArrowUpRight, CarFront, CheckCircle, ShieldCheck, Sparkles } from "@/components/icons";
+import { ArrowRight, ArrowUpRight, CarFront, CheckCircle, QrCode, ShieldCheck, Sparkles } from "@/components/icons";
 import { NavigationIcon } from "@/components/navigation-icon";
 import { adminNavigation } from "@/lib/navigation";
 import { getAdminTransactionDashboardData } from "@/lib/transactions/data";
@@ -28,10 +28,16 @@ export default async function AdminDashboardPage() {
               Customer submissions connected
             </span>
           </div>
-          <Link className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#b9fff2] transition-colors hover:text-white" href="/admin/catalog">
-            Configure catalog and pricing
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <Link className="inline-flex items-center gap-2 text-sm font-bold text-[#b9fff2] transition-colors hover:text-white" href="/admin/catalog">
+              Configure catalog and pricing
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link className="inline-flex items-center gap-2 text-sm font-bold text-[#b9fff2] transition-colors hover:text-white" href="/admin/qr">
+              <QrCode className="h-4 w-4" />
+              Display customer QR
+            </Link>
+          </div>
         </div>
         <div className="relative mt-10 grid max-w-lg grid-cols-2 gap-3 sm:absolute sm:bottom-10 sm:right-8 sm:mt-0 sm:w-[310px] lg:right-10">
           <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur-sm">

@@ -2,7 +2,7 @@
 
 RinsePoint is a web-based foundation for a carwash management system. It provides a public customer check-in entry point and a protected single-admin shell for three focused modules: Sales, Clients, and Inventory, plus a separate catalog configuration area.
 
-Phase 2 adds the Supabase connection, PostgreSQL profile foundation, cookie-based Supabase Auth, protected admin routes, and row-level security. Phase 3 adds the vehicle category, service, and service-price configuration foundation. Phase 4 adds admin-only inventory items, an atomic stock movement ledger, and service consumable recipes. Phase 5 adds the public customer check-in wizard and pending submission foundation. Phase 6 adds the protected admin transaction review, pending-request revision, confirmation, and cancellation workflow. The authentication cleanup keeps one admin account only; customers do not have accounts. Payment, completion, sales, and inventory deduction remain outside this phase.
+Phase 2 adds the Supabase connection, PostgreSQL profile foundation, cookie-based Supabase Auth, protected admin routes, and row-level security. Phase 3 adds the vehicle category, service, and service-price configuration foundation. Phase 4 adds admin-only inventory items, an atomic stock movement ledger, and service consumable recipes. Phase 5 adds the public customer check-in wizard and pending submission foundation. Phase 6 adds the protected admin transaction review, pending-request revision, confirmation, and cancellation workflow. Later phases add Sales, Clients, inventory reporting, and the production-ready public check-in doorway. Phase 11 adds a protected printable customer QR utility, tablet-safe check-in behavior, and an installable PWA foundation without offline transaction storage or a service worker. The authentication cleanup keeps one admin account only; customers do not have accounts. Payment, completion, and inventory deduction remain outside the public check-in flow.
 
 ## Tech stack
 
@@ -12,6 +12,7 @@ Phase 2 adds the Supabase connection, PostgreSQL profile foundation, cookie-base
 - Supabase Auth and PostgreSQL
 - `@supabase/supabase-js` and `@supabase/ssr`
 - Zod server-side form validation
+- `qrcode` for the protected customer QR utility
 - ESLint
 - npm
 
@@ -38,12 +39,13 @@ cp .env.example .env.local
 Set these values in `.env.local` using Supabase Dashboard > Project Settings > API:
 
 ```dotenv
+NEXT_PUBLIC_APP_URL=https://your-production-domain.example
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-public-publishable-key
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
-Use `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` when the dashboard provides a publishable key. If the project only provides the legacy anon key, leave the publishable key empty and set `NEXT_PUBLIC_SUPABASE_ANON_KEY` instead. Do not commit `.env.local`.
+`NEXT_PUBLIC_APP_URL` is the public application origin used to create the customer QR destination. Use the deployed HTTPS origin in production; do not use localhost. Set `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` when the dashboard provides a publishable key. If the project only provides the legacy anon key, leave the publishable key empty and set `NEXT_PUBLIC_SUPABASE_ANON_KEY` instead. Do not commit `.env.local`.
 
 ### Run the migrations
 
@@ -56,6 +58,10 @@ Run the migration files in timestamp order:
 - `supabase/migrations/20260903020000_create_inventory.sql`
 - `supabase/migrations/20260903030000_create_customer_check_in.sql`
 - `supabase/migrations/20260904000000_create_transaction_review.sql`
+- `supabase/migrations/20260904010000_complete_transaction.sql`
+- `supabase/migrations/20260904020000_create_sales_reporting.sql`
+- `supabase/migrations/20260908000000_create_client_directory.sql`
+- `supabase/migrations/20260908010000_finalize_inventory_reporting.sql`
 
 The simplest setup is the Supabase Dashboard:
 
@@ -141,6 +147,19 @@ Customer check-in tables also use row-level security:
 - Public submission resolves customers by a normalized Philippine mobile number without making the number globally unique. It never overwrites an existing canonical customer or vehicle from an unverified public form; an exact plate/category/details match may be reused, otherwise a new vehicle record is created. Prior customer data is never returned to the form.
 - Only the active admin can execute the transaction review functions. Direct browser writes to transaction and line-item tables are not granted; review mutations use the guarded database functions and status-transition trigger.
 
+## Production deployment
+
+Deploy the Next.js application to Vercel and use a separate production Supabase project or the approved production project:
+
+1. Apply every migration in timestamp order before deploying the application. Use either the Supabase SQL Editor or `npx supabase db push`, not both for the same migration history.
+2. In Vercel, open Project Settings > Environment Variables and add `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for the Production environment. Add the legacy anon key only when the project does not provide a publishable key.
+3. Set `NEXT_PUBLIC_APP_URL` to the final HTTPS domain, for example `https://wash.example.com`. The protected `/admin/qr` page shows a configuration warning instead of generating a QR code when the value is missing, malformed, or points to localhost in production.
+4. Deploy with the repository build command (`npm run build`) and redeploy after changing any `NEXT_PUBLIC_*` variable because these values are read during the application build/runtime setup.
+5. In Supabase Dashboard > Authentication > URL Configuration, set the Site URL to the deployed origin and add the deployed origin to the allowed redirect URLs if a future redirect-based Auth flow is enabled. The current email/password admin form does not use an OAuth callback.
+6. Disable public signups and provision only the intended active admin account as described above. Never add a service role key or database password to Vercel client-visible environment variables.
+
+The PWA foundation uses the app manifest and the project-owned `src/app/icon.svg`. It intentionally does not register a service worker or cache customer data. Customers can install the `/check-in` doorway from a supported browser, but submission still requires a live connection. If the shared tablet loses connectivity, the current form remains only in memory and no queue is created; reconnect before submitting. After a successful submission, use **New check-in** so the customer, vehicle, services, products, result, and idempotency key are cleared.
+
 ## Run locally
 
 Install dependencies, configure `.env.local`, and start the development server:
@@ -162,6 +181,7 @@ Open [http://localhost:3000](http://localhost:3000). Restart the development ser
 - `/admin/clients` - Protected Clients placeholder
 - `/admin/inventory` - Protected inventory items, stock movements, and movement history
 - `/admin/catalog` - Protected catalog and pricing configuration
+- `/admin/qr` - Protected customer check-in QR display, download, and print utility
 - `/admin/transactions/[id]` - Protected transaction review, pending edits, confirmation, and cancellation
 
 Only an active `admin` profile may enter the admin shell. The main navigation remains limited to Sales, Clients, and Inventory. Catalog settings and service consumable recipes are available separately and are fully editable by the admin. The public check-in flow does not require an account and does not collect payment. Transaction review is limited to pending edits, confirmation, and cancellation; completion, sales, payment, and inventory deduction are not implemented.
@@ -172,4 +192,5 @@ Only an active `admin` profile may enter the admin shell. The main navigation re
 npm run lint
 npm run typecheck
 npm run build
+git diff --check
 ```

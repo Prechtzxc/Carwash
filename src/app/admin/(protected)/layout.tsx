@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   return (
     <div className="min-h-screen bg-[#f4f8f7]">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 flex-col border-r border-white/8 bg-[#0d202c] lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 flex-col border-r border-white/8 bg-[#0d202c] lg:flex print:hidden">
         <div className="px-7 py-7">
           <BrandMark tone="light" />
         </div>
@@ -32,8 +32,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         </div>
       </aside>
 
-      <div className="min-h-screen lg:pl-72">
-        <header className="flex min-h-[76px] items-center justify-between gap-4 border-b border-[#dce8e4] bg-white/80 px-4 sm:px-6 lg:px-10">
+      <div className="min-h-screen lg:pl-72 print:pl-0">
+        <header className="flex min-h-[76px] items-center justify-between gap-4 border-b border-[#dce8e4] bg-white/80 px-4 sm:px-6 lg:px-10 print:hidden">
           <div>
             <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#829196]">Admin console</p>
             <p className="mt-1 text-sm font-semibold text-[#28424d]">Operations workspace</p>
@@ -41,11 +41,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           <AdminUserControl fullName={profile.full_name} />
         </header>
 
-        <div className="border-b border-[#dce8e4] bg-[#edf4f1] px-4 py-3 lg:hidden">
+        <div className="border-b border-[#dce8e4] bg-[#edf4f1] px-4 py-3 lg:hidden print:hidden">
           <AdminNavigation variant="mobile" />
         </div>
 
-        <main className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-10">{children}</main>
+        <main className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-10 print:max-w-none print:px-0 print:py-0">{children}</main>
       </div>
     </div>
   );

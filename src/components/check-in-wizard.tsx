@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
@@ -699,6 +699,7 @@ function SuccessScreen({ onReset, result }: { onReset: () => void; result: Check
 
 function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: PublicCheckInCatalog; idempotencyKey: string; onReset: () => void }) {
   const [state, formAction, actionPending] = useActionState(submitPublicCheckInAction, initialCheckInActionState);
+  const [isOffline, setIsOffline] = useState(false);
   const [step, setStep] = useState<Step>(1);
   const [details, setDetails] = useState<CustomerDetails>(initialCustomerDetails);
   const [vehicleDetails, setVehicleDetails] = useState<VehicleDetails>(initialVehicleDetails);
@@ -723,6 +724,21 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
   const productSubtotal = selectedProducts.reduce((sum, line) => sum + line.product.sellingPrice * line.quantity, 0);
   const total = serviceSubtotal + productSubtotal;
   const canSubmit = Boolean(categoryId && selectedServices.length > 0 && selectedServices.every((line) => line.price !== null));
+
+  useEffect(() => {
+    function updateNetworkStatus() {
+      setIsOffline(!navigator.onLine);
+    }
+
+    updateNetworkStatus();
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
+
+    return () => {
+      window.removeEventListener("online", updateNetworkStatus);
+      window.removeEventListener("offline", updateNetworkStatus);
+    };
+  }, []);
 
   function updateCustomerDetail(field: keyof CustomerDetails, value: string) {
     setDetails((current) => ({ ...current, [field]: value }));
@@ -808,6 +824,8 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
           <StepIndicator currentStep={step} />
         </div>
 
+        {isOffline && <div aria-live="polite" className="mt-5 rounded-xl border border-[#f0dfb8] bg-[#fff8e8] px-4 py-3 text-sm font-semibold leading-6 text-[#796239]">You are offline. Check-in is not submitted or saved on this device. Reconnect to continue.</div>}
+
         <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
           <form action={step === 5 ? formAction : undefined} className="rounded-[1.75rem] border border-[#dce8e4] bg-white p-5 shadow-[0_16px_45px_rgba(35,73,70,0.06)] sm:p-8" onSubmit={handleFormSubmit}>
             <HiddenSubmissionFields
@@ -833,7 +851,7 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
               <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-[#607378] transition-colors hover:bg-[#f1f6f4] hover:text-[#28424d] disabled:invisible" disabled={step === 1} onClick={goBack} type="button"><ChevronRight className="h-4 w-4 rotate-180" />Back</button>
               {step < 5 ? (
                 <button className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#0d8278] px-6 text-base font-bold text-white shadow-[0_12px_25px_rgba(13,130,120,0.2)] transition-colors hover:bg-[#096e67] sm:w-auto" onClick={continueToNextStep} type="button">Continue<ArrowRight className="h-5 w-5" /></button>
-              ) : <SubmitButton disabled={!canSubmit || !idempotencyKey} pending={actionPending} />}
+              ) : <SubmitButton disabled={!canSubmit || !idempotencyKey || isOffline} pending={actionPending} />}
             </div>
           </form>
           <EstimatePanel category={category} products={selectedProducts} services={selectedServices} total={total} />
@@ -842,7 +860,7 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
 
       <footer className="mx-auto flex w-full max-w-[1240px] flex-col gap-2 border-t border-[#dce8e4] px-4 py-7 text-xs text-[#829196] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
         <p>RinsePoint customer check-in</p>
-        <p>No login required</p>
+        <p>No login required · Nothing is saved on this shared device</p>
       </footer>
     </main>
   );
