@@ -18,8 +18,8 @@ import type {
 } from "@/lib/inventory/data";
 
 const inputClass =
-  "min-h-11 w-full rounded-xl border border-[#d7e5e0] bg-white px-3.5 text-sm text-[#18323c] shadow-sm outline-none transition-colors placeholder:text-[#9aa9aa] focus:border-[#0d8278] focus:ring-4 focus:ring-[#d7f1eb]";
-const labelClass = "text-xs font-bold uppercase tracking-[0.12em] text-[#607378]";
+  "min-h-11 w-full rounded-xl border border-[#dedbd1] bg-white px-3.5 text-sm text-[#292929] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]";
+const labelClass = "text-xs font-bold uppercase tracking-[0.12em] text-[#65635d]";
 
 function ActionFeedback({ state }: { state: InventoryActionState }) {
   if (state.status === "idle") {
@@ -29,7 +29,7 @@ function ActionFeedback({ state }: { state: InventoryActionState }) {
   return (
     <p
       aria-live="polite"
-      className={`text-xs font-semibold ${state.status === "success" ? "text-[#0d8278]" : "text-[#b34646]"}`}
+      className={`text-xs font-semibold ${state.status === "success" ? "text-[#756000]" : "text-[#b34646]"}`}
     >
       {state.message}
     </p>
@@ -53,7 +53,7 @@ function SubmitButton({ children, pendingLabel = "Saving..." }: { children: Reac
 
   return (
     <button
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#0d8278] px-4 text-sm font-bold text-white transition-colors hover:bg-[#096e67] disabled:cursor-not-allowed disabled:opacity-55"
+      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00] disabled:cursor-not-allowed disabled:opacity-55"
       disabled={pending}
       type="submit"
     >
@@ -93,8 +93,8 @@ function RemoveRequirementForm({ id }: { id: string }) {
 
 function ActiveBadge({ active }: { active: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] ${active ? "bg-[#e1f6f0] text-[#0d8278]" : "bg-[#eef1f0] text-[#78878a]"}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#17a190]" : "bg-[#9aa7a6]"}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] ${active ? "bg-[#fff7cc] text-[#756000]" : "bg-[#eef0eb] text-[#78766f]"}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#d4a900]" : "bg-[#9a978d]"}`} />
       {active ? "Active" : "Inactive"}
     </span>
   );
@@ -119,17 +119,17 @@ function RequirementEditor({
   const selectableConsumables = consumables.filter((item) => item.active || item.id === requirement?.inventory_item_id);
 
   return (
-    <article className="rounded-2xl border border-[#dce8e4] bg-white p-5 shadow-[0_12px_35px_rgba(35,73,70,0.04)] sm:p-6">
+    <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#0d8278]">
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#a77f00]">
             {requirement ? "Edit recipe line" : "New recipe line"}
           </p>
-          <h3 className="mt-1 text-lg font-bold tracking-[-0.025em] text-[#10222e]">
+          <h3 className="mt-1 text-lg font-bold tracking-[-0.025em] text-[#171717]">
             {requirement ? "Adjust service usage" : "Add a consumable requirement"}
           </h3>
         </div>
-        {requirement && <span className="rounded-full bg-[#f1f6f4] px-3 py-1.5 text-xs font-bold text-[#5d7475]">Existing requirement</span>}
+        {requirement && <span className="rounded-full bg-[#f2f1eb] px-3 py-1.5 text-xs font-bold text-[#5f5d57]">Existing requirement</span>}
       </div>
 
       <form action={formAction} className="mt-5 space-y-4">
@@ -192,20 +192,20 @@ function RequirementEditor({
               step="0.001"
               type="number"
             />
-            <span className="shrink-0 rounded-lg bg-[#f1f6f4] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#5d7475]">Item unit</span>
+             <span className="shrink-0 rounded-lg bg-[#f2f1eb] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#5f5d57]">Item unit</span>
           </div>
-          <p className="mt-2 text-xs leading-5 text-[#7b898c]">The amount is stored in the selected consumable&apos;s base unit, so recipes cannot mix incompatible units.</p>
+           <p className="mt-2 text-xs leading-5 text-[#817e75]">The amount is stored in the selected consumable&apos;s base unit, so recipes cannot mix incompatible units.</p>
           <FieldError id={quantityErrorId} message={fieldErrors.quantityRequired} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 border-t border-[#edf2f0] pt-4">
+       <div className="flex flex-wrap items-center gap-3 border-t border-[#e8e5dc] pt-4">
           <SubmitButton>{requirement ? "Save requirement" : "Add requirement"}</SubmitButton>
           <ActionFeedback state={state} />
         </div>
       </form>
 
       {requirement && (
-        <div className="mt-3 border-t border-[#edf2f0] pt-3">
+        <div className="mt-3 border-t border-[#e8e5dc] pt-3">
           <RemoveRequirementForm id={requirement.id} />
         </div>
       )}
@@ -224,16 +224,16 @@ function RequirementsSection({
         const serviceRequirements = requirements.filter((requirement) => requirement.service_id === service.id);
 
         return (
-          <article className="rounded-2xl border border-[#dce8e4] bg-white p-5 sm:p-6" key={service.id}>
+          <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 sm:p-6" key={service.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-lg font-bold tracking-[-0.025em] text-[#10222e]">{service.name}</h3>
+                  <h3 className="text-lg font-bold tracking-[-0.025em] text-[#171717]">{service.name}</h3>
                   <ActiveBadge active={service.active} />
                 </div>
-                <p className="mt-1 text-sm text-[#748387]">{service.description || "No description provided."}</p>
+                <p className="mt-1 text-sm text-[#706e67]">{service.description || "No description provided."}</p>
               </div>
-              <span className="rounded-lg bg-[#f3f7f5] px-3 py-2 text-xs font-bold text-[#607378]">
+              <span className="rounded-lg bg-[#f2f1eb] px-3 py-2 text-xs font-bold text-[#65635d]">
                 {serviceRequirements.length} {serviceRequirements.length === 1 ? "ingredient" : "ingredients"}
               </span>
             </div>
@@ -246,7 +246,7 @@ function RequirementsSection({
                   services={services}
                 />
               )) : (
-                <p className="rounded-xl border border-dashed border-[#b9d4ce] bg-[#fbfdfc] p-5 text-sm leading-6 text-[#6b7b7f] lg:col-span-2">
+                <p className="rounded-xl border border-dashed border-[#cfcac0] bg-[#fffdf2] p-5 text-sm leading-6 text-[#65635d] lg:col-span-2">
                   No consumables configured for this service yet.
                 </p>
               )}
@@ -254,7 +254,7 @@ function RequirementsSection({
           </article>
         );
       }) : (
-        <div className="rounded-2xl border border-dashed border-[#b9d4ce] bg-white p-6 text-sm leading-6 text-[#6b7b7f]">
+        <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-6 text-sm leading-6 text-[#65635d]">
           Add a service above before configuring its consumable requirements.
         </div>
       )}
@@ -266,15 +266,15 @@ export function ServiceRequirementsManager({ services, consumables, requirements
   const activeConsumables = consumables.filter((item) => item.active);
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="service-requirements">
-      <div className="flex flex-col gap-3 border-b border-[#dce8e4] pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="service-requirements">
+      <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#e5f5f1] text-xs font-black text-[#0d8278]">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-xs font-black text-[#a77f00]">
             04
           </span>
           <div>
-            <h2 className="text-xl font-bold tracking-[-0.03em] text-[#10222e]">Service consumables</h2>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-[#6b7b7f]">Define the internal recipe for each service without deducting stock yet. The selected item supplies the recipe unit.</p>
+            <h2 className="text-xl font-bold tracking-[-0.03em] text-[#171717]">Service consumables</h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-[#65635d]">Define the internal recipe for each service without deducting stock yet. The selected item supplies the recipe unit.</p>
           </div>
         </div>
         <span className="self-start rounded-full bg-[#f1f6f4] px-3 py-1.5 text-xs font-bold text-[#5d7475] sm:self-auto">
@@ -303,8 +303,8 @@ export function ServiceRequirementsManager({ services, consumables, requirements
 
       <RequirementsSection consumables={consumables} requirements={requirements} services={services} />
 
-      <p className="mt-6 flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#829196]">
-        <CheckCircle className="h-4 w-4 text-[#0d9f91]" />
+      <p className="mt-6 flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#89867d]">
+        <CheckCircle className="h-4 w-4 text-[#a77f00]" />
         Recipe configuration is protected by the active-admin policy.
       </p>
     </section>

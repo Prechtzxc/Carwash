@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f8f7;
-  --foreground: #10222e;
+  --background: #f7f6f1;
+  --foreground: #171717;
 }
 
 @theme inline {
@@ -40,11 +40,11 @@ select {
 }
 
 ::selection {
-  background: #a6e3d8;
-  color: #10222e;
+  background: #f4c400;
+  color: #171717;
 }
 
 :focus-visible {
-  outline: 3px solid #2bb6a2;
+  outline: 3px solid #d4a900;
   outline-offset: 3px;
 }

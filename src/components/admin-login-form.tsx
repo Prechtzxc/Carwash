@@ -71,10 +71,10 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
   return (
     <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
       <div>
-        <label className="text-sm font-bold text-[#28424d]" htmlFor="email">Email</label>
+        <label className="text-sm font-bold text-[#292929]" htmlFor="email">Email</label>
         <input
           autoComplete="username"
-          className="mt-2 min-h-13 w-full rounded-xl border border-[#cbdcd8] bg-white px-4 text-sm text-[#10222e] shadow-sm outline-none transition-colors placeholder:text-[#9aa9aa] focus:border-[#0d8278] focus:ring-4 focus:ring-[#dff6f0]"
+          className="mt-2 min-h-13 w-full rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm text-[#171717] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]"
           id="email"
           name="email"
           onChange={(event) => setEmail(event.target.value)}
@@ -87,11 +87,11 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
 
       <div>
         <div className="flex items-center justify-between gap-3">
-          <label className="text-sm font-bold text-[#28424d]" htmlFor="password">Password</label>
+          <label className="text-sm font-bold text-[#292929]" htmlFor="password">Password</label>
         </div>
         <input
           autoComplete="current-password"
-          className="mt-2 min-h-13 w-full rounded-xl border border-[#cbdcd8] bg-white px-4 text-sm text-[#10222e] shadow-sm outline-none transition-colors placeholder:text-[#9aa9aa] focus:border-[#0d8278] focus:ring-4 focus:ring-[#dff6f0]"
+          className="mt-2 min-h-13 w-full rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm text-[#171717] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]"
           id="password"
           name="password"
           onChange={(event) => setPassword(event.target.value)}
@@ -109,7 +109,7 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
       )}
 
       <button
-        className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#0d8278] px-5 text-sm font-bold text-white shadow-[0_10px_22px_rgba(13,130,120,0.18)] transition-colors hover:bg-[#096e67] disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-5 text-sm font-bold text-[#171717] shadow-[0_10px_22px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#d8aa00] disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isSubmitting || isFormIncomplete}
         type="submit"
       >
@@ -117,8 +117,8 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
         {!isSubmitting && <ArrowRight className="h-4 w-4" />}
       </button>
 
-      <div className="flex items-start gap-3 rounded-xl bg-[#f4f8f7] p-4 text-xs leading-5 text-[#6c7b80]">
-        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#0d8278]" />
+      <div className="flex items-start gap-3 rounded-xl bg-[#f2f1eb] p-4 text-xs leading-5 text-[#706e67]">
+        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#a77f00]" />
         <p>Admin access is provisioned by the system owner. There is no public registration.</p>
       </div>
     </form>

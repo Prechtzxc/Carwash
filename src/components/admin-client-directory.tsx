@@ -50,13 +50,13 @@ function directoryHref({ page, search, sort }: { page?: number; search: string; 
 
 function SummaryCard({ detail, icon, label, value }: { detail: string; icon: React.ReactNode; label: string; value: string | number }) {
   return (
-    <div className="rounded-[1.35rem] border border-[#dce8e4] bg-white p-5 shadow-[0_12px_35px_rgba(35,73,70,0.04)]">
+    <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)]">
       <div className="flex items-start justify-between gap-4">
-        <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#829196]">{label}</p>
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e5f5f1] text-[#0d8278]">{icon}</span>
+        <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">{label}</p>
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">{icon}</span>
       </div>
-      <p className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#102c38]">{value}</p>
-      <p className="mt-2 text-xs leading-5 text-[#6b7b7f]">{detail}</p>
+      <p className="mt-4 text-3xl font-black tracking-[-0.05em] text-[#171717]">{value}</p>
+      <p className="mt-2 text-xs leading-5 text-[#65635d]">{detail}</p>
     </div>
   );
 }
@@ -64,43 +64,43 @@ function SummaryCard({ detail, icon, label, value }: { detail: string; icon: Rea
 function ClientRow({ customer }: { customer: ClientDirectoryReport["customers"][number] }) {
   return (
     <Link
-      className="group block rounded-[1.35rem] border border-[#dce8e4] bg-white p-5 shadow-[0_10px_28px_rgba(35,73,70,0.035)] transition-all hover:-translate-y-0.5 hover:border-[#9acdc3] hover:shadow-[0_16px_34px_rgba(35,73,70,0.08)] sm:p-6"
+      className="group block rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_10px_28px_rgba(0,0,0,0.035)] transition-all hover:-translate-y-0.5 hover:border-[#d4b900] hover:shadow-[0_16px_34px_rgba(0,0,0,0.08)] sm:p-6"
       href={`/admin/clients/${customer.id}`}
     >
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_0.8fr_0.8fr_0.9fr_auto] lg:items-center lg:gap-6">
         <div className="flex min-w-0 items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#102c38] text-sm font-black tracking-[0.04em] text-[#a9eee2]">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#171717] text-sm font-black tracking-[0.04em] text-[#f4c400]">
             {initials(customer.customerName)}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-lg font-bold tracking-[-0.025em] text-[#18323c]">{customer.customerName}</p>
-            <p className="mt-1 truncate text-sm font-semibold text-[#0d8278]">{customer.mobileNumber}</p>
-            <p className="mt-1 truncate text-xs text-[#829196]">{customer.email ?? "No email provided"}</p>
+            <p className="truncate text-lg font-bold tracking-[-0.025em] text-[#292929]">{customer.customerName}</p>
+            <p className="mt-1 truncate text-sm font-semibold text-[#a77f00]">{customer.mobileNumber}</p>
+            <p className="mt-1 truncate text-xs text-[#89867d]">{customer.email ?? "No email provided"}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-t border-[#edf2f0] pt-4 sm:grid-cols-3 lg:block lg:border-0 lg:pt-0">
+        <div className="grid grid-cols-2 gap-4 border-t border-[#e8e5dc] pt-4 sm:grid-cols-3 lg:block lg:border-0 lg:pt-0">
           <div>
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#829196]">Visits</p>
-            <p className="mt-1 font-black text-[#18323c]">{customer.completedVisits}</p>
+            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#89867d]">Visits</p>
+            <p className="mt-1 font-black text-[#292929]">{customer.completedVisits}</p>
           </div>
           <div>
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#829196]">Vehicles</p>
-            <p className="mt-1 font-black text-[#18323c]">{customer.vehicleCount}</p>
+            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#89867d]">Vehicles</p>
+            <p className="mt-1 font-black text-[#292929]">{customer.vehicleCount}</p>
           </div>
           <div className="sm:col-span-1">
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#829196]">Last visit</p>
-            <p className="mt-1 text-sm font-semibold text-[#486168]">{formatDate(customer.lastCompletedVisit)}</p>
+            <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#89867d]">Last visit</p>
+            <p className="mt-1 text-sm font-semibold text-[#4a4945]">{formatDate(customer.lastCompletedVisit)}</p>
           </div>
         </div>
 
-        <div className="border-t border-[#edf2f0] pt-4 lg:border-0 lg:pt-0">
-          <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#829196]">Completed spend</p>
-          <p className="mt-1 text-lg font-black tracking-[-0.03em] text-[#102c38]">{formatCurrency(customer.totalTransactionAmount)}</p>
-          <p className="mt-1 text-xs text-[#829196]">Completed transactions only</p>
+        <div className="border-t border-[#e8e5dc] pt-4 lg:border-0 lg:pt-0">
+          <p className="text-[0.62rem] font-bold uppercase tracking-[0.13em] text-[#89867d]">Completed spend</p>
+          <p className="mt-1 text-lg font-black tracking-[-0.03em] text-[#171717]">{formatCurrency(customer.totalTransactionAmount)}</p>
+          <p className="mt-1 text-xs text-[#89867d]">Completed transactions only</p>
         </div>
 
-        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#0d8278] lg:justify-self-end">
+        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#a77f00] lg:justify-self-end">
           Open profile
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </span>
@@ -117,29 +117,29 @@ function Pagination({ report, search, sort }: { report: ClientDirectoryReport; s
   }
 
   return (
-    <div className="flex flex-col gap-3 border-t border-[#dce8e4] pt-5 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-[#6b7b7f]">
-        Page <strong className="text-[#36525a]">{page}</strong> of <strong className="text-[#36525a]">{totalPages}</strong> · {totalMatches} matching client{totalMatches === 1 ? "" : "s"}
+    <div className="flex flex-col gap-3 border-t border-[#dfddd4] pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-[#65635d]">
+        Page <strong className="text-[#3f3f3f]">{page}</strong> of <strong className="text-[#3f3f3f]">{totalPages}</strong> · {totalMatches} matching client{totalMatches === 1 ? "" : "s"}
       </p>
       <div className="flex items-center gap-2">
         {page > 1 ? (
-          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-[#d7e5e0] bg-white px-3.5 text-sm font-bold text-[#486168] transition-colors hover:border-[#a8cfc5] hover:text-[#0d8278]" href={directoryHref({ page: page - 1, search, sort })}>
+          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-[#d7d4ca] bg-white px-3.5 text-sm font-bold text-[#4a4945] transition-colors hover:border-[#d4b900] hover:text-[#a77f00]" href={directoryHref({ page: page - 1, search, sort })}>
             <ChevronRight className="h-4 w-4 rotate-180" />
             Previous
           </Link>
         ) : (
-          <span className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-[#edf2f0] bg-[#f8fbfa] px-3.5 text-sm font-bold text-[#b2bfbd]">
+          <span className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-[#ebe9e2] bg-[#f7f6f1] px-3.5 text-sm font-bold text-[#b0ada4]">
             <ChevronRight className="h-4 w-4 rotate-180" />
             Previous
           </span>
         )}
         {page < totalPages ? (
-          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#0d8278] px-3.5 text-sm font-bold text-white transition-colors hover:bg-[#096e67]" href={directoryHref({ page: page + 1, search, sort })}>
+          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#f4c400] px-3.5 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00]" href={directoryHref({ page: page + 1, search, sort })}>
             Next
             <ChevronRight className="h-4 w-4" />
           </Link>
         ) : (
-          <span className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#dce8e4] px-3.5 text-sm font-bold text-[#829196]">
+          <span className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#e4e2da] px-3.5 text-sm font-bold text-[#89867d]">
             Next
             <ChevronRight className="h-4 w-4" />
           </span>
@@ -156,32 +156,32 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
     <div className="space-y-8">
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#0d8278]">Client directory</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#10222e] sm:text-4xl">Know who keeps coming back.</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#64757a]">A living view of customer relationships, current vehicles, and completed work. Search by name, mobile number, or plate.</p>
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Client directory</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Know who keeps coming back.</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">A living view of customer relationships, current vehicles, and completed work. Search by name, mobile number, or plate.</p>
         </div>
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#102c38] text-[#a9eee2] shadow-[0_14px_30px_rgba(16,44,56,0.14)]">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#171717] text-[#f4c400] shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
           <Users className="h-8 w-8" />
         </div>
       </header>
 
-      <section className="rounded-[1.5rem] border border-[#ccebe3] bg-[#e9f8f4] p-5 sm:p-7">
-        <div className="flex flex-col gap-2 border-b border-[#ccebe3] pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff7cc] p-5 sm:p-7">
+        <div className="flex flex-col gap-2 border-b border-[#ead98a] pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#0d8278]">Find a client</p>
-            <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#10222e]">Search the directory</h2>
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Find a client</p>
+            <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#171717]">Search the directory</h2>
           </div>
-          <span className="text-sm font-semibold text-[#52706e]">Completed visits power the activity totals</span>
+          <span className="text-sm font-semibold text-[#6f652f]">Completed visits power the activity totals</span>
         </div>
 
         <form action="/admin/clients" className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1fr)_230px_auto] lg:items-end" method="get">
           <div>
-            <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#607378]" htmlFor="client-search">Name, mobile, or plate</label>
-            <input className="mt-1.5 min-h-12 w-full rounded-xl border border-[#c6e3dc] bg-white px-4 text-sm text-[#18323c] outline-none placeholder:text-[#9aa9aa] focus:border-[#0d8278] focus:ring-4 focus:ring-[#d7f1eb]" defaultValue={search} id="client-search" name="search" placeholder="Try Maria, 0917..., or ABC 123" type="search" />
+          <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#65635d]" htmlFor="client-search">Name, mobile, or plate</label>
+          <input className="mt-1.5 min-h-12 w-full rounded-xl border border-[#d4cfbf] bg-white px-4 text-sm text-[#292929] outline-none placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]" defaultValue={search} id="client-search" name="search" placeholder="Try Maria, 0917..., or ABC 123" type="search" />
           </div>
           <div>
-            <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#607378]" htmlFor="client-sort">Sort by</label>
-            <select className="mt-1.5 min-h-12 w-full rounded-xl border border-[#c6e3dc] bg-white px-4 text-sm font-semibold text-[#18323c] outline-none focus:border-[#0d8278] focus:ring-4 focus:ring-[#d7f1eb]" defaultValue={sort} id="client-sort" name="sort">
+          <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#65635d]" htmlFor="client-sort">Sort by</label>
+          <select className="mt-1.5 min-h-12 w-full rounded-xl border border-[#d4cfbf] bg-white px-4 text-sm font-semibold text-[#292929] outline-none focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]" defaultValue={sort} id="client-sort" name="sort">
               <option value="recent">Recent activity</option>
               <option value="name">Name</option>
               <option value="visits">Most visits</option>
@@ -189,8 +189,8 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
             </select>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
-            <button className="min-h-12 rounded-xl bg-[#102c38] px-5 text-sm font-bold text-white transition-colors hover:bg-[#183d4b]" type="submit">Search clients</button>
-            {search && <Link className="inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-bold text-[#0d8278] hover:bg-white/60" href="/admin/clients">Clear search</Link>}
+            <button className="min-h-12 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434]" type="submit">Search clients</button>
+            {search && <Link className="inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-bold text-[#756000] hover:bg-white/60" href="/admin/clients">Clear search</Link>}
           </div>
         </form>
       </section>
@@ -201,22 +201,22 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
         <SummaryCard detail="Current vehicles represented by this page" icon={<CarFront className="h-4 w-4" />} label="Showing" value={`${report.customers.length} of ${report.pagination.totalMatches}`} />
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7">
-        <div className="flex flex-col gap-3 border-b border-[#dce8e4] pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7">
+        <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#0d8278]">Customer records</p>
-            <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#10222e]">{search ? `Results for “${search}”` : "Every client, at a glance"}</h2>
-            <p className="mt-1 text-sm leading-6 text-[#6b7b7f]">Open a profile to review current details and the immutable completed transaction history.</p>
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Customer records</p>
+            <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#171717]">{search ? `Results for “${search}”` : "Every client, at a glance"}</h2>
+            <p className="mt-1 text-sm leading-6 text-[#65635d]">Open a profile to review current details and the immutable completed transaction history.</p>
           </div>
-          <span className="self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#5d7475] sm:self-auto">Sorted by {sort === "recent" ? "recent activity" : sort === "last_visit" ? "latest visit" : sort === "visits" ? "most visits" : "name"}</span>
+          <span className="self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#5f5d57] sm:self-auto">Sorted by {sort === "recent" ? "recent activity" : sort === "last_visit" ? "latest visit" : sort === "visits" ? "most visits" : "name"}</span>
         </div>
 
         <div className="mt-5 space-y-3">
           {hasMatches ? report.customers.map((customer) => <ClientRow customer={customer} key={customer.id} />) : (
-            <div className="rounded-2xl border border-dashed border-[#b9d4ce] bg-white p-8 text-center">
-              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e5f5f1] text-[#0d8278]"><Users className="h-5 w-5" /></span>
-              <h3 className="mt-4 text-lg font-bold text-[#18323c]">{search ? "No matching clients" : "No client records yet"}</h3>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#6b7b7f]">{search ? "Try a different name, mobile number, or plate. Search uses the current customer and vehicle records." : "Customer records will appear here after the first check-in is submitted."}</p>
+            <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-8 text-center">
+              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff7cc] text-[#a77f00]"><Users className="h-5 w-5" /></span>
+              <h3 className="mt-4 text-lg font-bold text-[#292929]">{search ? "No matching clients" : "No client records yet"}</h3>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#65635d]">{search ? "Try a different name, mobile number, or plate. Search uses the current customer and vehicle records." : "Customer records will appear here after the first check-in is submitted."}</p>
             </div>
           )}
         </div>
@@ -224,7 +224,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
         <div className="mt-6"><Pagination report={report} search={search} sort={sort} /></div>
       </section>
 
-      <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#829196]"><Clock className="h-4 w-4 text-[#0d9f91]" />Visit totals and spend include completed transactions only.</p>
+      <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#89867d]"><Clock className="h-4 w-4 text-[#a77f00]" />Visit totals and spend include completed transactions only.</p>
     </div>
   );
 }

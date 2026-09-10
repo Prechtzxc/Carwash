@@ -46,9 +46,17 @@ function resolveFilters(searchParams: Record<string, string | string[] | undefin
   const requestedMovementType = searchParamValue(searchParams, "movementType");
   const movementFrom = searchParamValue(searchParams, "movementFrom");
   const movementTo = searchParamValue(searchParams, "movementTo");
+  const movementFromIsValid = !movementFrom || isIsoDate(movementFrom);
+  const movementToIsValid = !movementTo || isIsoDate(movementTo);
   const normalizedMovementFrom = isIsoDate(movementFrom) ? movementFrom : "";
   const normalizedMovementTo = isIsoDate(movementTo) ? movementTo : "";
   const datesAreOrdered = !normalizedMovementFrom || !normalizedMovementTo || normalizedMovementFrom <= normalizedMovementTo;
+  const movementDateError = !movementFromIsValid || !movementToIsValid
+    ? "Enter valid movement dates."
+    : datesAreOrdered
+      ? null
+      : "The movement start date cannot be after the end date.";
+  const hasInvalidMovementDate = !movementFromIsValid || !movementToIsValid;
 
   return {
     ...defaultInventoryFilters,
@@ -64,8 +72,9 @@ function resolveFilters(searchParams: Record<string, string | string[] | undefin
     movementType: (inventoryMovementTypes as readonly string[]).includes(requestedMovementType)
       ? requestedMovementType as InventoryFilters["movementType"]
       : "",
-    movementFrom: datesAreOrdered ? normalizedMovementFrom : "",
-    movementTo: datesAreOrdered ? normalizedMovementTo : "",
+    movementFrom: hasInvalidMovementDate ? "" : normalizedMovementFrom,
+    movementTo: hasInvalidMovementDate ? "" : normalizedMovementTo,
+    movementDateError,
     movementPage: boundedPage(searchParamValue(searchParams, "movementPage")),
   };
 }

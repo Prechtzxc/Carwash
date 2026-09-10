@@ -1,6 +1,6 @@
-# RinsePoint Carwash Management System
+# Cool Car Centrale Carwash Management System
 
-RinsePoint is a web-based foundation for a carwash management system. It provides a public customer check-in entry point and a protected single-admin shell for three focused modules: Sales, Clients, and Inventory, plus a separate catalog configuration area.
+Cool Car Centrale is a web-based carwash management system. It provides a public customer check-in entry point and a protected single-admin shell for three focused modules: Sales, Clients, and Inventory, plus a separate catalog configuration area.
 
 Phase 2 adds the Supabase connection, PostgreSQL profile foundation, cookie-based Supabase Auth, protected admin routes, and row-level security. Phase 3 adds the vehicle category, service, and service-price configuration foundation. Phase 4 adds admin-only inventory items, an atomic stock movement ledger, and service consumable recipes. Phase 5 adds the public customer check-in wizard and pending submission foundation. Phase 6 adds the protected admin transaction review, pending-request revision, confirmation, and cancellation workflow. Later phases add Sales, Clients, inventory reporting, and the production-ready public check-in doorway. Phase 11 adds a protected printable customer QR utility, tablet-safe check-in behavior, and an installable PWA foundation without offline transaction storage or a service worker. The authentication cleanup keeps one admin account only; customers do not have accounts. Payment, completion, and inventory deduction remain outside the public check-in flow.
 
@@ -158,7 +158,7 @@ Deploy the Next.js application to Vercel and use a separate production Supabase 
 5. In Supabase Dashboard > Authentication > URL Configuration, set the Site URL to the deployed origin and add the deployed origin to the allowed redirect URLs if a future redirect-based Auth flow is enabled. The current email/password admin form does not use an OAuth callback.
 6. Disable public signups and provision only the intended active admin account as described above. Never add a service role key or database password to Vercel client-visible environment variables.
 
-The PWA foundation uses the app manifest and the project-owned `src/app/icon.svg`. It intentionally does not register a service worker or cache customer data. Customers can install the `/check-in` doorway from a supported browser, but submission still requires a live connection. If the shared tablet loses connectivity, the current form remains only in memory and no queue is created; reconnect before submitting. After a successful submission, use **New check-in** so the customer, vehicle, services, products, result, and idempotency key are cleared.
+The PWA uses the app manifest and the project-owned `public/img/logo.jpg`. It intentionally does not register a service worker or cache customer data. Customers can install the `/check-in` doorway from a supported browser, but submission still requires a live connection. If the shared tablet loses connectivity, the current form remains only in memory and no queue is created; reconnect before submitting. After a successful submission, use **New check-in** so the customer, vehicle, services, products, result, and idempotency key are cleared.
 
 ## Run locally
 

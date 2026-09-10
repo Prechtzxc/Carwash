@@ -107,7 +107,9 @@ function resolveSelection(searchParams: Record<string, string | string[] | undef
 
 export default async function SalesPage({ searchParams }: { searchParams: SalesSearchParams }) {
   const selection = resolveSelection(await searchParams);
-  const report = await getAdminSalesReport(selection.startDate, selection.endDate);
+  const report = selection.error
+    ? null
+    : await getAdminSalesReport(selection.startDate, selection.endDate);
 
   return <AdminSalesDashboard report={report} selection={selection} />;
 }

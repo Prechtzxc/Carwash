@@ -42,13 +42,13 @@ export function AdminUserControl({ fullName }: AdminUserControlProps) {
   }
 
   return (
-    <div className="flex items-center gap-2 sm:gap-3">
+    <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
       <div className="max-w-24 text-right sm:max-w-40">
-        <p className="truncate text-xs font-bold text-[#28424d]">{displayName}</p>
+         <p className="truncate text-xs font-bold text-[#292929]">{displayName}</p>
       </div>
       <button
         aria-label="Log out"
-        className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8e4] bg-white px-3 text-xs font-bold text-[#486168] transition-colors hover:border-[#b8d5ce] hover:bg-[#f7fbfa] hover:text-[#10222e] disabled:cursor-not-allowed disabled:opacity-60 sm:px-3.5"
+         className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dfddd4] bg-white px-3 text-xs font-bold text-[#4a4945] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2] hover:text-[#171717] disabled:cursor-not-allowed disabled:opacity-60 sm:px-3.5"
         disabled={isLoggingOut}
         onClick={handleLogout}
         type="button"
@@ -56,7 +56,7 @@ export function AdminUserControl({ fullName }: AdminUserControlProps) {
         <LogOut className="h-4 w-4" />
         <span className="hidden sm:inline">{isLoggingOut ? "Signing out..." : "Logout"}</span>
       </button>
-      {error && <span aria-live="polite" className="sr-only">{error}</span>}
+      {error && <p aria-live="polite" className="basis-full text-right text-xs font-semibold text-[#b34646] sm:basis-auto sm:max-w-56" role="alert">{error}</p>}
     </div>
   );
 }

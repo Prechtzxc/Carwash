@@ -28,23 +28,23 @@ export function AdminNavigation({ variant }: AdminNavigationProps) {
                 className={`group flex min-h-12 items-center gap-3 rounded-xl px-3.5 text-sm font-semibold transition-colors ${
                   isMobile
                     ? isActive
-                      ? "bg-[#133f4c] text-white shadow-[0_5px_14px_rgba(19,63,76,0.16)]"
-                      : "bg-white text-[#5d6d73] ring-1 ring-[#dce7e3] hover:bg-[#f7fbfa] hover:text-[#10222e]"
-                    : isActive
-                      ? "bg-white/10 text-white shadow-[inset_3px_0_0_#37c0ad]"
-                      : "text-slate-300 hover:bg-white/7 hover:text-white"
+                       ? "bg-[#171717] text-white shadow-[0_5px_14px_rgba(0,0,0,0.16)]"
+                       : "bg-white text-[#5d5a54] ring-1 ring-[#dfddd4] hover:bg-[#fffdf2] hover:text-[#171717]"
+                     : isActive
+                       ? "bg-white/10 text-white shadow-[inset_3px_0_0_#f4c400]"
+                       : "text-slate-300 hover:bg-white/7 hover:text-white"
                 }`}
                 href={item.href}
               >
                 <span
                   className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
                     isMobile
-                      ? isActive
-                        ? "bg-white/12 text-[#9cefe2]"
-                        : "bg-[#e8f3ef] text-[#087d73]"
-                      : isActive
-                        ? "bg-[#1c877e] text-[#b5fff2]"
-                        : "bg-white/6 text-slate-400 group-hover:text-slate-200"
+                       ? isActive
+                         ? "bg-[#f4c400] text-[#171717]"
+                         : "bg-[#fff7cc] text-[#756000]"
+                       : isActive
+                         ? "bg-[#f4c400] text-[#171717]"
+                         : "bg-white/6 text-slate-400 group-hover:text-slate-200"
                   }`}
                 >
                   <NavigationIcon className="h-[18px] w-[18px]" name={item.icon} />

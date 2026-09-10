@@ -2,20 +2,20 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "RinsePoint Carwash",
-    short_name: "RinsePoint",
-    description: "Public customer check-in for RinsePoint Carwash.",
+    name: "Cool Car Centrale",
+    short_name: "Cool Car",
+    description: "Public customer check-in for Cool Car Centrale.",
     start_url: "/check-in",
     scope: "/",
     display: "standalone",
     orientation: "any",
-    background_color: "#f4f8f7",
-    theme_color: "#0d9f91",
+    background_color: "#f7f6f1",
+    theme_color: "#f4c400",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/img/logo.jpg",
+        sizes: "2000x1000",
+        type: "image/jpeg",
       },
     ],
   };

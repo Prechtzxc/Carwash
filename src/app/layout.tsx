@@ -4,17 +4,21 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "RinsePoint | Carwash Operations",
-    template: "%s | RinsePoint",
+    default: "Cool Car Centrale | Carwash Operations",
+    template: "%s | Cool Car Centrale",
   },
   description:
-    "A clean foundation for customer check-in and carwash operations.",
-  applicationName: "RinsePoint",
+    "Customer check-in and carwash operations for Cool Car Centrale.",
+  applicationName: "Cool Car Centrale",
+  icons: {
+    icon: "/img/logo.jpg",
+    apple: "/img/logo.jpg",
+  },
 };
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#0d9f91",
+  themeColor: "#f4c400",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

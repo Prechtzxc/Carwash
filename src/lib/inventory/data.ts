@@ -84,6 +84,7 @@ export type InventoryFilters = {
   movementType: InventoryMovementType | "";
   movementFrom: string;
   movementTo: string;
+  movementDateError: string | null;
   movementPage: number;
 };
 
@@ -99,6 +100,7 @@ export const defaultInventoryFilters: InventoryFilters = {
   movementType: "",
   movementFrom: "",
   movementTo: "",
+  movementDateError: null,
   movementPage: 1,
 };
 
