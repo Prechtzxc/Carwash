@@ -1,4 +1,4 @@
-import { Boxes, ChartLine, Users } from "@/components/icons";
+import { Boxes, ChartLine, LayoutDashboard, Users } from "@/components/icons";
 import type { AdminNavigationIcon } from "@/types/navigation";
 
 type NavigationIconProps = {
@@ -7,6 +7,10 @@ type NavigationIconProps = {
 };
 
 export function NavigationIcon({ name, className }: NavigationIconProps) {
+  if (name === "dashboard") {
+    return <LayoutDashboard className={className} />;
+  }
+
   if (name === "sales") {
     return <ChartLine className={className} />;
   }

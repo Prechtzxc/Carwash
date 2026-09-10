@@ -11,6 +11,10 @@ type AdminModulePlaceholderProps = {
 };
 
 const moduleStyles: Record<AdminNavigationIcon, { icon: string; iconSurface: string }> = {
+  dashboard: {
+    icon: "text-[#a77f00]",
+    iconSurface: "bg-[#fff7cc] ring-[#ead98a]",
+  },
   sales: {
     icon: "text-[#a77f00]",
     iconSurface: "bg-[#fff7cc] ring-[#ead98a]",
@@ -52,18 +56,18 @@ export function AdminModulePlaceholder({
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">
             <CircleDashed className="h-5 w-5" />
           </div>
-          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#89867d]">Workspace status</p>
-          <h2 className="mt-2 text-xl font-bold tracking-[-0.03em] text-[#171717]">The workspace is ready.</h2>
-          <p className="mt-3 text-sm leading-6 text-[#706e67]">Live {eyebrow.toLowerCase()} records will appear here when this module is connected.</p>
+          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#89867d]">Status</p>
+          <h2 className="mt-2 text-xl font-bold tracking-[-0.03em] text-[#171717]">The page is ready.</h2>
+          <p className="mt-3 text-sm leading-6 text-[#706e67]">Live {eyebrow.toLowerCase()} records will appear here when available.</p>
         </div>
 
         <div className="rounded-2xl border border-[#171717] bg-[#171717] p-6 text-white shadow-[0_12px_35px_rgba(0,0,0,0.12)]">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f4c400]/15 text-[#f4c400]">
             <ClipboardCheck className="h-5 w-5" />
           </div>
-          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#f4c400]">Implementation status</p>
-          <h2 className="mt-2 text-xl font-bold tracking-[-0.03em]">Placeholder ready to extend.</h2>
-          <p className="mt-3 text-sm leading-6 text-slate-300">This screen is intentionally free of business data, calculations, and actions for now.</p>
+          <p className="mt-6 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#f4c400]">Status</p>
+          <h2 className="mt-2 text-xl font-bold tracking-[-0.03em]">No records yet.</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-300">Records and actions will appear here when they are available.</p>
         </div>
       </section>
 
@@ -73,12 +77,12 @@ export function AdminModulePlaceholder({
             <Layers className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Next steps</p>
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Details</p>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-[#65635d]">{nextPhase}</p>
           </div>
         </div>
         <span className="inline-flex min-h-10 shrink-0 items-center gap-2 self-start rounded-full bg-white px-4 text-xs font-bold text-[#a77f00] shadow-sm sm:self-auto">
-          Planning view
+          Details
           <ArrowUpRight className="h-3.5 w-3.5" />
         </span>
       </section>

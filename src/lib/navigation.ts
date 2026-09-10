@@ -2,16 +2,22 @@ import type { AdminNavigationItem } from "@/types/navigation";
 
 export const adminNavigation = [
   {
+    label: "Dashboard",
+    href: "/admin",
+    icon: "dashboard",
+    description: "Incoming check-ins and customer activity.",
+  },
+  {
     label: "Sales",
     href: "/admin/sales",
     icon: "sales",
-    description: "A future view of completed wash activity.",
+    description: "Review completed wash activity.",
   },
   {
     label: "Clients",
     href: "/admin/clients",
     icon: "clients",
-    description: "A future home for customer records.",
+    description: "View customer records and visit history.",
   },
   {
     label: "Inventory",

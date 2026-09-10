@@ -515,7 +515,7 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Configuration</p>
           <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Catalog and pricing</h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">
-            Shape the services and vehicle rules that will power future check-in and transaction flows. This workspace stores configuration only.
+            Set the services, vehicle rules, and prices used for customer check-in. This page stores configuration only.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-[#dfddd4] bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
@@ -573,7 +573,7 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
 
       <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#89867d]">
         <CheckCircle className="h-4 w-4 text-[#a77f00]" />
-        Catalog configuration is protected by the admin access policy.
+         Catalog settings are protected by admin access.
       </p>
     </div>
   );

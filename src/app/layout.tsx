@@ -4,11 +4,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Cool Car Centrale | Carwash Operations",
+     default: "Cool Car Centrale | Carwash",
     template: "%s | Cool Car Centrale",
   },
   description:
-    "Customer check-in and carwash operations for Cool Car Centrale.",
+    "Customer check-in and carwash management for Cool Car Centrale.",
   applicationName: "Cool Car Centrale",
   icons: {
     icon: "/img/logo.jpg",

@@ -6,7 +6,7 @@ export default function Loading() {
         <div aria-hidden="true" className="mt-5 h-10 max-w-xl animate-pulse rounded bg-white/15" />
         <div aria-hidden="true" className="mt-4 h-5 max-w-lg animate-pulse rounded bg-white/10" />
       </section>
-      <p className="text-center text-sm font-semibold text-[#65635d]">Loading admin workspace...</p>
+      <p className="text-center text-sm font-semibold text-[#65635d]">Loading...</p>
     </div>
   );
 }

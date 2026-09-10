@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ArrowRight, ChartLine, CheckCircle, Clock, Sparkles } from "@/components/icons";
+import { ChartLine, CheckCircle, Clock, Sparkles } from "@/components/icons";
 import type { SalesFilterSelection, SalesReport } from "@/lib/sales/data";
 
 function formatPeso(value: number) {
@@ -270,7 +270,7 @@ export function AdminSalesDashboard({ report, selection }: { report: SalesReport
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#a77f00] shadow-sm"><CheckCircle className="h-5 w-5" /></span>
           <div>
             <h2 className="text-lg font-bold text-[#171717]">No completed sales yet.</h2>
-            <p className="mt-1 text-sm leading-6 text-[#6f652f]">Completed transactions will appear here after the operational completion step succeeds.</p>
+            <p className="mt-1 text-sm leading-6 text-[#6f652f]">Completed transactions will appear here when the completion step succeeds.</p>
           </div>
         </section>
       )}
@@ -341,17 +341,6 @@ export function AdminSalesDashboard({ report, selection }: { report: SalesReport
         </div>
         <div className="mt-5"><TransactionTable report={report} /></div>
       </section>
-
-      <div className="flex flex-col gap-4 rounded-2xl border border-dashed border-[#cfcac0] bg-[#fff9d9] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div>
-          <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Operational handoff</p>
-          <p className="mt-1 text-sm leading-6 text-[#6f652f]">Incoming and confirmed requests remain on the operations dashboard until completion.</p>
-        </div>
-        <Link className="inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-xl bg-white px-4 text-xs font-bold text-[#a77f00] shadow-sm transition-colors hover:bg-[#fffdf2] sm:self-auto" href="/admin">
-          Open operations dashboard
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
 
       {!hasFilteredSales && hasCompletedSales && <p className="text-center text-xs font-semibold text-[#89867d]">No completed transactions found for this period.</p>}
     </div>

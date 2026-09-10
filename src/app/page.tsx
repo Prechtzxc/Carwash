@@ -21,7 +21,7 @@ export default function Home() {
         <section className="grid gap-12 pb-16 pt-10 sm:pt-16 lg:grid-cols-[1.03fr_0.97fr] lg:items-center lg:gap-16 lg:pb-24 lg:pt-20">
           <div>
             <h1 className="max-w-3xl text-5xl font-bold leading-[0.98] tracking-[-0.065em] text-[#171717] sm:text-6xl lg:text-[5.5rem]">Make every wash visit <span className="text-[#a77f00]">flow.</span></h1>
-            <p className="mt-7 max-w-xl text-base leading-7 text-[#65635d] sm:text-lg">Cool Car Centrale makes customer arrival smoother and day-to-day carwash operations easier to run.</p>
+            <p className="mt-7 max-w-xl text-base leading-7 text-[#65635d] sm:text-lg">Cool Car Centrale makes customer arrival smoother and day-to-day carwash management easier to run.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-sm font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/check-in">
                 Open customer check-in
@@ -39,7 +39,7 @@ export default function Home() {
               </div>
               <div>
                 <dt className="text-[0.63rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">Admin side</dt>
-                <dd className="mt-2 text-sm font-bold text-[#292929]">Three modules</dd>
+                <dd className="mt-2 text-sm font-bold text-[#292929]">Clear tools</dd>
               </div>
               <div>
                 <dt className="text-[0.63rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">Built for</dt>
@@ -55,8 +55,8 @@ export default function Home() {
               <div className="rounded-[1.5rem] bg-[#171717] p-5 text-white sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[0.63rem] font-bold uppercase tracking-[0.2em] text-[#f4c400]">Workspace overview</p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em]">A clean operational start.</h2>
+                    <p className="text-[0.63rem] font-bold uppercase tracking-[0.2em] text-[#f4c400]">At a glance</p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em]">A clear place to start.</h2>
                   </div>
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4c400]/15 text-[#f4c400]"><Sparkles className="h-5 w-5" /></span>
                 </div>
@@ -68,8 +68,8 @@ export default function Home() {
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/7 p-4">
                     <Droplets className="h-5 w-5 text-[#f4c400]" />
-                    <p className="mt-7 text-sm font-bold">Operations shell</p>
-                    <p className="mt-1 text-xs text-slate-400">Team workspace</p>
+                    <p className="mt-7 text-sm font-bold">Admin tools</p>
+                    <p className="mt-1 text-xs text-slate-400">Team view</p>
                   </div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function Home() {
               <div>
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[#a77f00] shadow-[0_5px_16px_rgba(0,0,0,0.08)]"><Sparkles className="h-5 w-5" /></span>
                 <h3 className="mt-5 text-base font-bold text-[#292929]">Built to grow</h3>
-                <p className="mt-2 text-sm leading-6 text-[#65635d]">A clean structure that can grow into connected operations without extra noise.</p>
+                <p className="mt-2 text-sm leading-6 text-[#65635d]">A clean structure that can grow with the team without extra noise.</p>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function Home() {
 
         <footer className="flex flex-col gap-3 border-t border-[#dfddd4] py-7 text-xs text-[#89867d] sm:flex-row sm:items-center sm:justify-between">
           <p>Cool Car Centrale Carwash Management System</p>
-          <p>Customer check-in and operations</p>
+          <p>Customer check-in and carwash management</p>
         </footer>
       </div>
     </main>

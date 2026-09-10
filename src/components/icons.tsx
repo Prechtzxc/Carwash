@@ -119,6 +119,17 @@ export function Droplets(props: IconProps) {
   );
 }
 
+export function LayoutDashboard(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect height="6.5" rx="1" stroke="currentColor" strokeWidth="1.7" width="6.5" x="4" y="4" />
+      <rect height="6.5" rx="1" stroke="currentColor" strokeWidth="1.7" width="6.5" x="13.5" y="4" />
+      <rect height="6.5" rx="1" stroke="currentColor" strokeWidth="1.7" width="6.5" x="4" y="13.5" />
+      <rect height="6.5" rx="1" stroke="currentColor" strokeWidth="1.7" width="6.5" x="13.5" y="13.5" />
+    </Icon>
+  );
+}
+
 export function Layers(props: IconProps) {
   return (
     <Icon {...props}>

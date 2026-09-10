@@ -35,7 +35,7 @@ export default async function AdminQrPage() {
           <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">Display or print a public QR code for the shared tablet and carwash entrance.</p>
         </div>
         <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2]" href="/admin">
-          Back to dashboard
+          Back
           <ArrowRight className="h-4 w-4 rotate-180" />
         </Link>
       </header>

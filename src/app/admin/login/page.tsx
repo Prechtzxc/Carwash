@@ -8,7 +8,7 @@ import { getSafeReturnPath } from "@/lib/auth/redirect";
 
 export const metadata: Metadata = {
   title: "Admin sign in",
-  description: "Sign in to the Cool Car Centrale admin workspace.",
+  description: "Sign in to the Cool Car Centrale admin area.",
 };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -32,7 +32,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: S
           <div className="relative">
             <BrandMark href="/" tone="light" />
             <div className="mt-24 max-w-lg">
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#f4c400]">Secure workspace</p>
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#f4c400]">Admin access</p>
               <h1 className="mt-5 text-5xl font-bold leading-[1.02] tracking-[-0.06em] xl:text-6xl">Keep the wash floor moving with clarity.</h1>
               <p className="mt-6 max-w-md text-base leading-7 text-slate-300">Cool Car Centrale gives the team one focused place to work across Sales, Clients, and Inventory.</p>
             </div>
@@ -55,7 +55,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: S
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Admin sign in</p>
             <h2 className="mt-4 text-4xl font-bold leading-tight tracking-[-0.055em] text-[#171717]">Welcome back.</h2>
-            <p className="mt-4 text-base leading-7 text-[#65635d]">Sign in to access the Cool Car Centrale operations workspace.</p>
+            <p className="mt-4 text-base leading-7 text-[#65635d]">Sign in to access the Cool Car Centrale dashboard.</p>
             <AdminLoginForm initialError={initialError} returnTo={returnTo} />
           </div>
 
