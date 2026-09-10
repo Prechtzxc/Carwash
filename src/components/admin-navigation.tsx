@@ -51,7 +51,7 @@ export function AdminNavigation({ variant }: AdminNavigationProps) {
                 </span>
                 <span className="whitespace-nowrap">{item.label}</span>
                 {!isMobile && (
-                  <ChevronRight className="ml-auto h-4 w-4 opacity-40 transition-transform group-hover:translate-x-0.5" />
+                  <ChevronRight className={`ml-auto h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isActive ? "text-[#171717] opacity-80" : "text-white opacity-80"}`} />
                 )}
               </Link>
             </li>
