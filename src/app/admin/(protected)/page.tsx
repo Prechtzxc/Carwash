@@ -16,12 +16,12 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#3d3d3d] bg-[#171717] px-4 text-sm font-bold text-white shadow-[0_8px_18px_rgba(0,0,0,0.12)] transition-colors hover:border-[#595959] hover:bg-[#343434] hover:text-white active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#a77f00]/50 sm:min-w-[230px]" href="/admin/catalog">
-            Configure catalog and pricing
+            <span className="text-white">Configure catalog and pricing</span>
             <ArrowRight className="h-4 w-4 text-[#f4c400]" />
           </Link>
           <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm font-bold text-[#171717] shadow-[0_8px_18px_rgba(0,0,0,0.06)] transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 sm:min-w-[230px]" href="/admin/qr">
             <QrCode className="h-4 w-4 text-[#a77f00]" />
-            Display customer QR
+            <span className="text-[#171717]">Display customer QR</span>
           </Link>
         </div>
       </header>

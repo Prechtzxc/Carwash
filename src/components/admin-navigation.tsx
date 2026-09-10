@@ -47,11 +47,11 @@ export function AdminNavigation({ variant }: AdminNavigationProps) {
                         : "bg-[#3c3c3c] text-[#ffe45e] group-hover:bg-[#4b4b4b] group-hover:text-white"
                   }`}
                 >
-                  <NavigationIcon className="h-[18px] w-[18px]" name={item.icon} />
+                  <NavigationIcon className={`h-[18px] w-[18px] ${isActive ? "text-[#171717]" : "text-[#ffe45e] group-hover:text-white"}`} name={item.icon} />
                 </span>
-                <span className="whitespace-nowrap">{item.label}</span>
+                <span className={`whitespace-nowrap ${isActive ? "text-[#171717]" : "text-white group-hover:text-white"}`}>{item.label}</span>
                 {!isMobile && (
-                  <ChevronRight className={`ml-auto h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isActive ? "text-[#171717] opacity-80" : "text-white opacity-80"}`} />
+                  <ChevronRight className={`ml-auto h-4 w-4 transition-transform group-hover:translate-x-0.5 ${isActive ? "text-[#171717] opacity-100" : "text-white opacity-100"}`} />
                 )}
               </Link>
             </li>

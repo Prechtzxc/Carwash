@@ -39,7 +39,7 @@ cp .env.example .env.local
 Set these values in `.env.local` using Supabase Dashboard > Project Settings > API:
 
 ```dotenv
-NEXT_PUBLIC_APP_URL=https://your-production-domain.example
+NEXT_PUBLIC_APP_URL=https://coolcarcentrale.com
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-public-publishable-key
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -153,7 +153,7 @@ Deploy the Next.js application to Vercel and use a separate production Supabase 
 
 1. Apply every migration in timestamp order before deploying the application. Use either the Supabase SQL Editor or `npx supabase db push`, not both for the same migration history.
 2. In Vercel, open Project Settings > Environment Variables and add `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for the Production environment. Add the legacy anon key only when the project does not provide a publishable key.
-3. Set `NEXT_PUBLIC_APP_URL` to the final HTTPS domain, for example `https://wash.example.com`. The protected `/admin/qr` page shows a configuration warning instead of generating a QR code when the value is missing, malformed, or points to localhost in production.
+3. Set `NEXT_PUBLIC_APP_URL` to `https://coolcarcentrale.com`. The protected `/admin/qr` page shows a configuration warning instead of generating a QR code when the value is missing, malformed, or points to localhost in production.
 4. Deploy with the repository build command (`npm run build`) and redeploy after changing any `NEXT_PUBLIC_*` variable because these values are read during the application build/runtime setup.
 5. In Supabase Dashboard > Authentication > URL Configuration, set the Site URL to the deployed origin and add the deployed origin to the allowed redirect URLs if a future redirect-based Auth flow is enabled. The current email/password admin form does not use an OAuth callback.
 6. Disable public signups and provision only the intended active admin account as described above. Never add a service role key or database password to Vercel client-visible environment variables.
