@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
 import {
@@ -19,16 +19,24 @@ import {
   type InventoryActionState,
 } from "@/app/admin/(protected)/inventory/actions";
 import { initialFormActionState } from "@/lib/form-action-state";
-import type { InventoryData, InventoryItemDto, InventoryMovementDto } from "@/lib/inventory/data";
+import type {
+  InventoryData,
+  InventoryFilters,
+  InventoryItemDto,
+  InventoryItemOptionDto,
+  InventoryMovementDto,
+  InventoryPagination,
+} from "@/lib/inventory/data";
 import {
   inventoryItemTypeLabels,
   inventoryItemTypes,
   inventoryMovementTypeLabels,
   inventoryMovementTypes,
+  inventoryStockStatusLabels,
   inventoryUnits,
   inventoryUnitLabels,
   manualInventoryMovementTypes,
-  type InventoryMovementType,
+  type InventoryStockStatus,
 } from "@/types/inventory";
 
 const inputClass =
@@ -66,12 +74,22 @@ function formatPriceInput(value: number | null | undefined) {
 }
 
 function formatDateTime(value: string) {
-  return `${value.slice(0, 10)} ${value.slice(11, 16)} UTC`;
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unavailable";
+  }
+
+  return `${date.toLocaleDateString("en-PH", { dateStyle: "medium", timeZone: "Asia/Manila" })} ${date.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" })} PHT`;
 }
 
-type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+type StockStatus = InventoryStockStatus;
 
 function getStockStatus(item: InventoryItemDto): StockStatus {
+  if (item.stock_status === "in_stock" || item.stock_status === "low_stock" || item.stock_status === "out_of_stock") {
+    return item.stock_status;
+  }
+
   const currentStock = Number(item.current_stock);
   const minimumStock = Number(item.minimum_stock);
 
@@ -86,11 +104,7 @@ function getStockStatus(item: InventoryItemDto): StockStatus {
   return "in_stock";
 }
 
-const stockStatusLabels: Record<StockStatus, string> = {
-  in_stock: "In stock",
-  low_stock: "Low stock",
-  out_of_stock: "Out of stock",
-};
+const stockStatusLabels = inventoryStockStatusLabels;
 
 const stockStatusStyles: Record<StockStatus, { badge: string; dot: string }> = {
   in_stock: { badge: "bg-[#e1f6f0] text-[#0d8278]", dot: "bg-[#17a190]" },
@@ -220,6 +234,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
   const sellingPriceErrorId = `${prefix}-selling-price-error`;
   const descriptionErrorId = `${prefix}-description-error`;
   const sortOrderErrorId = `${prefix}-sort-order-error`;
+  const fieldErrors = state?.fieldErrors ?? {};
 
   return (
     <article className="rounded-2xl border border-[#dce8e4] bg-white p-5 shadow-[0_12px_35px_rgba(35,73,70,0.04)] sm:p-6">
@@ -253,8 +268,8 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-name`}>Name</label>
             <input
-              aria-describedby={state.fieldErrors?.name ? nameErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.name)}
+              aria-describedby={fieldErrors.name ? nameErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.name)}
               className={`${inputClass} mt-2`}
               defaultValue={item?.name ?? ""}
               id={`${prefix}-name`}
@@ -263,13 +278,13 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
               placeholder="e.g. Car Shampoo"
               required
             />
-            <FieldError id={nameErrorId} message={state.fieldErrors?.name} />
+            <FieldError id={nameErrorId} message={fieldErrors.name} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-sort-order`}>Sort order</label>
             <input
-              aria-describedby={state.fieldErrors?.sortOrder ? sortOrderErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.sortOrder)}
+              aria-describedby={fieldErrors.sortOrder ? sortOrderErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.sortOrder)}
               className={`${inputClass} mt-2`}
               defaultValue={item?.sort_order ?? 0}
               id={`${prefix}-sort-order`}
@@ -281,7 +296,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
               step={1}
               type="number"
             />
-            <FieldError id={sortOrderErrorId} message={state.fieldErrors?.sortOrder} />
+            <FieldError id={sortOrderErrorId} message={fieldErrors.sortOrder} />
           </div>
         </div>
 
@@ -289,8 +304,8 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-item-type`}>Item type</label>
             <select
-              aria-describedby={state.fieldErrors?.itemType ? typeErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.itemType)}
+              aria-describedby={fieldErrors.itemType ? typeErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.itemType)}
               className={`${inputClass} mt-2`}
               defaultValue={item?.item_type ?? "consumable"}
               id={`${prefix}-item-type`}
@@ -300,13 +315,13 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
                 <option key={itemType} value={itemType}>{inventoryItemTypeLabels[itemType]}</option>
               ))}
             </select>
-            <FieldError id={typeErrorId} message={state.fieldErrors?.itemType} />
+            <FieldError id={typeErrorId} message={fieldErrors.itemType} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-unit`}>Base unit</label>
             <select
-              aria-describedby={state.fieldErrors?.unit ? unitErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.unit)}
+              aria-describedby={fieldErrors.unit ? unitErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.unit)}
               className={`${inputClass} mt-2`}
               defaultValue={item?.unit ?? "ml"}
               id={`${prefix}-unit`}
@@ -316,7 +331,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
                 <option key={unit} value={unit}>{inventoryUnitLabels[unit]}</option>
               ))}
             </select>
-            <FieldError id={unitErrorId} message={state.fieldErrors?.unit} />
+            <FieldError id={unitErrorId} message={fieldErrors.unit} />
           </div>
         </div>
 
@@ -324,8 +339,8 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-minimum-stock`}>Minimum stock</label>
             <input
-              aria-describedby={state.fieldErrors?.minimumStock ? minimumStockErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.minimumStock)}
+              aria-describedby={fieldErrors.minimumStock ? minimumStockErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.minimumStock)}
               className={`${inputClass} mt-2`}
               defaultValue={item?.minimum_stock ?? 0}
               id={`${prefix}-minimum-stock`}
@@ -336,13 +351,13 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
               step="0.001"
               type="number"
             />
-            <FieldError id={minimumStockErrorId} message={state.fieldErrors?.minimumStock} />
+            <FieldError id={minimumStockErrorId} message={fieldErrors.minimumStock} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-selling-price`}>Selling price (PHP)</label>
             <input
-              aria-describedby={state.fieldErrors?.sellingPrice ? sellingPriceErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.sellingPrice)}
+              aria-describedby={fieldErrors.sellingPrice ? sellingPriceErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.sellingPrice)}
               className={`${inputClass} mt-2`}
               defaultValue={formatPriceInput(item?.selling_price)}
               id={`${prefix}-selling-price`}
@@ -354,15 +369,15 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
               type="number"
             />
             <p className="mt-2 text-xs leading-5 text-[#7b898c]">Leave blank for consumables; shop products require a PHP price.</p>
-            <FieldError id={sellingPriceErrorId} message={state.fieldErrors?.sellingPrice} />
+            <FieldError id={sellingPriceErrorId} message={fieldErrors.sellingPrice} />
           </div>
         </div>
 
         <div>
           <label className={labelClass} htmlFor={`${prefix}-description`}>Description</label>
           <textarea
-            aria-describedby={state.fieldErrors?.description ? descriptionErrorId : undefined}
-            aria-invalid={Boolean(state.fieldErrors?.description)}
+            aria-describedby={fieldErrors.description ? descriptionErrorId : undefined}
+            aria-invalid={Boolean(fieldErrors.description)}
             className={`${inputClass} mt-2 min-h-24 resize-y py-3`}
             defaultValue={item?.description ?? ""}
             id={`${prefix}-description`}
@@ -371,7 +386,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
             placeholder="Optional operator-facing description"
             rows={3}
           />
-          <FieldError id={descriptionErrorId} message={state.fieldErrors?.description} />
+          <FieldError id={descriptionErrorId} message={fieldErrors.description} />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 border-t border-[#edf2f0] pt-4">
@@ -388,6 +403,7 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
   const prefix = `movement-${item.id}`;
   const quantityErrorId = `${prefix}-quantity-error`;
   const notesErrorId = `${prefix}-notes-error`;
+  const fieldErrors = state?.fieldErrors ?? {};
 
   return (
     <div className="rounded-2xl border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-6">
@@ -416,8 +432,8 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
           <div>
             <label className={labelClass} htmlFor={`${prefix}-quantity`}>Quantity ({item.unit})</label>
             <input
-              aria-describedby={state.fieldErrors?.quantity ? quantityErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.quantity)}
+              aria-describedby={fieldErrors.quantity ? quantityErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.quantity)}
               className={`${inputClass} mt-2`}
               id={`${prefix}-quantity`}
               inputMode="decimal"
@@ -428,22 +444,22 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
               step="0.001"
               type="number"
             />
-            <FieldError id={quantityErrorId} message={state.fieldErrors?.quantity} />
+            <FieldError id={quantityErrorId} message={fieldErrors.quantity} />
           </div>
         </div>
         <div>
           <label className={labelClass} htmlFor={`${prefix}-notes`}>Notes</label>
           <textarea
-            aria-describedby={state.fieldErrors?.notes ? notesErrorId : undefined}
-            aria-invalid={Boolean(state.fieldErrors?.notes)}
+            aria-describedby={fieldErrors.notes ? notesErrorId : undefined}
+            aria-invalid={Boolean(fieldErrors.notes)}
             className={`${inputClass} mt-2 min-h-20 resize-y py-3`}
             id={`${prefix}-notes`}
             maxLength={500}
             name="notes"
-            placeholder="Optional reason or supplier note"
+            placeholder="Optional reason or operator note"
             rows={2}
           />
-          <FieldError id={notesErrorId} message={state.fieldErrors?.notes} />
+          <FieldError id={notesErrorId} message={fieldErrors.notes} />
         </div>
         <div className="flex flex-wrap items-center gap-3 border-t border-[#e5eeeb] pt-4">
           <SubmitButton pendingLabel="Recording...">Record movement</SubmitButton>
@@ -454,136 +470,288 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
   );
 }
 
-function InventoryTable({ items }: { items: InventoryItemDto[] }) {
+function InventoryTypeBadge({ itemType }: { itemType: InventoryItemDto["item_type"] }) {
+  const shopProduct = itemType === "shop_product";
+
   return (
-    <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dce8e4] bg-white">
-      <table className="w-full min-w-[820px] border-collapse text-left">
-        <thead className="bg-[#f8fbfa]">
-          <tr className="border-b border-[#e5eeeb] text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#708085]">
-            <th className="px-5 py-4">Item name</th>
-            <th className="px-5 py-4">Type</th>
-            <th className="px-5 py-4">Unit</th>
-            <th className="px-5 py-4 text-right">Current</th>
-            <th className="px-5 py-4 text-right">Minimum</th>
-            <th className="px-5 py-4 text-right">Selling price</th>
-            <th className="px-5 py-4">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.length > 0 ? items.map((item) => (
-            <tr className="border-b border-[#edf2f0] last:border-0" key={item.id}>
-              <td className="px-5 py-4">
-                <p className="font-bold text-[#18323c]">{item.name}</p>
-                <p className="mt-1 text-xs text-[#899797]">Order {item.sort_order}</p>
-              </td>
-              <td className="px-5 py-4 text-sm text-[#486168]">{inventoryItemTypeLabels[item.item_type]}</td>
-              <td className="px-5 py-4 text-sm font-semibold text-[#486168]">{item.unit}</td>
-              <td className="px-5 py-4 text-right text-sm font-bold text-[#18323c]">{formatQuantity(item.current_stock)}</td>
-              <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatQuantity(item.minimum_stock)}</td>
-              <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatPrice(item.selling_price)}</td>
-              <td className="px-5 py-4">
-                <div className="flex flex-col items-start gap-2">
-                  <StockStatusBadge status={getStockStatus(item)} />
-                  <ActiveBadge active={item.active} />
-                </div>
-              </td>
-            </tr>
-          )) : (
-            <tr>
-              <td className="px-5 py-10 text-center text-sm leading-6 text-[#6b7b7f]" colSpan={7}>
-                No inventory items yet. Add the first item below; no stock is created until a movement is recorded.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] ${shopProduct ? "bg-[#e9edff] text-[#5368a5]" : "bg-[#e6f5f1] text-[#0d8278]"}`}>
+      {inventoryItemTypeLabels[itemType]}
+    </span>
+  );
+}
+
+function buildInventoryHref(filters: InventoryFilters, changes: Partial<InventoryFilters> = {}) {
+  const nextFilters = { ...filters, ...changes };
+  const params = new URLSearchParams();
+
+  if (nextFilters.search) params.set("search", nextFilters.search);
+  if (nextFilters.itemType !== "all") params.set("type", nextFilters.itemType);
+  if (nextFilters.status !== "all") params.set("status", nextFilters.status);
+  if (nextFilters.page > 1) params.set("page", String(nextFilters.page));
+  if (nextFilters.movementItemId) params.set("movementItem", nextFilters.movementItemId);
+  if (nextFilters.movementType) params.set("movementType", nextFilters.movementType);
+  if (nextFilters.movementFrom) params.set("movementFrom", nextFilters.movementFrom);
+  if (nextFilters.movementTo) params.set("movementTo", nextFilters.movementTo);
+  if (nextFilters.movementPage > 1) params.set("movementPage", String(nextFilters.movementPage));
+
+  const query = params.toString();
+  return query ? `/admin/inventory?${query}` : "/admin/inventory";
+}
+
+function MovementFilterHiddenFields({ filters }: { filters: InventoryFilters }) {
+  return (
+    <>
+      <input name="movementItem" type="hidden" value={filters.movementItemId} />
+      <input name="movementType" type="hidden" value={filters.movementType} />
+      <input name="movementFrom" type="hidden" value={filters.movementFrom} />
+      <input name="movementTo" type="hidden" value={filters.movementTo} />
+      <input name="movementPage" type="hidden" value={filters.movementPage} />
+    </>
+  );
+}
+
+function ItemFilterControls({ filters }: { filters: InventoryFilters }) {
+  return (
+    <form action="/admin/inventory" className="mt-5 rounded-2xl border border-[#dce8e4] bg-white p-4" method="get">
+      <MovementFilterHiddenFields filters={filters} />
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(150px,0.7fr)_minmax(150px,0.7fr)_auto] lg:items-end">
+        <div>
+          <label className={labelClass} htmlFor="inventory-search">Search by item name</label>
+          <input className={`${inputClass} mt-2`} defaultValue={filters.search} id="inventory-search" maxLength={80} name="search" placeholder="Search inventory" type="search" />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="inventory-type-filter">Type</label>
+          <select className={`${inputClass} mt-2`} defaultValue={filters.itemType === "all" ? "" : filters.itemType} id="inventory-type-filter" name="type">
+            <option value="">All types</option>
+            <option value="consumable">Consumables</option>
+            <option value="shop_product">Shop products</option>
+          </select>
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="inventory-status-filter">Status</label>
+          <select className={`${inputClass} mt-2`} defaultValue={filters.status === "all" ? "" : filters.status} id="inventory-status-filter" name="status">
+            <option value="">All statuses</option>
+            <option value="in_stock">In stock</option>
+            <option value="low_stock">Low stock</option>
+            <option value="out_of_stock">Out of stock</option>
+          </select>
+        </div>
+        <button className="min-h-11 rounded-xl bg-[#102c38] px-5 text-sm font-bold text-white transition-colors hover:bg-[#183d4b]" type="submit">Apply filters</button>
+      </div>
+      {(filters.search || filters.itemType !== "all" || filters.status !== "all") && (
+        <Link className="mt-3 inline-flex min-h-9 items-center rounded-lg px-2 text-xs font-bold text-[#0d8278] hover:bg-[#edf8f5]" href={buildInventoryHref(filters, { search: "", itemType: "all", status: "all", page: 1 })}>
+          Clear item filters
+        </Link>
+      )}
+    </form>
+  );
+}
+
+function PaginationControls({
+  filters,
+  pagination,
+  kind,
+}: {
+  filters: InventoryFilters;
+  pagination: InventoryPagination;
+  kind: "items" | "movements";
+}) {
+  if (pagination.totalItems === 0) {
+    return null;
+  }
+
+  const isMovement = kind === "movements";
+  const currentPage = pagination.page;
+  const pageChange = (page: number) => isMovement
+    ? buildInventoryHref(filters, { movementPage: page })
+    : buildInventoryHref(filters, { page });
+  const firstShown = (currentPage - 1) * pagination.pageSize + 1;
+  const lastShown = Math.min(currentPage * pagination.pageSize, pagination.totalItems);
+  const previousHref = currentPage > 1 ? pageChange(currentPage - 1) : undefined;
+  const nextHref = currentPage < pagination.totalPages ? pageChange(currentPage + 1) : undefined;
+
+  return (
+    <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#dce8e4] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-[#607378]">Showing <span className="font-bold text-[#18323c]">{firstShown}-{lastShown}</span> of <span className="font-bold text-[#18323c]">{pagination.totalItems}</span></p>
+      <div className="flex items-center gap-2">
+        {previousHref ? <Link className="inline-flex min-h-10 items-center rounded-lg border border-[#d7e5e0] px-3 text-xs font-bold text-[#486168] hover:border-[#9acdc3] hover:text-[#0d8278]" href={previousHref}>Previous</Link> : <span className="inline-flex min-h-10 items-center rounded-lg border border-[#edf2f0] px-3 text-xs font-bold text-[#b0bbba]">Previous</span>}
+        <span className="px-2 text-xs font-bold text-[#607378]">Page {currentPage} of {pagination.totalPages}</span>
+        {nextHref ? <Link className="inline-flex min-h-10 items-center rounded-lg border border-[#d7e5e0] px-3 text-xs font-bold text-[#486168] hover:border-[#9acdc3] hover:text-[#0d8278]" href={nextHref}>Next</Link> : <span className="inline-flex min-h-10 items-center rounded-lg border border-[#edf2f0] px-3 text-xs font-bold text-[#b0bbba]">Next</span>}
+      </div>
     </div>
   );
 }
 
-function MovementHistory({ items, movements }: { items: InventoryItemDto[]; movements: InventoryMovementDto[] }) {
-  const [itemFilter, setItemFilter] = useState("");
-  const [movementTypeFilter, setMovementTypeFilter] = useState<InventoryMovementType | "">("");
-  const filteredMovements = movements.filter((movement) => {
-    if (itemFilter && movement.inventory_item_id !== itemFilter) {
-      return false;
-    }
-
-    if (movementTypeFilter && movement.movement_type !== movementTypeFilter) {
-      return false;
-    }
-
-    return true;
-  });
+function InventoryTable({ items, filters, pagination }: { items: InventoryItemDto[]; filters: InventoryFilters; pagination: InventoryPagination }) {
+  const hasFilters = Boolean(filters.search || filters.itemType !== "all" || filters.status !== "all");
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="movement-history">
-      <SectionHeading
-        count={filteredMovements.length}
-        description="Every manual stock change records the before and after balance. Newest movements appear first."
-        index="03"
-        title="Movement history"
-      />
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-        <div className="flex-1">
-          <label className={labelClass} htmlFor="movement-item-filter">Filter by item</label>
-          <select className={`${inputClass} mt-2`} id="movement-item-filter" onChange={(event) => setItemFilter(event.target.value)} value={itemFilter}>
-            <option value="">All inventory items</option>
-            {items.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-          </select>
-        </div>
-        <div className="flex-1">
-          <label className={labelClass} htmlFor="movement-type-filter">Filter by movement</label>
-          <select className={`${inputClass} mt-2`} id="movement-type-filter" onChange={(event) => setMovementTypeFilter(event.target.value as InventoryMovementType | "")} value={movementTypeFilter}>
-            <option value="">All movement types</option>
-            {inventoryMovementTypes.map((movementType) => (
-              <option key={movementType} value={movementType}>{inventoryMovementTypeLabels[movementType]}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
+    <>
+      <ItemFilterControls filters={filters} />
       <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dce8e4] bg-white">
-        <table className="w-full min-w-[920px] border-collapse text-left">
+        <table className="w-full min-w-[900px] border-collapse text-left">
           <thead className="bg-[#f8fbfa]">
             <tr className="border-b border-[#e5eeeb] text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#708085]">
-              <th className="px-5 py-4">Date / time</th>
-              <th className="px-5 py-4">Item</th>
-              <th className="px-5 py-4">Movement</th>
-              <th className="px-5 py-4 text-right">Quantity</th>
-              <th className="px-5 py-4 text-right">Before</th>
-              <th className="px-5 py-4 text-right">After</th>
-              <th className="px-5 py-4">Notes / reference</th>
+              <th className="px-5 py-4">Item name</th>
+              <th className="px-5 py-4">Type</th>
+              <th className="px-5 py-4">Unit</th>
+              <th className="px-5 py-4 text-right">Current stock</th>
+              <th className="px-5 py-4 text-right">Minimum stock</th>
+              <th className="px-5 py-4 text-right">Selling price</th>
+              <th className="px-5 py-4">Status</th>
             </tr>
           </thead>
           <tbody>
-            {filteredMovements.length > 0 ? filteredMovements.map((movement) => {
-              const item = items.find((candidate) => candidate.id === movement.inventory_item_id);
-
-              return (
-                <tr className="border-b border-[#edf2f0] last:border-0" key={movement.id}>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-[#607378]">{formatDateTime(movement.created_at)}</td>
-                  <td className="px-5 py-4 text-sm font-bold text-[#18323c]">{item?.name ?? "Unknown item"}</td>
-                  <td className="px-5 py-4 text-sm font-semibold text-[#486168]">{inventoryMovementTypeLabels[movement.movement_type]}</td>
-                  <td className="px-5 py-4 text-right text-sm font-bold text-[#18323c]">{formatQuantity(movement.quantity)} {item?.unit ?? ""}</td>
-                  <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatQuantity(movement.stock_before)}</td>
-                  <td className="px-5 py-4 text-right text-sm font-bold text-[#18323c]">{formatQuantity(movement.stock_after)}</td>
-                  <td className="max-w-[260px] px-5 py-4 text-sm leading-5 text-[#607378]">
-                    <p>{movement.notes || "No notes"}</p>
-                    {movement.reference_type && <p className="mt-1 text-xs text-[#899797]">{movement.reference_type}{movement.reference_id ? ` · ${movement.reference_id}` : ""}</p>}
-                  </td>
-                </tr>
-              );
-            }) : (
+            {items.length > 0 ? items.map((item) => (
+              <tr className="border-b border-[#edf2f0] last:border-0" key={item.id}>
+                <td className="px-5 py-4">
+                  <p className="font-bold text-[#18323c]">{item.name}</p>
+                  <p className="mt-1 text-xs text-[#899797]">Order {item.sort_order}</p>
+                </td>
+                <td className="px-5 py-4"><InventoryTypeBadge itemType={item.item_type} /></td>
+                <td className="px-5 py-4 text-sm font-semibold text-[#486168]">{item.unit}</td>
+                <td className="px-5 py-4 text-right text-sm font-bold text-[#18323c]">{formatQuantity(item.current_stock)}</td>
+                <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatQuantity(item.minimum_stock)}</td>
+                <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatPrice(item.selling_price)}</td>
+                <td className="px-5 py-4">
+                  <div className="flex flex-col items-start gap-2">
+                    <StockStatusBadge status={getStockStatus(item)} />
+                    <ActiveBadge active={item.active} />
+                  </div>
+                </td>
+              </tr>
+            )) : (
               <tr>
                 <td className="px-5 py-10 text-center text-sm leading-6 text-[#6b7b7f]" colSpan={7}>
-                  No movements match the selected filters.
+                  {hasFilters ? "No inventory items found." : "No inventory items yet."}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+      <PaginationControls filters={filters} kind="items" pagination={pagination} />
+    </>
+  );
+}
+
+function movementQuantityLabel(movement: InventoryMovementDto, unit: string) {
+  const deductsStock = movement.movement_type === "adjustment_out"
+    || movement.movement_type === "service_usage"
+    || movement.movement_type === "product_sale";
+
+  return `${deductsStock ? "-" : "+"}${formatQuantity(movement.quantity)} ${unit}`;
+}
+
+function movementTypeClass(movementType: InventoryMovementDto["movement_type"]) {
+  return movementType === "service_usage" || movementType === "product_sale"
+    ? "bg-[#e9edff] text-[#5368a5]"
+    : "bg-[#e6f5f1] text-[#0d8278]";
+}
+
+function MovementHistory({
+  itemOptions,
+  movements,
+  filters,
+  pagination,
+}: {
+  itemOptions: InventoryItemOptionDto[];
+  movements: InventoryMovementDto[];
+  filters: InventoryFilters;
+  pagination: InventoryPagination;
+}) {
+  const itemById = new Map(itemOptions.map((item) => [item.id, item]));
+  const hasFilters = Boolean(filters.movementItemId || filters.movementType || filters.movementFrom || filters.movementTo);
+
+  return (
+    <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="movement-history">
+      <SectionHeading
+        count={pagination.totalItems}
+        description="Every stock change records the before and after balance. Transaction usage is shown alongside manual stock movements, newest first."
+        index="03"
+        title="Movement history"
+      />
+      <form action="/admin/inventory" className="mt-5 rounded-2xl border border-[#dce8e4] bg-white p-4" method="get">
+        <input name="search" type="hidden" value={filters.search} />
+        <input name="type" type="hidden" value={filters.itemType === "all" ? "" : filters.itemType} />
+        <input name="status" type="hidden" value={filters.status === "all" ? "" : filters.status} />
+        <input name="page" type="hidden" value={filters.page} />
+        <div className="grid gap-3 xl:grid-cols-[minmax(180px,1.1fr)_minmax(180px,1fr)_minmax(150px,0.7fr)_minmax(150px,0.7fr)_auto] xl:items-end">
+          <div>
+            <label className={labelClass} htmlFor="movement-item-filter">Inventory item</label>
+            <select className={`${inputClass} mt-2`} defaultValue={filters.movementItemId} id="movement-item-filter" name="movementItem">
+              <option value="">All inventory items</option>
+              {itemOptions.map((item) => <option key={item.id} value={item.id}>{item.name}{item.active ? "" : " (inactive)"}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="movement-type-filter">Movement type</label>
+            <select className={`${inputClass} mt-2`} defaultValue={filters.movementType} id="movement-type-filter" name="movementType">
+              <option value="">All movement types</option>
+              {inventoryMovementTypes.map((movementType) => <option key={movementType} value={movementType}>{inventoryMovementTypeLabels[movementType]}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="movement-from-filter">From date (PHT)</label>
+            <input className={`${inputClass} mt-2`} defaultValue={filters.movementFrom} id="movement-from-filter" name="movementFrom" type="date" />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="movement-to-filter">To date (PHT)</label>
+            <input className={`${inputClass} mt-2`} defaultValue={filters.movementTo} id="movement-to-filter" name="movementTo" type="date" />
+          </div>
+          <button className="min-h-11 rounded-xl bg-[#102c38] px-5 text-sm font-bold text-white transition-colors hover:bg-[#183d4b]" type="submit">Apply filters</button>
+        </div>
+        {hasFilters && (
+          <Link className="mt-3 inline-flex min-h-9 items-center rounded-lg px-2 text-xs font-bold text-[#0d8278] hover:bg-[#edf8f5]" href={buildInventoryHref(filters, { movementItemId: "", movementType: "", movementFrom: "", movementTo: "", movementPage: 1 })}>
+            Clear movement filters
+          </Link>
+        )}
+      </form>
+
+      <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dce8e4] bg-white">
+        <table className="w-full min-w-[1120px] border-collapse text-left">
+          <thead className="bg-[#f8fbfa]">
+            <tr className="border-b border-[#e5eeeb] text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#708085]">
+              <th className="px-5 py-4">Date / time</th>
+              <th className="px-5 py-4">Item</th>
+              <th className="px-5 py-4">Movement type</th>
+              <th className="px-5 py-4 text-right">Quantity</th>
+              <th className="px-5 py-4 text-right">Stock before</th>
+              <th className="px-5 py-4 text-right">Stock after</th>
+              <th className="px-5 py-4">Reference</th>
+              <th className="px-5 py-4">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {movements.length > 0 ? movements.map((movement) => {
+              const item = itemById.get(movement.inventory_item_id);
+
+              return (
+                <tr className="border-b border-[#edf2f0] align-top last:border-0" key={movement.id}>
+                  <td className="whitespace-nowrap px-5 py-4 text-sm text-[#607378]">{formatDateTime(movement.created_at)}</td>
+                  <td className="px-5 py-4">
+                    <p className="text-sm font-bold text-[#18323c]">{item?.name ?? "Unknown item"}</p>
+                    {item && <p className="mt-1 text-xs text-[#899797]">{item.unit}{item.active ? "" : " · inactive"}</p>}
+                  </td>
+                  <td className="px-5 py-4"><span className={`inline-flex rounded-full px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.1em] ${movementTypeClass(movement.movement_type)}`}>{inventoryMovementTypeLabels[movement.movement_type]}</span></td>
+                  <td className="whitespace-nowrap px-5 py-4 text-right text-sm font-bold text-[#18323c]">{movementQuantityLabel(movement, item?.unit ?? "units")}</td>
+                  <td className="px-5 py-4 text-right text-sm text-[#607378]">{formatQuantity(movement.stock_before)}</td>
+                  <td className="px-5 py-4 text-right text-sm font-bold text-[#18323c]">{formatQuantity(movement.stock_after)}</td>
+                  <td className="max-w-[220px] px-5 py-4 text-sm leading-5 text-[#486168]">{movement.reference_label ?? "Manual admin entry"}</td>
+                  <td className="max-w-[280px] px-5 py-4 text-sm leading-5 text-[#607378]">{movement.notes || "No notes"}</td>
+                </tr>
+              );
+            }) : (
+              <tr>
+                <td className="px-5 py-10 text-center text-sm leading-6 text-[#6b7b7f]" colSpan={8}>
+                  {hasFilters ? "No inventory movements found." : "No inventory movements yet."}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <PaginationControls filters={filters} kind="movements" pagination={pagination} />
     </section>
   );
 }
@@ -597,11 +765,15 @@ function InventoryItemPanel({ item }: { item: InventoryItemDto }) {
   );
 }
 
-export function InventoryManager({ items, movements }: InventoryManagerProps) {
-  const activeItems = items.filter((item) => item.active);
-  const lowStockItems = activeItems.filter((item) => getStockStatus(item) === "low_stock");
-  const outOfStockItems = activeItems.filter((item) => getStockStatus(item) === "out_of_stock");
-
+export function InventoryManager({
+  items,
+  movements,
+  itemOptions,
+  summary,
+  itemPagination,
+  movementPagination,
+  filters,
+}: InventoryManagerProps) {
   return (
     <div className="space-y-8">
       <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
@@ -620,18 +792,18 @@ export function InventoryManager({ items, movements }: InventoryManagerProps) {
 
       <section className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl border border-[#ccebe3] bg-[#e9f8f4] p-5">
-          <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#0d8278]">Active items</p>
-          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{activeItems.length}</p>
-          <p className="mt-1 text-xs text-[#52706e]">of {items.length} configured</p>
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#0d8278]">Total active inventory items</p>
+          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{summary.totalActiveItems}</p>
+          <p className="mt-1 text-xs text-[#52706e]">Current database count</p>
         </div>
         <div className="rounded-2xl border border-[#f1dfbd] bg-[#fff7e7] p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#ac7121]">Low stock</p>
-          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{lowStockItems.length}</p>
+          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{summary.lowStockItems}</p>
           <p className="mt-1 text-xs text-[#8d754f]">Above zero, at or below minimum</p>
         </div>
         <div className="rounded-2xl border border-[#f0d3c8] bg-[#fff4ef] p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#b34646]">Out of stock</p>
-          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{outOfStockItems.length}</p>
+          <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#10222e]">{summary.outOfStockItems}</p>
           <p className="mt-1 text-xs text-[#9a6259]">Current stock at or below zero</p>
         </div>
       </section>
@@ -657,18 +829,18 @@ export function InventoryManager({ items, movements }: InventoryManagerProps) {
 
       <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="inventory-table">
         <SectionHeading
-          count={items.length}
-          description="Monitor current balances, minimum thresholds, item types, and optional PHP selling prices."
+          count={itemPagination.totalItems}
+          description="Monitor current balances, minimum thresholds, item types, optional PHP selling prices, and stock status."
           index="01"
           title="Inventory items"
         />
-        <InventoryTable items={items} />
+        <InventoryTable filters={filters} items={items} pagination={itemPagination} />
       </section>
 
       <section className="rounded-[1.5rem] border border-[#dce8e4] bg-[#f8fbfa] p-5 sm:p-7" id="inventory-management">
         <SectionHeading
-          count={items.length}
-          description="Edit item details and use the movement form beside each item to update stock atomically."
+          count={itemPagination.totalItems}
+          description="Edit item details and use the movement form beside each item to update stock atomically. Current stock is never overwritten directly."
           index="02"
           title="Manage inventory"
         />
@@ -678,13 +850,13 @@ export function InventoryManager({ items, movements }: InventoryManagerProps) {
         <div className="mt-4 space-y-4">
           {items.length > 0 ? items.map((item) => <InventoryItemPanel item={item} key={item.id} />) : (
             <div className="rounded-2xl border border-dashed border-[#b9d4ce] bg-white p-6 text-sm leading-6 text-[#6b7b7f]">
-              Add an item above to unlock its edit and stock movement controls.
+              {filters.search || filters.itemType !== "all" || filters.status !== "all" ? "No inventory items found." : "Add an item above to unlock its edit and stock movement controls."}
             </div>
           )}
         </div>
       </section>
 
-      <MovementHistory items={items} movements={movements} />
+      <MovementHistory filters={filters} itemOptions={itemOptions} movements={movements} pagination={movementPagination} />
 
       <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#829196]">
         <CheckCircle className="h-4 w-4 text-[#0d9f91]" />

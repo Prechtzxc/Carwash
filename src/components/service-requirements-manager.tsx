@@ -114,6 +114,7 @@ function RequirementEditor({
   const serviceErrorId = `${prefix}-service-error`;
   const itemErrorId = `${prefix}-item-error`;
   const quantityErrorId = `${prefix}-quantity-error`;
+  const fieldErrors = state?.fieldErrors ?? {};
   const selectableServices = services.filter((service) => service.active || service.id === requirement?.service_id);
   const selectableConsumables = consumables.filter((item) => item.active || item.id === requirement?.inventory_item_id);
 
@@ -137,8 +138,8 @@ function RequirementEditor({
           <div>
             <label className={labelClass} htmlFor={`${prefix}-service`}>Service</label>
             <select
-              aria-describedby={state.fieldErrors?.serviceId ? serviceErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.serviceId)}
+              aria-describedby={fieldErrors.serviceId ? serviceErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.serviceId)}
               className={`${inputClass} mt-2`}
               defaultValue={requirement?.service_id ?? ""}
               id={`${prefix}-service`}
@@ -150,13 +151,13 @@ function RequirementEditor({
                 <option key={service.id} value={service.id}>{service.name}{service.active ? "" : " (inactive)"}</option>
               ))}
             </select>
-            <FieldError id={serviceErrorId} message={state.fieldErrors?.serviceId} />
+            <FieldError id={serviceErrorId} message={fieldErrors.serviceId} />
           </div>
           <div>
             <label className={labelClass} htmlFor={`${prefix}-item`}>Consumable</label>
             <select
-              aria-describedby={state.fieldErrors?.inventoryItemId ? itemErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.inventoryItemId)}
+              aria-describedby={fieldErrors.inventoryItemId ? itemErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.inventoryItemId)}
               className={`${inputClass} mt-2`}
               defaultValue={requirement?.inventory_item_id ?? ""}
               id={`${prefix}-item`}
@@ -170,7 +171,7 @@ function RequirementEditor({
                 </option>
               ))}
             </select>
-            <FieldError id={itemErrorId} message={state.fieldErrors?.inventoryItemId} />
+            <FieldError id={itemErrorId} message={fieldErrors.inventoryItemId} />
           </div>
         </div>
 
@@ -178,8 +179,8 @@ function RequirementEditor({
           <label className={labelClass} htmlFor={`${prefix}-quantity`}>Amount required per service</label>
           <div className="mt-2 flex items-center gap-2">
             <input
-              aria-describedby={state.fieldErrors?.quantityRequired ? quantityErrorId : undefined}
-              aria-invalid={Boolean(state.fieldErrors?.quantityRequired)}
+              aria-describedby={fieldErrors.quantityRequired ? quantityErrorId : undefined}
+              aria-invalid={Boolean(fieldErrors.quantityRequired)}
               className={`${inputClass} min-w-0`}
               defaultValue={requirement?.quantity_required ?? ""}
               id={`${prefix}-quantity`}
@@ -194,7 +195,7 @@ function RequirementEditor({
             <span className="shrink-0 rounded-lg bg-[#f1f6f4] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#5d7475]">Item unit</span>
           </div>
           <p className="mt-2 text-xs leading-5 text-[#7b898c]">The amount is stored in the selected consumable&apos;s base unit, so recipes cannot mix incompatible units.</p>
-          <FieldError id={quantityErrorId} message={state.fieldErrors?.quantityRequired} />
+          <FieldError id={quantityErrorId} message={fieldErrors.quantityRequired} />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 border-t border-[#edf2f0] pt-4">

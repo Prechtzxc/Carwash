@@ -1,6 +1,6 @@
 import type { AppRole } from "@/types/auth";
 import type { VehicleSize } from "@/types/catalog";
-import type { InventoryItemType, InventoryMovementType, InventoryUnit } from "@/types/inventory";
+import type { InventoryItemType, InventoryMovementType, InventoryStockStatus, InventoryUnit } from "@/types/inventory";
 
 export type Json =
   | boolean
@@ -122,6 +122,7 @@ export type Database = {
           unit: InventoryUnit;
           current_stock: number;
           minimum_stock: number;
+          stock_status: InventoryStockStatus;
           selling_price: number | null;
           description: string | null;
           active: boolean;

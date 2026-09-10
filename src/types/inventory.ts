@@ -15,6 +15,9 @@ export type InventoryMovementType = (typeof inventoryMovementTypes)[number];
 
 export const manualInventoryMovementTypes = ["stock_in", "adjustment_in", "adjustment_out"] as const;
 
+export const inventoryStockStatuses = ["in_stock", "low_stock", "out_of_stock"] as const;
+export type InventoryStockStatus = (typeof inventoryStockStatuses)[number];
+
 export const inventoryItemTypeLabels: Record<InventoryItemType, string> = {
   consumable: "Consumable",
   shop_product: "Shop product",
@@ -32,4 +35,10 @@ export const inventoryMovementTypeLabels: Record<InventoryMovementType, string> 
   adjustment_out: "Adjustment out",
   service_usage: "Service usage",
   product_sale: "Product sale",
+};
+
+export const inventoryStockStatusLabels: Record<InventoryStockStatus, string> = {
+  in_stock: "In stock",
+  low_stock: "Low stock",
+  out_of_stock: "Out of stock",
 };
