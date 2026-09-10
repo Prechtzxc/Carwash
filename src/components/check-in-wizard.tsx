@@ -114,7 +114,7 @@ function SubmitButton({ disabled, pending: actionPending, pendingLabel = "Submit
 
   return (
     <button
-      className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-base font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#d8aa00] disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto"
+      className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-base font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto"
       disabled={pending || disabled}
       type="submit"
     >
@@ -656,10 +656,10 @@ function SuccessScreen({ onReset, result }: { onReset: () => void; result: Check
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#f7f6f1]">
+    <main className="min-h-screen bg-[#f5f1e7]">
       <header className="mx-auto flex min-h-[92px] w-full max-w-[1280px] items-center justify-between gap-4 border-b border-[#dfddd4] px-4 sm:px-6 lg:border-0 lg:px-10">
         <BrandMark />
-        <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[#4a4945] transition-colors hover:bg-white hover:text-[#171717]" href="/">Back to home<ArrowRight className="h-4 w-4" /></Link>
+        <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#d7d4ca] bg-white/80 px-3.5 text-sm font-bold text-[#292929] shadow-sm transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] hover:text-[#171717] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/">Back to home<ArrowRight className="h-4 w-4" /></Link>
       </header>
       <section className="mx-auto w-full max-w-[760px] px-4 py-12 sm:px-6 sm:py-20 lg:px-10">
         <div className="rounded-[1.75rem] border border-[#ead98a] bg-white p-6 text-center shadow-[0_20px_55px_rgba(0,0,0,0.08)] sm:p-10">
@@ -701,8 +701,8 @@ function SuccessScreen({ onReset, result }: { onReset: () => void; result: Check
             )}
           </div>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-             <button className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00]" onClick={onReset} type="button">New check-in<ArrowRight className="h-4 w-4" /></button>
-             <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#d7d4ca] bg-white px-6 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2]" href="/">Return home</Link>
+             <button className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" onClick={onReset} type="button">New check-in<ArrowRight className="h-4 w-4" /></button>
+             <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#d7d4ca] bg-white px-6 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/">Return home</Link>
           </div>
         </div>
       </section>
@@ -846,10 +846,10 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f6f1]">
+    <main className="min-h-screen bg-[#f5f1e7]">
       <header className="mx-auto flex min-h-[92px] w-full max-w-[1280px] items-center justify-between gap-4 border-b border-[#dfddd4] px-4 sm:px-6 lg:border-0 lg:px-10">
         <BrandMark />
-        <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[#4a4945] transition-colors hover:bg-white hover:text-[#171717]" href="/">Back to home<ArrowRight className="h-4 w-4" /></Link>
+        <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#d7d4ca] bg-white/80 px-3.5 text-sm font-bold text-[#292929] shadow-sm transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] hover:text-[#171717] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/">Back to home<ArrowRight className="h-4 w-4" /></Link>
       </header>
 
       <section className="mx-auto w-full max-w-[1240px] px-4 py-8 sm:px-6 sm:py-12 lg:px-10 lg:py-16">
@@ -889,7 +889,7 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
              <div className="mt-8 flex flex-col-reverse gap-3 border-t border-[#e8e5dc] pt-6 sm:flex-row sm:items-center sm:justify-between">
                <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold text-[#65635d] transition-colors hover:bg-[#f2f1eb] hover:text-[#292929] disabled:invisible" disabled={step === 1} onClick={goBack} type="button"><ChevronRight className="h-4 w-4 rotate-180" />Back</button>
                {step < 5 ? (
-                 <button className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-base font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#d8aa00] sm:w-auto" onClick={continueToNextStep} type="button">Continue<ArrowRight className="h-5 w-5" /></button>
+                  <button className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-base font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 sm:w-auto" onClick={continueToNextStep} type="button">Continue<ArrowRight className="h-5 w-5" /></button>
               ) : <SubmitButton disabled={!canSubmit || !idempotencyKey || isOffline} pending={actionPending} />}
             </div>
           </form>

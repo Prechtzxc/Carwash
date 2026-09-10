@@ -24,7 +24,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: S
   const initialError = error === "configuration" || error === "unauthorized" ? error : undefined;
 
   return (
-    <main className="min-h-screen bg-[#f7f6f1]">
+    <main className="min-h-screen bg-[#f5f1e7]">
       <div className="mx-auto grid min-h-screen w-full max-w-[1440px] lg:grid-cols-[0.9fr_1.1fr]">
         <section className="relative hidden overflow-hidden bg-[#171717] p-8 text-white lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
           <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border-[34px] border-[#c7a900]/30" />
@@ -46,7 +46,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: S
         <section className="flex min-h-screen flex-col px-4 py-6 sm:px-8 sm:py-8 lg:px-12 lg:py-12 xl:px-20">
           <div className="flex items-center justify-between gap-4">
             <div className="lg:hidden"><BrandMark /></div>
-            <Link className="ml-auto inline-flex min-h-10 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[#4a4945] transition-colors hover:bg-white hover:text-[#171717]" href="/">
+            <Link className="ml-auto inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#d7d4ca] bg-[#fffdf7] px-3.5 text-sm font-bold text-[#292929] shadow-sm transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] hover:text-[#171717] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/">
               Back to home
               <ArrowRight className="h-4 w-4" />
             </Link>

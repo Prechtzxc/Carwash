@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f6f1;
+  --background: #f5f1e7;
   --foreground: #171717;
 }
 
@@ -45,6 +45,10 @@ select {
 }
 
 :focus-visible {
-  outline: 3px solid #d4a900;
+  outline: 3px solid #a77f00;
   outline-offset: 3px;
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
 }

@@ -35,7 +35,7 @@ export function QrCheckInPanel({ destinationUrl, qrDataUrl, qrError }: { destina
        </div>
 
        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center print:hidden">
-         <a className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition-colors ${qrDataUrl ? "bg-[#f4c400] text-[#171717] hover:bg-[#d8aa00]" : "pointer-events-none bg-[#d5d1c5] text-[#8a877e]"}`} download="cool-car-centrale-customer-check-in.png" href={qrDataUrl || undefined}>
+          <a className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition-colors ${qrDataUrl ? "bg-[#f4c400] text-[#171717] hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" : "pointer-events-none bg-[#d5d1c5] text-[#8a877e]"}`} download="cool-car-centrale-customer-check-in.png" href={qrDataUrl || undefined}>
            Download QR
            <ArrowRight className="h-4 w-4" />
          </a>

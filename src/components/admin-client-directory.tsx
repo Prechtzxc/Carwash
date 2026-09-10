@@ -134,7 +134,7 @@ function Pagination({ report, search, sort }: { report: ClientDirectoryReport; s
           </span>
         )}
         {page < totalPages ? (
-          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#f4c400] px-3.5 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00]" href={directoryHref({ page: page + 1, search, sort })}>
+          <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#f4c400] px-3.5 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href={directoryHref({ page: page + 1, search, sort })}>
             Next
             <ChevronRight className="h-4 w-4" />
           </Link>

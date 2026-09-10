@@ -94,7 +94,7 @@ function RequestCard({ transaction }: { transaction: AdminTransaction }) {
           <p className="text-[0.63rem] font-bold uppercase tracking-[0.14em] text-[#89867d]">Total</p>
           <p className="mt-1 text-xl font-black tracking-[-0.03em] text-[#171717]">{formatCurrency(transaction.total)}</p>
         </div>
-        <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-5 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00]" href={`/admin/transactions/${transaction.id}`}>
+        <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-5 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href={`/admin/transactions/${transaction.id}`}>
           {transaction.status === "confirmed" ? "Complete transaction" : "Review"}
           <ArrowRight className="h-4 w-4" />
         </Link>

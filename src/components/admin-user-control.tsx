@@ -8,9 +8,10 @@ import { createClient } from "@/lib/supabase/client";
 
 type AdminUserControlProps = {
   fullName: string | null;
+  variant?: "mobile" | "sidebar";
 };
 
-export function AdminUserControl({ fullName }: AdminUserControlProps) {
+export function AdminUserControl({ fullName, variant = "sidebar" }: AdminUserControlProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -41,22 +42,27 @@ export function AdminUserControl({ fullName }: AdminUserControlProps) {
     }
   }
 
+  const isSidebar = variant === "sidebar";
+
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
-      <div className="max-w-24 text-right sm:max-w-40">
-         <p className="truncate text-xs font-bold text-[#292929]">{displayName}</p>
+    <div className={isSidebar ? "space-y-3" : "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#4a4a4a] bg-[#2d2d2d] p-3"}>
+      <div className={isSidebar ? "min-w-0" : "min-w-0 flex-1"}>
+        <p className="text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#f4c400]">Signed in</p>
+        <p className="mt-1 truncate text-sm font-bold text-white">{displayName}</p>
       </div>
       <button
         aria-label="Log out"
-         className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dfddd4] bg-white px-3 text-xs font-bold text-[#4a4945] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2] hover:text-[#171717] disabled:cursor-not-allowed disabled:opacity-60 sm:px-3.5"
+        className={isSidebar
+          ? "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] shadow-[0_8px_18px_rgba(244,196,0,0.16)] transition-colors hover:bg-[#ffe45e] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#242424] disabled:cursor-not-allowed disabled:opacity-60"
+          : "inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-3.5 text-xs font-bold text-[#171717] shadow-[0_6px_14px_rgba(244,196,0,0.14)] transition-colors hover:bg-[#ffe45e] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#2d2d2d] disabled:cursor-not-allowed disabled:opacity-60"}
         disabled={isLoggingOut}
         onClick={handleLogout}
         type="button"
       >
         <LogOut className="h-4 w-4" />
-        <span className="hidden sm:inline">{isLoggingOut ? "Signing out..." : "Logout"}</span>
+        <span>{isLoggingOut ? "Signing out..." : "Log out"}</span>
       </button>
-      {error && <p aria-live="polite" className="basis-full text-right text-xs font-semibold text-[#b34646] sm:basis-auto sm:max-w-56" role="alert">{error}</p>}
+      {error && <p aria-live="polite" className={isSidebar ? "text-xs font-semibold text-[#ffb7a9]" : "basis-full text-xs font-semibold text-[#ffb7a9]"} role="alert">{error}</p>}
     </div>
   );
 }

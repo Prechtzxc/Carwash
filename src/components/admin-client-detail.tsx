@@ -78,7 +78,7 @@ function FormButton({ children, pendingLabel }: { children: ReactNode; pendingLa
   const { pending } = useFormStatus();
 
   return (
-    <button className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#d8aa00] disabled:cursor-not-allowed disabled:opacity-55" disabled={pending} type="submit">
+    <button className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55" disabled={pending} type="submit">
       {pending ? pendingLabel : children}
     </button>
   );

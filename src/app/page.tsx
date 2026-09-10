@@ -5,13 +5,13 @@ import { BrandMark } from "@/components/brand-mark";
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f7f6f1]">
+    <main className="min-h-screen overflow-hidden bg-[#f5f1e7]">
       <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10">
         <header className="flex min-h-[92px] items-center justify-between gap-3">
           <BrandMark />
           <nav aria-label="Site navigation" className="flex items-center gap-1 sm:gap-2">
-            <Link className="hidden min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-[#5f5d57] transition-colors hover:bg-white hover:text-[#171717] sm:inline-flex sm:px-4" href="/check-in">Customer check-in</Link>
-            <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#171717] px-3 text-xs font-bold text-white shadow-[0_8px_20px_rgba(0,0,0,0.12)] transition-colors hover:bg-[#343434] sm:px-5 sm:text-sm" href="/admin">
+            <Link className="hidden min-h-11 items-center rounded-xl px-3 text-sm font-semibold text-[#5f5d57] transition-colors hover:bg-white hover:text-[#171717] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 sm:inline-flex sm:px-4" href="/check-in">Customer check-in</Link>
+            <Link className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#f4c400] px-3 text-xs font-bold text-[#171717] shadow-[0_10px_22px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 sm:px-5 sm:text-sm" href="/admin">
               Admin sign in
               <ArrowUpRight className="h-4 w-4" />
             </Link>
@@ -23,11 +23,11 @@ export default function Home() {
             <h1 className="max-w-3xl text-5xl font-bold leading-[0.98] tracking-[-0.065em] text-[#171717] sm:text-6xl lg:text-[5.5rem]">Make every wash visit <span className="text-[#a77f00]">flow.</span></h1>
             <p className="mt-7 max-w-xl text-base leading-7 text-[#65635d] sm:text-lg">Cool Car Centrale makes customer arrival smoother and day-to-day carwash operations easier to run.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-sm font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#d8aa00]" href="/check-in">
+              <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#f4c400] px-6 text-sm font-bold text-[#171717] shadow-[0_12px_25px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/check-in">
                 Open customer check-in
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#d7d4ca] bg-white px-6 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2]" href="/admin">
+              <Link className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#d7d4ca] bg-[#fffdf7] px-6 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fff7cc] active:translate-y-px focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/admin">
                 Admin sign in
                 <ArrowUpRight className="h-4 w-4" />
               </Link>

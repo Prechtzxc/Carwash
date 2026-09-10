@@ -29,11 +29,11 @@ export default async function AdminDashboardPage() {
             </span>
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
-             <Link className="inline-flex items-center gap-2 text-sm font-bold text-[#ffe67a] transition-colors hover:text-white" href="/admin/catalog">
+              <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[#ffe67a] transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/admin/catalog">
               Configure catalog and pricing
               <ArrowRight className="h-4 w-4" />
             </Link>
-             <Link className="inline-flex items-center gap-2 text-sm font-bold text-[#ffe67a] transition-colors hover:text-white" href="/admin/qr">
+              <Link className="inline-flex min-h-10 items-center gap-2 rounded-xl px-3 text-sm font-bold text-[#ffe67a] transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-4 focus-visible:ring-[#f4c400]/40" href="/admin/qr">
               <QrCode className="h-4 w-4" />
               Display customer QR
             </Link>
@@ -66,7 +66,7 @@ export default async function AdminDashboardPage() {
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {adminNavigation.map((item) => (
             <Link
-              className="group rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(0,0,0,0.09)]"
+               className="group rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(0,0,0,0.09)] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40"
               href={item.href}
               key={item.href}
             >
@@ -114,7 +114,7 @@ export default async function AdminDashboardPage() {
             <h2 className="mt-2 text-xl font-bold tracking-[-0.035em] text-[#171717]">The check-in doorway is ready.</h2>
             <p className="mt-3 text-sm leading-6 text-[#6f652f]">Open the public-facing check-in page to review the tablet-friendly entry point.</p>
           </div>
-          <Link className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434]" href="/check-in">
+           <Link className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434] focus-visible:ring-4 focus-visible:ring-[#171717]/25" href="/check-in">
             View customer check-in
             <ArrowRight className="h-4 w-4" />
           </Link>

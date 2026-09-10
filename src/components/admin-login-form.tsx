@@ -109,7 +109,7 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
       )}
 
       <button
-        className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-5 text-sm font-bold text-[#171717] shadow-[0_10px_22px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#d8aa00] disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-5 text-sm font-bold text-[#171717] shadow-[0_10px_22px_rgba(177,139,0,0.2)] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isSubmitting || isFormIncomplete}
         type="submit"
       >
