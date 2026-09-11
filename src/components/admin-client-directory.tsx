@@ -50,7 +50,7 @@ function directoryHref({ page, search, sort }: { page?: number; search: string; 
 
 function SummaryCard({ detail, icon, label, value }: { detail: string; icon: React.ReactNode; label: string; value: string | number }) {
   return (
-    <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)]">
+    <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">{label}</p>
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">{icon}</span>
@@ -64,7 +64,7 @@ function SummaryCard({ detail, icon, label, value }: { detail: string; icon: Rea
 function ClientRow({ customer }: { customer: ClientDirectoryReport["customers"][number] }) {
   return (
     <Link
-      className="group block rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_10px_28px_rgba(0,0,0,0.035)] transition-all hover:-translate-y-0.5 hover:border-[#d4b900] hover:shadow-[0_16px_34px_rgba(0,0,0,0.08)] sm:p-6"
+      className="group block rounded-[1.35rem] border border-[#dfddd4] bg-white p-4 shadow-[0_10px_28px_rgba(0,0,0,0.035)] transition-all hover:-translate-y-0.5 hover:border-[#d4b900] hover:shadow-[0_16px_34px_rgba(0,0,0,0.08)] sm:p-6"
       href={`/admin/clients/${customer.id}`}
     >
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_0.8fr_0.8fr_0.9fr_auto] lg:items-center lg:gap-6">
@@ -117,11 +117,11 @@ function Pagination({ report, search, sort }: { report: ClientDirectoryReport; s
   }
 
   return (
-    <div className="flex flex-col gap-3 border-t border-[#dfddd4] pt-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 border-t border-[#dfddd4] pt-4 sm:pt-5 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm text-[#65635d]">
         Page <strong className="text-[#3f3f3f]">{page}</strong> of <strong className="text-[#3f3f3f]">{totalPages}</strong> · {totalMatches} matching client{totalMatches === 1 ? "" : "s"}
       </p>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {page > 1 ? (
           <Link className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-[#d7d4ca] bg-white px-3.5 text-sm font-bold text-[#4a4945] transition-colors hover:border-[#d4b900] hover:text-[#a77f00]" href={directoryHref({ page: page - 1, search, sort })}>
             <ChevronRight className="h-4 w-4 rotate-180" />
@@ -153,20 +153,20 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
   const hasMatches = report.customers.length > 0;
 
   return (
-    <div className="space-y-8">
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <header className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Client directory</p>
           <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Know who keeps coming back.</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">A living view of customer relationships, current vehicles, and completed work. Search by name, mobile number, or plate.</p>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#65635d] sm:mt-4 sm:text-base sm:leading-7">A living view of customer relationships, current vehicles, and completed work. Search by name, mobile number, or plate.</p>
         </div>
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#171717] text-[#f4c400] shadow-[0_14px_30px_rgba(0,0,0,0.14)]">
-          <Users className="h-8 w-8" />
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#171717] text-[#f4c400] shadow-[0_14px_30px_rgba(0,0,0,0.14)] sm:h-16 sm:w-16">
+          <Users className="h-7 w-7 sm:h-8 sm:w-8" />
         </div>
       </header>
 
-      <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff7cc] p-5 sm:p-7">
-        <div className="flex flex-col gap-2 border-b border-[#ead98a] pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-7">
+        <div className="flex flex-col gap-2 border-b border-[#ead98a] pb-4 sm:pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Find a client</p>
             <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#171717]">Search the directory</h2>
@@ -174,7 +174,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
           <span className="text-sm font-semibold text-[#6f652f]">Completed visits power the activity totals</span>
         </div>
 
-        <form action="/admin/clients" className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1fr)_230px_auto] lg:items-end" method="get">
+        <form action="/admin/clients" className="mt-4 grid gap-3 sm:mt-5 lg:grid-cols-[minmax(0,1fr)_230px_auto] lg:items-end" method="get">
           <div>
           <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#65635d]" htmlFor="client-search">Name, mobile, or plate</label>
           <input className="mt-1.5 min-h-12 w-full rounded-xl border border-[#d4cfbf] bg-white px-4 text-sm text-[#292929] outline-none placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]" defaultValue={search} id="client-search" name="search" placeholder="Try Maria, 0917..., or ABC 123" type="search" />
@@ -190,7 +190,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
           </div>
           <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
             <button className="min-h-12 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434]" type="submit">Search clients</button>
-            {search && <Link className="inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-bold text-[#756000] hover:bg-white/60" href="/admin/clients">Clear search</Link>}
+            {search && <Link className="inline-flex min-h-10 w-full items-center justify-center rounded-xl px-4 text-sm font-bold text-[#756000] hover:bg-white/60 sm:w-auto" href="/admin/clients">Clear search</Link>}
           </div>
         </form>
       </section>
@@ -201,8 +201,8 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
         <SummaryCard detail="Current vehicles represented by this page" icon={<CarFront className="h-4 w-4" />} label="Showing" value={`${report.customers.length} of ${report.pagination.totalMatches}`} />
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7">
-        <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+        <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-4 sm:pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Customer records</p>
             <h2 className="mt-1 text-xl font-bold tracking-[-0.03em] text-[#171717]">{search ? `Results for “${search}”` : "Every client, at a glance"}</h2>

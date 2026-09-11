@@ -164,7 +164,7 @@ function SubmitButton({ children, pendingLabel = "Saving..." }: { children: Reac
 
   return (
     <button
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto"
       disabled={pending}
       type="submit"
     >
@@ -179,7 +179,7 @@ function CompactSubmitButton({ children, pendingLabel }: { children: ReactNode; 
 
   return (
     <button
-      className="min-h-9 rounded-lg bg-[#f4c400] px-3 text-xs font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55"
+      className="min-h-10 rounded-lg bg-[#f4c400] px-3 text-xs font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:min-h-9"
       disabled={pending}
       type="submit"
     >
@@ -237,8 +237,8 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
   const fieldErrors = state?.fieldErrors ?? {};
 
   return (
-    <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#a77f00]">
             {item ? "Edit inventory item" : "New inventory item"}
@@ -248,7 +248,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
           </h3>
         </div>
         {item && (
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-start gap-2 sm:items-end">
             <ActiveBadge active={item.active} />
             <InventoryItemStatusToggle active={item.active} id={item.id} />
           </div>
@@ -262,7 +262,7 @@ function InventoryItemEditor({ item }: { item?: InventoryItemDto }) {
         </div>
       )}
 
-      <form action={formAction} className="mt-5 space-y-4">
+      <form action={formAction} className="mt-4 space-y-4 sm:mt-5">
         {item && <input name="id" type="hidden" value={item.id} />}
         <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_150px]">
           <div>
@@ -406,7 +406,7 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
   const fieldErrors = state?.fieldErrors ?? {};
 
   return (
-    <div className="rounded-2xl border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-6">
+    <div className="rounded-2xl border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
       <div className="flex items-start gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">
           <Boxes className="h-5 w-5" />
@@ -418,7 +418,7 @@ function StockMovementForm({ item }: { item: InventoryItemDto }) {
         </div>
       </div>
 
-      <form action={formAction} className="mt-5 space-y-4">
+      <form action={formAction} className="mt-4 space-y-4 sm:mt-5">
         <input name="inventoryItemId" type="hidden" value={item.id} />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -512,7 +512,7 @@ function MovementFilterHiddenFields({ filters }: { filters: InventoryFilters }) 
 
 function ItemFilterControls({ filters }: { filters: InventoryFilters }) {
   return (
-      <form action="/admin/inventory" aria-describedby={filters.movementDateError ? "movement-date-filter-error" : undefined} className="mt-5 rounded-2xl border border-[#dfddd4] bg-white p-4" method="get">
+      <form action="/admin/inventory" aria-describedby={filters.movementDateError ? "movement-date-filter-error" : undefined} className="mt-4 rounded-2xl border border-[#dfddd4] bg-white p-3 sm:mt-5 sm:p-4" method="get">
       <MovementFilterHiddenFields filters={filters} />
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(150px,0.7fr)_minmax(150px,0.7fr)_auto] lg:items-end">
         <div>
@@ -536,10 +536,10 @@ function ItemFilterControls({ filters }: { filters: InventoryFilters }) {
             <option value="out_of_stock">Out of stock</option>
           </select>
         </div>
-        <button className="min-h-11 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434]" type="submit">Apply filters</button>
+        <button className="min-h-11 w-full rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434] lg:w-auto" type="submit">Apply filters</button>
       </div>
       {(filters.search || filters.itemType !== "all" || filters.status !== "all") && (
-        <Link className="mt-3 inline-flex min-h-9 items-center rounded-lg px-2 text-xs font-bold text-[#a77f00] hover:bg-[#fff7cc]" href={buildInventoryHref(filters, { search: "", itemType: "all", status: "all", page: 1 })}>
+        <Link className="mt-3 inline-flex min-h-10 items-center rounded-lg px-2 text-xs font-bold text-[#a77f00] hover:bg-[#fff7cc] sm:min-h-9" href={buildInventoryHref(filters, { search: "", itemType: "all", status: "all", page: 1 })}>
           Clear item filters
         </Link>
       )}
@@ -573,7 +573,7 @@ function PaginationControls({
   return (
     <div className="mt-4 flex flex-col gap-3 rounded-xl border border-[#dfddd4] bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
       <p className="text-[#65635d]">Showing <span className="font-bold text-[#292929]">{firstShown}-{lastShown}</span> of <span className="font-bold text-[#292929]">{pagination.totalItems}</span></p>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {previousHref ? <Link className="inline-flex min-h-10 items-center rounded-lg border border-[#d7d4ca] px-3 text-xs font-bold text-[#4a4945] hover:border-[#d4b900] hover:text-[#a77f00]" href={previousHref}>Previous</Link> : <span className="inline-flex min-h-10 items-center rounded-lg border border-[#ebe9e2] px-3 text-xs font-bold text-[#b0ada4]">Previous</span>}
         <span className="px-2 text-xs font-bold text-[#65635d]">Page {currentPage} of {pagination.totalPages}</span>
         {nextHref ? <Link className="inline-flex min-h-10 items-center rounded-lg border border-[#d7d4ca] px-3 text-xs font-bold text-[#4a4945] hover:border-[#d4b900] hover:text-[#a77f00]" href={nextHref}>Next</Link> : <span className="inline-flex min-h-10 items-center rounded-lg border border-[#ebe9e2] px-3 text-xs font-bold text-[#b0ada4]">Next</span>}
@@ -588,7 +588,7 @@ function InventoryTable({ items, filters, pagination }: { items: InventoryItemDt
   return (
     <>
       <ItemFilterControls filters={filters} />
-      <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dfddd4] bg-white">
+       <div className="mt-4 max-w-full overflow-x-auto rounded-2xl border border-[#dfddd4] bg-white sm:mt-5">
         <table className="w-full min-w-[900px] border-collapse text-left">
           <thead className="bg-[#f7f6f1]">
             <tr className="border-b border-[#e8e5dc] text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#706e67]">
@@ -664,14 +664,14 @@ function MovementHistory({
   const hasFilters = Boolean(filters.movementItemId || filters.movementType || filters.movementFrom || filters.movementTo || filters.movementDateError);
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="movement-history">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="movement-history">
       <SectionHeading
         count={pagination.totalItems}
         description="Every stock change records the before and after balance. Transaction usage is shown alongside manual stock movements, newest first."
         index="03"
         title="Movement history"
       />
-      <form action="/admin/inventory" className="mt-5 rounded-2xl border border-[#dfddd4] bg-white p-4" method="get">
+      <form action="/admin/inventory" className="mt-4 rounded-2xl border border-[#dfddd4] bg-white p-3 sm:mt-5 sm:p-4" method="get">
         <input name="search" type="hidden" value={filters.search} />
         <input name="type" type="hidden" value={filters.itemType === "all" ? "" : filters.itemType} />
         <input name="status" type="hidden" value={filters.status === "all" ? "" : filters.status} />
@@ -699,17 +699,17 @@ function MovementHistory({
             <label className={labelClass} htmlFor="movement-to-filter">To date (PHT)</label>
             <input className={`${inputClass} mt-2`} defaultValue={filters.movementTo} id="movement-to-filter" name="movementTo" type="date" />
           </div>
-          <button className="min-h-11 rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434]" type="submit">Apply filters</button>
+          <button className="min-h-11 w-full rounded-xl bg-[#171717] px-5 text-sm font-bold text-white transition-colors hover:bg-[#343434] xl:w-auto" type="submit">Apply filters</button>
         </div>
         {filters.movementDateError && <p className="mt-3 rounded-xl border border-[#f0d3c8] bg-[#fff4f0] px-4 py-3 text-sm font-semibold text-[#9f4c47]" id="movement-date-filter-error" role="alert">{filters.movementDateError}</p>}
         {hasFilters && (
-          <Link className="mt-3 inline-flex min-h-9 items-center rounded-lg px-2 text-xs font-bold text-[#a77f00] hover:bg-[#fff7cc]" href={buildInventoryHref(filters, { movementItemId: "", movementType: "", movementFrom: "", movementTo: "", movementPage: 1 })}>
+          <Link className="mt-3 inline-flex min-h-10 items-center rounded-lg px-2 text-xs font-bold text-[#a77f00] hover:bg-[#fff7cc] sm:min-h-9" href={buildInventoryHref(filters, { movementItemId: "", movementType: "", movementFrom: "", movementTo: "", movementPage: 1 })}>
             Clear movement filters
           </Link>
         )}
       </form>
 
-      <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dfddd4] bg-white">
+      <div className="mt-4 max-w-full overflow-x-auto rounded-2xl border border-[#dfddd4] bg-white sm:mt-5">
         <table className="w-full min-w-[1120px] border-collapse text-left">
           <thead className="bg-[#f7f6f1]">
             <tr className="border-b border-[#e8e5dc] text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#706e67]">
@@ -776,40 +776,40 @@ export function InventoryManager({
   filters,
 }: InventoryManagerProps) {
   return (
-    <div className="space-y-8">
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <header className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Inventory control</p>
           <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Keep every item accounted for.</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#65635d] sm:mt-4 sm:text-base sm:leading-7">
             Track internal consumables and optional shop products in their canonical base units. Stock changes are recorded in a protected ledger.
           </p>
         </div>
-        <Link className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2]" href="/admin/catalog#service-requirements">
+        <Link className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm font-bold text-[#292929] transition-colors hover:border-[#c7a900] hover:bg-[#fffdf2] md:w-auto" href="/admin/catalog#service-requirements">
           Configure service recipes
           <ArrowRight className="h-4 w-4" />
         </Link>
       </header>
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[#ead98a] bg-[#fff7cc] p-5">
+        <div className="rounded-2xl border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Total active inventory items</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{summary.totalActiveItems}</p>
           <p className="mt-1 text-xs text-[#6f652f]">Current database count</p>
         </div>
-        <div className="rounded-2xl border border-[#ead98a] bg-[#fff9d9] p-5">
+        <div className="rounded-2xl border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Low stock</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{summary.lowStockItems}</p>
           <p className="mt-1 text-xs text-[#756000]">Above zero, at or below minimum</p>
         </div>
-        <div className="rounded-2xl border border-[#f0d3c8] bg-[#fff4ef] p-5">
+        <div className="rounded-2xl border border-[#f0d3c8] bg-[#fff4ef] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#b34646]">Out of stock</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{summary.outOfStockItems}</p>
           <p className="mt-1 text-xs text-[#9a6259]">Current stock at or below zero</p>
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] bg-[#171717] p-6 text-white shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:p-7">
+      <section className="rounded-[1.5rem] bg-[#171717] p-5 text-white shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:p-7">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f4c400]/15 text-[#f4c400]">
@@ -821,14 +821,14 @@ export function InventoryManager({
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">New items start at zero. Use Stock In or an adjustment to change the balance; direct stock overwrites are not available.</p>
             </div>
           </div>
-          <span className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-[#ffe67a]">
+          <span className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-[#ffe67a] md:w-auto">
             <Sparkles className="h-4 w-4" />
             Admin-only inventory
           </span>
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="inventory-table">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="inventory-table">
         <SectionHeading
           count={itemPagination.totalItems}
           description="Monitor current balances, minimum thresholds, item types, optional PHP selling prices, and stock status."
@@ -838,7 +838,7 @@ export function InventoryManager({
         <InventoryTable filters={filters} items={items} pagination={itemPagination} />
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="inventory-management">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="inventory-management">
         <SectionHeading
           count={itemPagination.totalItems}
           description="Edit item details and use the movement form beside each item to update stock atomically. Current stock is never overwritten directly."

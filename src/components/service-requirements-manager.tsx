@@ -53,7 +53,7 @@ function SubmitButton({ children, pendingLabel = "Saving..." }: { children: Reac
 
   return (
     <button
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto"
       disabled={pending}
       type="submit"
     >
@@ -68,7 +68,7 @@ function RemoveButton() {
 
   return (
     <button
-      className="min-h-9 rounded-lg border border-[#efd5d0] bg-white px-3 text-xs font-bold text-[#aa5a51] transition-colors hover:border-[#dca9a0] hover:bg-[#fff8f6] disabled:cursor-not-allowed disabled:opacity-55"
+      className="min-h-10 rounded-lg border border-[#efd5d0] bg-white px-3 text-xs font-bold text-[#aa5a51] transition-colors hover:border-[#dca9a0] hover:bg-[#fff8f6] disabled:cursor-not-allowed disabled:opacity-55 sm:min-h-9"
       disabled={pending}
       type="submit"
     >
@@ -119,8 +119,8 @@ function RequirementEditor({
   const selectableConsumables = consumables.filter((item) => item.active || item.id === requirement?.inventory_item_id);
 
   return (
-    <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#a77f00]">
             {requirement ? "Edit recipe line" : "New recipe line"}
@@ -224,7 +224,7 @@ function RequirementsSection({
         const serviceRequirements = requirements.filter((requirement) => requirement.service_id === service.id);
 
         return (
-          <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 sm:p-6" key={service.id}>
+          <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 sm:p-6" key={service.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -266,7 +266,7 @@ export function ServiceRequirementsManager({ services, consumables, requirements
   const activeConsumables = consumables.filter((item) => item.active);
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="service-requirements">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="service-requirements">
       <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-xs font-black text-[#a77f00]">

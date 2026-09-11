@@ -16,8 +16,8 @@ export function AdminNavigation({ variant }: AdminNavigationProps) {
   const isMobile = variant === "mobile";
 
   return (
-    <nav aria-label="Admin navigation" className={isMobile ? "overflow-x-auto pb-1" : undefined}>
-      <ul className={isMobile ? "flex min-w-max gap-2" : "space-y-1"}>
+    <nav aria-label="Admin navigation" className={isMobile ? "max-w-full overflow-x-auto pb-1" : undefined}>
+      <ul className={isMobile ? "flex w-max min-w-full gap-1.5" : "space-y-1"}>
         {adminNavigation.map((item) => {
           const isActive = currentPath === item.href || (item.href !== "/admin" && currentPath.startsWith(`${item.href}/`));
 
@@ -25,19 +25,19 @@ export function AdminNavigation({ variant }: AdminNavigationProps) {
             <li key={item.href}>
               <Link
                 aria-current={isActive ? "page" : undefined}
-                className={`group flex min-h-12 items-center gap-3 rounded-xl px-3.5 text-sm font-semibold transition-colors focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 focus-visible:ring-offset-2 ${
+                className={`group flex shrink-0 items-center rounded-xl font-semibold transition-colors focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 focus-visible:ring-offset-2 ${
                   isMobile
-                    ? isActive
+                    ? `min-h-11 justify-center gap-1.5 px-1.5 text-[0.8125rem] sm:min-h-12 sm:gap-3 sm:px-3.5 sm:text-sm ${isActive
                       ? "bg-[#f4c400] text-[#171717] shadow-[0_8px_18px_rgba(244,196,0,0.18)]"
-                      : "bg-[#2d2d2d] text-white ring-1 ring-[#4a4a4a] hover:bg-[#414141] hover:text-white hover:ring-[#f4c400]/60"
+                      : "bg-[#2d2d2d] text-white ring-1 ring-[#4a4a4a] hover:bg-[#414141] hover:text-white hover:ring-[#f4c400]/60"}`
                     : isActive
-                      ? "bg-[#f4c400] text-[#171717] shadow-[0_8px_18px_rgba(244,196,0,0.16)]"
-                      : "text-white hover:bg-[#3d3d3d] hover:text-white"
+                      ? "min-h-12 gap-3 px-3.5 text-sm bg-[#f4c400] text-[#171717] shadow-[0_8px_18px_rgba(244,196,0,0.16)]"
+                      : "min-h-12 gap-3 px-3.5 text-sm text-white hover:bg-[#3d3d3d] hover:text-white"
                 }`}
                 href={item.href}
               >
                 <span
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                  className={`${isMobile ? "hidden sm:flex" : "flex"} h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
                     isMobile
                       ? isActive
                         ? "bg-[#171717]/15 text-[#171717]"

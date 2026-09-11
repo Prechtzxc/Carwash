@@ -84,6 +84,30 @@ const transactionIdSchema = z.object({
   transactionId: z.string().uuid("Transaction id is invalid."),
 });
 
+const staffAssignmentSchema = z.object({
+  staffId: z.string().uuid("Staff selection is invalid."),
+  sharePercent: z
+    .number()
+    .finite("Staff share must be a valid number.")
+    .positive("Staff share must be greater than zero.")
+    .max(40, "Staff share cannot exceed 40%.")
+    .refine((value) => Math.abs(value * 100 - Math.round(value * 100)) < 0.00000001, "Staff share can use at most two decimals."),
+});
+
+const staffAssignmentsSchema = transactionIdSchema.extend({
+  assignments: z.array(staffAssignmentSchema).max(20, "Assign fewer staff members."),
+}).superRefine((value, context) => {
+  if (new Set(value.assignments.map((assignment) => assignment.staffId)).size !== value.assignments.length) {
+    context.addIssue({ code: "custom", message: "A staff member may only be assigned once.", path: ["assignments"] });
+  }
+
+  const totalShare = value.assignments.reduce((total, assignment) => total + assignment.sharePercent, 0);
+
+  if (totalShare > 40) {
+    context.addIssue({ code: "custom", message: "Staff shares cannot exceed 40%.", path: ["assignments"] });
+  }
+});
+
 const cancellationSchema = transactionIdSchema.extend({
   reason: z.string().trim().max(500, "The cancellation reason must be 500 characters or fewer."),
 });
@@ -164,6 +188,25 @@ function databaseFailure(error: DatabaseError): TransactionActionState {
       return failure("Only pending or confirmed transactions can be cancelled.");
     }
 
+    if (error.message?.includes("read-only")) {
+      return failure("Staff assignments for this transaction are read-only.", { assignments: "Completed and cancelled assignments cannot be changed." });
+    }
+
+    if (error.message?.includes("Staff shares cannot exceed 40")) {
+      return failure("Staff shares cannot exceed 40%.", { assignments: "Staff shares cannot exceed 40%." });
+    }
+
+    if (error.message?.includes("active staff members")) {
+      return failure("Select active staff members only.", { assignments: "Select active staff members only." });
+    }
+
+    if (error.message?.includes("Staff assignments are invalid")
+      || error.message?.includes("Staff shares must be greater")
+      || error.message?.includes("staff assignments")
+      || error.message?.includes("staff member")) {
+      return failure(error.message ?? "Staff assignments could not be saved.", { assignments: error.message ?? "Staff assignments could not be saved." });
+    }
+
     if (error.message?.includes("no longer exists")) {
       return failure("That transaction no longer exists. Return to the dashboard and refresh.");
     }
@@ -205,6 +248,14 @@ function completionDatabaseFailure(error: DatabaseError): TransactionActionState
 
     if (message.includes("required inventory item")) {
       return failure("A required inventory item is no longer available. Refresh and review the transaction.");
+    }
+
+    if (message.includes("Assign at least one active staff member")) {
+      return failure("Assign at least one active staff member before completing this service transaction.");
+    }
+
+    if (message.includes("Staff shares must total exactly 40")) {
+      return failure("Staff shares must total exactly 40% before completion.");
     }
 
     return failure("The transaction could not be completed. Refresh and try again.");
@@ -283,6 +334,42 @@ export async function revisePendingTransactionAction(
   revalidatePath("/admin");
   revalidatePath(`/admin/transactions/${parsed.data.transactionId}`);
   return { status: "success", message: "Transaction changes saved.", fieldErrors: {} };
+}
+
+export async function replaceTransactionStaffAction(
+  previousState: TransactionActionState,
+  formData: FormData,
+): Promise<TransactionActionState> {
+  void previousState;
+
+  const parsed = staffAssignmentsSchema.safeParse({
+    transactionId: formString(formData, "transactionId"),
+    assignments: jsonFormValue(formData, "assignments"),
+  });
+
+  if (!parsed.success) {
+    return validationFailure(parsed.error);
+  }
+
+  const supabase = await getTransactionWriter();
+
+  if (!supabase) {
+    return failure("Only the active admin can manage staff assignments.");
+  }
+
+  const { error } = await supabase.rpc("replace_transaction_staff", {
+    p_transaction_id: parsed.data.transactionId,
+    p_assignments: parsed.data.assignments as Json,
+  });
+
+  if (error) {
+    return databaseFailure(error);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/sales");
+  revalidatePath(`/admin/transactions/${parsed.data.transactionId}`);
+  return { status: "success", message: "Staff assignments saved.", fieldErrors: {} };
 }
 
 export async function confirmPendingTransactionAction(

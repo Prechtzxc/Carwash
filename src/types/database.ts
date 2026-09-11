@@ -529,6 +529,78 @@ export type Database = {
           },
         ];
       };
+      staff: {
+        Row: {
+          id: string;
+          name: string;
+          mobile_number: string | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          mobile_number?: string | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          mobile_number?: string | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      transaction_staff: {
+        Row: {
+          transaction_id: string;
+          staff_id: string;
+          share_percent: number;
+          service_sales_snapshot: number | null;
+          earnings_snapshot: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          transaction_id: string;
+          staff_id: string;
+          share_percent: number;
+          service_sales_snapshot?: number | null;
+          earnings_snapshot?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          transaction_id?: string;
+          staff_id?: string;
+          share_percent?: number;
+          service_sales_snapshot?: number | null;
+          earnings_snapshot?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "transaction_staff_transaction_id_fkey";
+            columns: ["transaction_id"];
+            isOneToOne: false;
+            referencedRelation: "transactions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "transaction_staff_staff_id_fkey";
+            columns: ["staff_id"];
+            isOneToOne: false;
+            referencedRelation: "staff";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           id: string;
@@ -636,6 +708,13 @@ export type Database = {
       complete_confirmed_transaction: {
         Args: {
           p_transaction_id: string;
+        };
+        Returns: Json;
+      };
+      replace_transaction_staff: {
+        Args: {
+          p_transaction_id: string;
+          p_assignments: Json;
         };
         Returns: Json;
       };

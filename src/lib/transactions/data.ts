@@ -1,5 +1,6 @@
 import { requireAdminProfile } from "@/lib/auth/admin";
 import { createClient } from "@/lib/supabase/server";
+import type { AdminStaff } from "@/lib/staff/data";
 import type { Database } from "@/types/database";
 
 type TransactionRow = Database["public"]["Tables"]["transactions"]["Row"];
@@ -11,6 +12,7 @@ type ProductLineRow = Database["public"]["Tables"]["transaction_products"]["Row"
 type InventoryItemRow = Database["public"]["Tables"]["inventory_items"]["Row"];
 type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
 type ServicePriceRow = Database["public"]["Tables"]["service_prices"]["Row"];
+type TransactionStaffRow = Database["public"]["Tables"]["transaction_staff"]["Row"];
 
 export type TransactionStatus = TransactionRow["status"];
 
@@ -31,6 +33,16 @@ export type AdminTransactionProduct = {
   unitPrice: number;
   quantity: number;
   lineTotal: number;
+};
+
+export type AdminTransactionStaffAssignment = {
+  staffId: string;
+  name: string;
+  mobileNumber: string | null;
+  active: boolean;
+  sharePercent: number;
+  serviceSalesSnapshot: number | null;
+  earningsSnapshot: number | null;
 };
 
 export type AdminTransactionCustomer = Pick<
@@ -55,6 +67,7 @@ export type AdminTransaction = {
   vehicle: AdminTransactionVehicle;
   services: AdminTransactionService[];
   products: AdminTransactionProduct[];
+  staffAssignments: AdminTransactionStaffAssignment[];
   serviceSubtotal: number;
   productSubtotal: number;
   total: number;
@@ -91,6 +104,7 @@ export type AdminTransactionDashboardData = {
 export type AdminTransactionReviewPageData = {
   transaction: AdminTransaction;
   catalog: AdminTransactionCatalog;
+  staff: AdminStaff[];
 };
 
 const transactionSelect = [
@@ -143,7 +157,7 @@ async function hydrateTransactions(
   const customerIds = unique(rows.map((row) => row.customer_id));
   const vehicleIds = unique(rows.map((row) => row.vehicle_id));
 
-  const [customersResult, vehiclesResult, serviceLinesResult, productLinesResult] = await Promise.all([
+  const [customersResult, vehiclesResult, serviceLinesResult, productLinesResult, staffAssignmentsResult] = await Promise.all([
     supabase
       .from("customers")
       .select("id, first_name, last_name, mobile_number, email")
@@ -164,10 +178,26 @@ async function hydrateTransactions(
       .in("transaction_id", transactionIds)
       .order("line_order", { ascending: true })
       .order("created_at", { ascending: true }),
+    supabase
+      .from("transaction_staff")
+      .select("transaction_id, staff_id, share_percent, service_sales_snapshot, earnings_snapshot, created_at, updated_at")
+      .in("transaction_id", transactionIds),
   ]);
 
-  if (customersResult.error || vehiclesResult.error || serviceLinesResult.error || productLinesResult.error) {
+  if (customersResult.error || vehiclesResult.error || serviceLinesResult.error || productLinesResult.error || staffAssignmentsResult.error) {
     throw new Error("Transaction details could not be loaded.");
+  }
+
+  const staffIds = unique((staffAssignmentsResult.data ?? []).map((assignment) => assignment.staff_id));
+  const staffResult = staffIds.length > 0
+    ? await supabase
+      .from("staff")
+      .select("id, name, mobile_number, active, created_at, updated_at")
+      .in("id", staffIds)
+    : { data: [], error: null };
+
+  if (staffResult.error) {
+    throw new Error("Staff assignment details could not be loaded.");
   }
 
   const categoryIds = unique((vehiclesResult.data ?? []).map((vehicle) => vehicle.vehicle_category_id));
@@ -183,8 +213,10 @@ async function hydrateTransactions(
   const customersById = new Map((customersResult.data ?? []).map((customer) => [customer.id, customer]));
   const vehiclesById = new Map((vehiclesResult.data ?? []).map((vehicle) => [vehicle.id, vehicle]));
   const categoriesById = new Map((categoriesResult.data ?? []).map((category) => [category.id, category]));
+  const staffById = new Map((staffResult.data ?? []).map((staff) => [staff.id, staff]));
   const servicesByTransactionId = new Map<string, ServiceLineRow[]>();
   const productsByTransactionId = new Map<string, ProductLineRow[]>();
+  const staffAssignmentsByTransactionId = new Map<string, TransactionStaffRow[]>();
 
   for (const line of serviceLinesResult.data ?? []) {
     const lines = servicesByTransactionId.get(line.transaction_id) ?? [];
@@ -198,6 +230,12 @@ async function hydrateTransactions(
     productsByTransactionId.set(line.transaction_id, lines);
   }
 
+  for (const assignment of staffAssignmentsResult.data ?? []) {
+    const assignments = staffAssignmentsByTransactionId.get(assignment.transaction_id) ?? [];
+    assignments.push(assignment);
+    staffAssignmentsByTransactionId.set(assignment.transaction_id, assignments);
+  }
+
   return rows.map((row) => {
     const customer = customersById.get(row.customer_id);
     const vehicle = vehiclesById.get(row.vehicle_id);
@@ -206,6 +244,24 @@ async function hydrateTransactions(
     if (!customer || !vehicle || !category) {
       throw new Error("Transaction relationship data is incomplete.");
     }
+
+    const staffAssignments = (staffAssignmentsByTransactionId.get(row.id) ?? []).map((assignment) => {
+      const staff = staffById.get(assignment.staff_id);
+
+      if (!staff) {
+        throw new Error("Staff assignment relationship data is incomplete.");
+      }
+
+      return {
+        staffId: staff.id,
+        name: staff.name,
+        mobileNumber: staff.mobile_number,
+        active: staff.active,
+        sharePercent: assignment.share_percent,
+        serviceSalesSnapshot: assignment.service_sales_snapshot,
+        earningsSnapshot: assignment.earnings_snapshot,
+      };
+    });
 
     return {
       id: row.id,
@@ -235,6 +291,7 @@ async function hydrateTransactions(
         quantity: line.quantity,
         lineTotal: line.line_total,
       })),
+      staffAssignments,
       serviceSubtotal: row.service_subtotal,
       productSubtotal: row.product_subtotal,
       total: row.total,
@@ -246,6 +303,22 @@ async function hydrateTransactions(
       completedAt: row.completed_at,
     };
   });
+}
+
+async function getAdminStaffOptions(
+  supabase: Awaited<ReturnType<typeof getAdminClient>>,
+): Promise<AdminStaff[]> {
+  const { data, error } = await supabase
+    .from("staff")
+    .select("id, name, mobile_number, active, created_at, updated_at")
+    .order("active", { ascending: false })
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error("Staff records could not be loaded.");
+  }
+
+  return data ?? [];
 }
 
 async function getAdminTransactionCatalog(
@@ -373,5 +446,6 @@ export async function getAdminTransactionReviewPageData(id: string): Promise<Adm
   return {
     transaction,
     catalog: await getAdminTransactionCatalog(supabase),
+    staff: await getAdminStaffOptions(supabase),
   };
 }

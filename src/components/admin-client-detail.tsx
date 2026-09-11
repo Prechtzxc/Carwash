@@ -78,7 +78,7 @@ function FormButton({ children, pendingLabel }: { children: ReactNode; pendingLa
   const { pending } = useFormStatus();
 
   return (
-    <button className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55" disabled={pending} type="submit">
+    <button className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto" disabled={pending} type="submit">
       {pending ? pendingLabel : children}
     </button>
   );
@@ -152,7 +152,7 @@ function VehicleForm({ customerId, vehicle, vehicleCategories }: { customerId: s
   }, [router, state.status]);
 
   return (
-    <form action={formAction} className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_10px_28px_rgba(0,0,0,0.035)] sm:p-6">
+    <form action={formAction} className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_10px_28px_rgba(0,0,0,0.035)] sm:p-6">
       <input name="customerId" type="hidden" value={customerId} />
       <input name="vehicleId" type="hidden" value={vehicle.id} />
       <div className="flex flex-col gap-4 border-b border-[#e8e5dc] pb-5 sm:flex-row sm:items-start sm:justify-between">
@@ -217,8 +217,8 @@ function TransactionLines({ lines, emptyLabel }: { lines: ClientDetail["transact
   return (
     <div className="space-y-2">
       {lines.map((line, index) => (
-        <div className="flex items-start justify-between gap-4 text-sm" key={`${line.name}-${index}`}>
-          <p className="min-w-0 font-semibold text-[#4a4945]">{line.name}{line.quantity > 1 ? ` x${line.quantity}` : ""}</p>
+      <div className="flex items-start justify-between gap-4 text-sm" key={`${line.name}-${index}`}>
+          <p className="min-w-0 break-words font-semibold text-[#4a4945]">{line.name}{line.quantity > 1 ? ` x${line.quantity}` : ""}</p>
           <p className="shrink-0 font-bold text-[#292929]">{formatCurrency(line.lineTotal)}</p>
         </div>
       ))}
@@ -230,7 +230,7 @@ function CompletedHistory({ transactions }: { transactions: ClientDetail["transa
   return (
     <div className="mt-6 space-y-4">
       {transactions.length > 0 ? transactions.map((transaction) => (
-        <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_10px_28px_rgba(0,0,0,0.035)] sm:p-6" key={transaction.id}>
+        <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_10px_28px_rgba(0,0,0,0.035)] sm:p-6" key={transaction.id}>
           <div className="flex flex-col gap-4 border-b border-[#e8e5dc] pb-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <Link className="inline-flex items-center gap-2 text-sm font-black tracking-[0.07em] text-[#a77f00] hover:text-[#756000]" href={`/admin/transactions/${transaction.id}`}>
@@ -274,14 +274,14 @@ export function AdminClientDetail({ detail }: { detail: ClientDetail }) {
   const { customer, summary } = detail;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <header>
-        <Link className="inline-flex items-center gap-1 text-sm font-bold text-[#a77f00] hover:text-[#756000]" href="/admin/clients"><ChevronRight className="h-4 w-4 rotate-180" />Back to clients</Link>
-        <div className="mt-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <Link className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-bold text-[#a77f00] hover:text-[#756000]" href="/admin/clients"><ChevronRight className="h-4 w-4 rotate-180" />Back to clients</Link>
+        <div className="mt-4 flex flex-col gap-4 sm:mt-6 sm:gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Client profile</p>
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">{customer.firstName} {customer.lastName}</h1>
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-[#65635d]">
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm leading-6 text-[#65635d] sm:mt-3">
               <span className="font-semibold text-[#3f3f3f]">{customer.mobileNumber}</span>
               <span>{customer.email ?? "No email provided"}</span>
               <span>Client since {formatDate(customer.createdAt)}</span>
@@ -292,29 +292,29 @@ export function AdminClientDetail({ detail }: { detail: ClientDetail }) {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)]">
+        <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">Completed visits</p>
           <p className="mt-3 text-3xl font-black tracking-[-0.05em] text-[#171717]">{summary.completedVisits}</p>
           <p className="mt-2 text-xs leading-5 text-[#65635d]">Completed transactions only</p>
         </div>
-        <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)]">
+        <div className="rounded-[1.35rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#89867d]">Last visit</p>
           <p className="mt-3 text-xl font-black tracking-[-0.04em] text-[#171717]">{summary.lastCompletedVisit ? formatDate(summary.lastCompletedVisit) : "Not yet"}</p>
           <p className="mt-2 text-xs leading-5 text-[#65635d]">Based on `completed_at`</p>
         </div>
-        <div className="rounded-[1.35rem] border border-[#ead98a] bg-[#fff7cc] p-5">
+        <div className="rounded-[1.35rem] border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#756000]">Completed spend</p>
           <p className="mt-3 text-2xl font-black tracking-[-0.05em] text-[#171717]">{formatCurrency(summary.totalTransactionAmount)}</p>
           <p className="mt-2 text-xs leading-5 text-[#6f652f]">Historical transaction totals</p>
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
         <SectionHeading description="Update the current customer record used for future visits. Historical transaction names and contact details remain snapshots." eyebrow="Current record" icon={<Users className="h-4 w-4" />} title="Customer details" />
         <CustomerProfileForm customer={customer} />
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1">
             <SectionHeading description="Keep current vehicle details accurate for the next check-in without rewriting prior visit snapshots." eyebrow="Current records" icon={<CarFront className="h-4 w-4" />} title="Vehicles" />
@@ -326,7 +326,7 @@ export function AdminClientDetail({ detail }: { detail: ClientDetail }) {
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
         <SectionHeading description="Completed transactions are shown from their stored historical snapshots. Current profile or vehicle edits cannot alter this record." eyebrow="Immutable history" icon={<Sparkles className="h-4 w-4" />} title="Completed visits" />
         <CompletedHistory transactions={detail.transactions} />
       </section>

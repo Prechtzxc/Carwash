@@ -68,7 +68,7 @@ function SubmitButton({ children, pendingLabel = "Saving..." }: { children: Reac
 
   return (
     <button
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55"
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f4c400] px-4 text-sm font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:w-auto"
       disabled={pending}
       type="submit"
     >
@@ -93,8 +93,8 @@ function CompactSubmitButton({
     <button
       className={
         tone === "primary"
-          ? "min-h-9 rounded-lg bg-[#f4c400] px-3 text-xs font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55"
-          : "min-h-9 rounded-lg border border-[#d7d4ca] bg-white px-3 text-xs font-bold text-[#4a4945] transition-colors hover:border-[#d4b900] hover:text-[#a77f00] disabled:cursor-not-allowed disabled:opacity-55"
+          ? "min-h-10 rounded-lg bg-[#f4c400] px-3 text-xs font-bold text-[#171717] transition-colors hover:bg-[#ffe45e] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40 disabled:cursor-not-allowed disabled:opacity-55 sm:min-h-9"
+          : "min-h-10 rounded-lg border border-[#d7d4ca] bg-white px-3 text-xs font-bold text-[#4a4945] transition-colors hover:border-[#d4b900] hover:text-[#a77f00] disabled:cursor-not-allowed disabled:opacity-55 sm:min-h-9"
       }
       disabled={pending}
       type="submit"
@@ -162,8 +162,8 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
   const sortOrderErrorId = `${prefix}-sort-order-error`;
 
   return (
-    <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#a77f00]">
             {category ? "Edit category" : "New category"}
@@ -173,7 +173,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
           </h3>
         </div>
         {category && (
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-start gap-2 sm:items-end">
             <StatusBadge active={category.active} />
             <StatusToggle entity="category" id={category.id} active={category.active} />
           </div>
@@ -261,7 +261,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
 
 function CategorySection({ categories }: { categories: VehicleCategoryDto[] }) {
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="vehicle-categories">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="vehicle-categories">
       <SectionHeading
         count={categories.length}
         description="Keep the vehicle choices clear for operators and map each category to a default pricing size."
@@ -292,8 +292,8 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
   const sortOrderErrorId = `${prefix}-sort-order-error`;
 
   return (
-    <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
         <div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#a77f00]">
             {service ? "Edit service" : "New service"}
@@ -303,7 +303,7 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
           </h3>
         </div>
         {service && (
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-start gap-2 sm:items-end">
             <StatusBadge active={service.active} />
             <StatusToggle entity="service" id={service.id} active={service.active} />
           </div>
@@ -375,7 +375,7 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
 
 function ServiceSection({ services }: { services: ServiceDto[] }) {
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="services">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="services">
       <SectionHeading
         count={services.length}
         description="Define the wash and add-on services that will later be offered to customers and operators."
@@ -457,7 +457,7 @@ function PricingSection({ services, prices }: { services: ServiceDto[]; prices: 
   }
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-5 sm:p-7" id="pricing">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="pricing">
       <SectionHeading
         count={prices.length}
         description="Set one amount per service and vehicle size. Empty cells are intentionally left unset until an admin configures them."
@@ -471,7 +471,7 @@ function PricingSection({ services, prices }: { services: ServiceDto[]; prices: 
       <div className="mt-4 space-y-4">
         {services.length > 0 ? (
           services.map((service) => (
-            <article className="rounded-2xl border border-[#dfddd4] bg-white p-5 sm:p-6" key={service.id}>
+            <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 sm:p-6" key={service.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -509,16 +509,16 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
   const activeServices = services.filter((service) => service.active).length;
 
   return (
-    <div className="space-y-8">
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div className="space-y-6 sm:space-y-8">
+      <header className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Configuration</p>
           <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Catalog and pricing</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#65635d]">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#65635d] sm:mt-4 sm:text-base sm:leading-7">
             Set the services, vehicle rules, and prices used for customer check-in. This page stores configuration only.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-[#dfddd4] bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+        <div className="flex w-full shrink-0 items-center gap-3 rounded-2xl border border-[#dfddd4] bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)] md:w-auto">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">
             <Sparkles className="h-5 w-5" />
           </span>
@@ -530,24 +530,24 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
       </header>
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[#ead98a] bg-[#fff7cc] p-5">
+        <div className="rounded-2xl border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Active categories</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{activeCategories}</p>
           <p className="mt-1 text-xs text-[#6f652f]">of {categories.length} configured</p>
         </div>
-        <div className="rounded-2xl border border-[#d8e2f6] bg-[#f0f4ff] p-5">
+        <div className="rounded-2xl border border-[#d8e2f6] bg-[#f0f4ff] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#3f3f3f]">Active services</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{activeServices}</p>
           <p className="mt-1 text-xs text-[#706e67]">of {services.length} configured</p>
         </div>
-        <div className="rounded-2xl border border-[#ead98a] bg-[#fff9d9] p-5">
+        <div className="rounded-2xl border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Price points</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{prices.length}</p>
           <p className="mt-1 text-xs text-[#756000]">of {services.length * vehicleSizes.length} possible</p>
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] bg-[#171717] p-6 text-white shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:p-7">
+      <section className="rounded-[1.5rem] bg-[#171717] p-5 text-white shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:p-7">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f4c400]/15 text-[#f4c400]">
@@ -559,7 +559,7 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Disable records instead of deleting them, and leave prices unset until the operator has approved the amount.</p>
             </div>
           </div>
-          <a className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-[#ffe67a] transition-colors hover:bg-white/15" href="#vehicle-categories">
+          <a className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-[#ffe67a] transition-colors hover:bg-white/15 md:w-auto" href="#vehicle-categories">
             Start with categories
             <ArrowRight className="h-4 w-4" />
           </a>

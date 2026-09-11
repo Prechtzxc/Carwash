@@ -23,18 +23,18 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       </aside>
 
       <div className="min-h-screen lg:pl-72 print:pl-0">
-        <header className="flex min-h-[82px] items-center border-b border-[#ded8c9] bg-[#fffdf7]/95 px-4 sm:px-6 lg:hidden print:hidden">
-          <BrandMark />
+        <header className="flex min-h-[72px] items-center border-b border-[#ded8c9] bg-[#fffdf7]/95 px-4 py-1 sm:min-h-[82px] sm:px-6 sm:py-0 lg:hidden print:hidden">
+          <BrandMark size="mobile" />
         </header>
 
-        <div className="border-b border-[#3b3b3b] bg-[#171717] px-4 py-3 lg:hidden print:hidden">
-          <div className="space-y-3">
+        <div className="border-b border-[#3b3b3b] bg-[#171717] px-4 py-2 sm:py-3 lg:hidden print:hidden">
+          <div className="space-y-2 sm:space-y-3">
             <AdminNavigation variant="mobile" />
             <AdminUserControl fullName={profile.full_name} variant="mobile" />
           </div>
         </div>
 
-        <main className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-10 print:max-w-none print:px-0 print:py-0">{children}</main>
+        <main className="mx-auto min-w-0 w-full max-w-[1440px] px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10 print:max-w-none print:px-0 print:py-0">{children}</main>
       </div>
     </div>
   );
