@@ -17,7 +17,7 @@ export function QrCheckInPanel({ destinationUrl, qrDataUrl, qrError }: { destina
   }
 
   return (
-     <section className="rounded-[1.75rem] border border-[#dfddd4] bg-white p-4 shadow-[0_20px_55px_rgba(0,0,0,0.08)] sm:p-8 print:border-0 print:p-0 print:shadow-none">
+      <section className="rounded-[1.75rem] border border-[#dfddd4] bg-white p-4 shadow-[0_20px_55px_rgba(0,0,0,0.08)] sm:p-7 print:border-0 print:p-0 print:shadow-none">
        <div className="text-center">
           <Image alt="Cool Car Centrale" className="mx-auto h-auto w-[150px] rounded-xl bg-white object-contain p-1 sm:w-[220px]" height={1000} sizes="(max-width: 639px) 150px, 220px" src="/img/logo.jpg" width={2000} />
           <p className="mt-4 text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00] sm:mt-6">Customer Check-In</p>

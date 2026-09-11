@@ -93,7 +93,7 @@ function StaffEditor({ onCancel, staff }: { onCancel?: () => void; staff?: Admin
   const editing = Boolean(staff);
 
   return (
-    <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-7">
+    <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-6">
       <div className="flex items-start gap-3 border-b border-[#ead98a] pb-5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#a77f00]"><Users className="h-4 w-4" /></span>
         <div>
@@ -103,7 +103,7 @@ function StaffEditor({ onCancel, staff }: { onCancel?: () => void; staff?: Admin
         </div>
       </div>
 
-      <form action={formAction} className="mt-5 space-y-4 sm:mt-6">
+      <form action={formAction} className="mt-5 space-y-4">
         {staff && <input name="id" type="hidden" value={staff.id} />}
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
@@ -179,10 +179,10 @@ export function AdminStaffManager({ staff }: AdminStaffData) {
   const activeCount = staff.filter((member) => member.active).length;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-5 sm:space-y-6">
       <header>
         <Link className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-bold text-[#a77f00] hover:text-[#756000]" href="/admin/sales"><ChevronRight className="h-4 w-4 rotate-180" />Back to Sales</Link>
-        <div className="mt-4 flex flex-col gap-4 sm:mt-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-4 flex flex-col gap-4 sm:mt-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Staff records</p>
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Keep service assignments current.</h1>
@@ -207,7 +207,7 @@ export function AdminStaffManager({ staff }: AdminStaffData) {
 
       <StaffEditor key={editingStaff?.id ?? "new"} onCancel={() => setEditingStaffId(null)} staff={editingStaff} />
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
         <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-4 sm:flex-row sm:items-end sm:justify-between sm:pb-5">
           <div className="flex items-start gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]"><CheckCircle className="h-4 w-4" /></span>
@@ -220,11 +220,11 @@ export function AdminStaffManager({ staff }: AdminStaffData) {
           <span className="self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#5f5d57] sm:self-auto">{staff.length} {staff.length === 1 ? "record" : "records"}</span>
         </div>
 
-        <div className="mt-5 space-y-3">
+        <div className="mt-4 space-y-3">
           {staff.length > 0 ? staff.map((member) => (
             <StaffRow editing={member.id === editingStaffId} key={member.id} onEdit={() => setEditingStaffId(member.id === editingStaffId ? null : member.id)} staff={member} />
           )) : (
-            <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-7 text-sm leading-6 text-[#65635d]">No staff records yet. Add the first staff member above.</div>
+            <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-5 text-sm leading-6 text-[#65635d]">No staff records yet. Add the first staff member above.</div>
           )}
         </div>
       </section>

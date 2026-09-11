@@ -27,7 +27,7 @@ export default async function AdminQrPage() {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 print:space-y-0">
+    <div className="space-y-5 sm:space-y-6 print:space-y-0">
       <header className="flex flex-col gap-3 sm:gap-4 print:hidden sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Customer access utility</p>

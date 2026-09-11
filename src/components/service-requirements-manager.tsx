@@ -266,8 +266,8 @@ export function ServiceRequirementsManager({ services, consumables, requirements
   const activeConsumables = consumables.filter((item) => item.active);
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="service-requirements">
-      <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6" id="service-requirements">
+      <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-xs font-black text-[#a77f00]">
             04

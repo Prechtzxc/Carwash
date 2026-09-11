@@ -153,19 +153,15 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
   const hasMatches = report.customers.length > 0;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <header className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Client directory</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Know who keeps coming back.</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#65635d] sm:mt-4 sm:text-base sm:leading-7">A living view of customer relationships, current vehicles, and completed work. Search by name, mobile number, or plate.</p>
-        </div>
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#171717] text-[#f4c400] shadow-[0_14px_30px_rgba(0,0,0,0.14)] sm:h-16 sm:w-16">
-          <Users className="h-7 w-7 sm:h-8 sm:w-8" />
-        </div>
-      </header>
+    <div className="space-y-5 sm:space-y-6">
+      <h1 className="sr-only">Clients</h1>
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <SummaryCard detail="All customer records in the protected directory" icon={<Users className="h-4 w-4" />} label="Total clients" value={report.summary.totalCustomers} />
+        <SummaryCard detail="Two or more completed visits" icon={<Clock className="h-4 w-4" />} label="Returning clients" value={report.summary.returningCustomers} />
+        <SummaryCard detail="Current vehicles represented by this page" icon={<CarFront className="h-4 w-4" />} label="Showing" value={`${report.customers.length} of ${report.pagination.totalMatches}`} />
+      </section>
 
-      <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-6">
         <div className="flex flex-col gap-2 border-b border-[#ead98a] pb-4 sm:pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Find a client</p>
@@ -174,7 +170,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
           <span className="text-sm font-semibold text-[#6f652f]">Completed visits power the activity totals</span>
         </div>
 
-        <form action="/admin/clients" className="mt-4 grid gap-3 sm:mt-5 lg:grid-cols-[minmax(0,1fr)_230px_auto] lg:items-end" method="get">
+        <form action="/admin/clients" className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_230px_auto] lg:items-end" method="get">
           <div>
           <label className="text-[0.65rem] font-bold uppercase tracking-[0.13em] text-[#65635d]" htmlFor="client-search">Name, mobile, or plate</label>
           <input className="mt-1.5 min-h-12 w-full rounded-xl border border-[#d4cfbf] bg-white px-4 text-sm text-[#292929] outline-none placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]" defaultValue={search} id="client-search" name="search" placeholder="Try Maria, 0917..., or ABC 123" type="search" />
@@ -195,13 +191,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
         </form>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <SummaryCard detail="All customer records in the protected directory" icon={<Users className="h-4 w-4" />} label="Total clients" value={report.summary.totalCustomers} />
-        <SummaryCard detail="Two or more completed visits" icon={<Clock className="h-4 w-4" />} label="Returning clients" value={report.summary.returningCustomers} />
-        <SummaryCard detail="Current vehicles represented by this page" icon={<CarFront className="h-4 w-4" />} label="Showing" value={`${report.customers.length} of ${report.pagination.totalMatches}`} />
-      </section>
-
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
         <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-4 sm:pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Customer records</p>
@@ -211,9 +201,9 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
           <span className="self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#5f5d57] sm:self-auto">Sorted by {sort === "recent" ? "recent activity" : sort === "last_visit" ? "latest visit" : sort === "visits" ? "most visits" : "name"}</span>
         </div>
 
-        <div className="mt-5 space-y-3">
+        <div className="mt-4 space-y-3">
           {hasMatches ? report.customers.map((customer) => <ClientRow customer={customer} key={customer.id} />) : (
-            <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-8 text-center">
+            <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-6 text-center">
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff7cc] text-[#a77f00]"><Users className="h-5 w-5" /></span>
               <h3 className="mt-4 text-lg font-bold text-[#292929]">{search ? "No matching clients" : "No client records yet"}</h3>
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#65635d]">{search ? "Try a different name, mobile number, or plate. Search uses the current customer and vehicle records." : "Customer records will appear here after the first check-in is submitted."}</p>
@@ -221,7 +211,7 @@ export function AdminClientDirectory({ report, search, sort }: { report: ClientD
           )}
         </div>
 
-        <div className="mt-6"><Pagination report={report} search={search} sort={sort} /></div>
+        <div className="mt-5"><Pagination report={report} search={search} sort={sort} /></div>
       </section>
 
       <p className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-[#89867d]"><Clock className="h-4 w-4 text-[#a77f00]" />Visit totals and spend include completed transactions only.</p>

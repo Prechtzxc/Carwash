@@ -86,7 +86,7 @@ function FormButton({ children, pendingLabel }: { children: ReactNode; pendingLa
 
 function SectionHeading({ description, eyebrow, icon, title }: { description: string; eyebrow: string; icon: ReactNode; title: string }) {
   return (
-    <div className="flex items-start gap-3 border-b border-[#dfddd4] pb-5">
+    <div className="flex items-start gap-3 border-b border-[#dfddd4] pb-4">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">{icon}</span>
       <div>
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">{eyebrow}</p>
@@ -228,7 +228,7 @@ function TransactionLines({ lines, emptyLabel }: { lines: ClientDetail["transact
 
 function CompletedHistory({ transactions }: { transactions: ClientDetail["transactions"] }) {
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-5 space-y-4">
       {transactions.length > 0 ? transactions.map((transaction) => (
         <article className="rounded-2xl border border-[#dfddd4] bg-white p-4 shadow-[0_10px_28px_rgba(0,0,0,0.035)] sm:p-6" key={transaction.id}>
           <div className="flex flex-col gap-4 border-b border-[#e8e5dc] pb-5 sm:flex-row sm:items-start sm:justify-between">
@@ -260,7 +260,7 @@ function CompletedHistory({ transactions }: { transactions: ClientDetail["transa
           </div>
         </article>
       )) : (
-        <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-8 text-center">
+        <div className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-6 text-center">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff7cc] text-[#a77f00]"><Clock className="h-5 w-5" /></span>
           <h3 className="mt-4 text-lg font-bold text-[#292929]">No completed visits yet</h3>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#65635d]">Pending and cancelled requests are not included in client activity or history.</p>
@@ -274,10 +274,10 @@ export function AdminClientDetail({ detail }: { detail: ClientDetail }) {
   const { customer, summary } = detail;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-5 sm:space-y-6">
       <header>
         <Link className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-bold text-[#a77f00] hover:text-[#756000]" href="/admin/clients"><ChevronRight className="h-4 w-4 rotate-180" />Back to clients</Link>
-        <div className="mt-4 flex flex-col gap-4 sm:mt-6 sm:gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-4 flex flex-col gap-4 sm:mt-5 sm:gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Client profile</p>
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">{customer.firstName} {customer.lastName}</h1>
@@ -309,24 +309,24 @@ export function AdminClientDetail({ detail }: { detail: ClientDetail }) {
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
         <SectionHeading description="Update the current customer record used for future visits. Historical transaction names and contact details remain snapshots." eyebrow="Current record" icon={<Users className="h-4 w-4" />} title="Customer details" />
         <CustomerProfileForm customer={customer} />
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1">
             <SectionHeading description="Keep current vehicle details accurate for the next check-in without rewriting prior visit snapshots." eyebrow="Current records" icon={<CarFront className="h-4 w-4" />} title="Vehicles" />
           </div>
           <span className="self-start rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#5f5d57] sm:self-auto">{detail.vehicles.length} vehicle{detail.vehicles.length === 1 ? "" : "s"}</span>
         </div>
-        <div className="mt-6 space-y-4">
+        <div className="mt-5 space-y-4">
           {detail.vehicles.length > 0 ? detail.vehicles.map((vehicle) => <VehicleForm customerId={customer.id} key={vehicle.id} vehicle={vehicle} vehicleCategories={detail.vehicleCategories} />) : <p className="rounded-2xl border border-dashed border-[#cfcac0] bg-white p-6 text-sm leading-6 text-[#65635d]">No current vehicles are recorded for this customer.</p>}
         </div>
       </section>
 
-      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+      <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
         <SectionHeading description="Completed transactions are shown from their stored historical snapshots. Current profile or vehicle edits cannot alter this record." eyebrow="Immutable history" icon={<Sparkles className="h-4 w-4" />} title="Completed visits" />
         <CompletedHistory transactions={detail.transactions} />
       </section>

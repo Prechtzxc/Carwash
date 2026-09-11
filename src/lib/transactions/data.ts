@@ -99,6 +99,14 @@ export type AdminTransactionDashboardData = {
   pendingRequests: AdminTransaction[];
   confirmedRequests: AdminTransaction[];
   recentSubmissions: AdminTransaction[];
+  recentPagination: AdminTransactionPagination;
+};
+
+export type AdminTransactionPagination = {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
 };
 
 export type AdminTransactionReviewPageData = {
@@ -106,6 +114,8 @@ export type AdminTransactionReviewPageData = {
   catalog: AdminTransactionCatalog;
   staff: AdminStaff[];
 };
+
+export const dashboardRecentPageSize = 10;
 
 const transactionSelect = [
   "id",
@@ -366,8 +376,29 @@ async function getAdminTransactionCatalog(
   };
 }
 
-export async function getAdminTransactionDashboardData(): Promise<AdminTransactionDashboardData> {
+function getPagination(totalItems: number, requestedPage: number, pageSize: number): AdminTransactionPagination {
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  return {
+    page: Math.min(Math.max(requestedPage, 1), totalPages),
+    pageSize,
+    totalItems,
+    totalPages,
+  };
+}
+
+function buildRecentSubmissionsQuery(supabase: Awaited<ReturnType<typeof getAdminClient>>) {
+  return supabase
+    .from("transactions")
+    .select(transactionSelect, { count: "exact" })
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false });
+}
+
+export async function getAdminTransactionDashboardData(requestedRecentPage = 1): Promise<AdminTransactionDashboardData> {
   const supabase = await getAdminClient();
+  const recentPage = Number.isInteger(requestedRecentPage) && requestedRecentPage > 0 ? requestedRecentPage : 1;
+  const recentOffset = (recentPage - 1) * dashboardRecentPageSize;
   const [pendingResult, confirmedResult, confirmedCountResult, recentResult] = await Promise.all([
     supabase
       .from("transactions")
@@ -385,11 +416,7 @@ export async function getAdminTransactionDashboardData(): Promise<AdminTransacti
       .from("transactions")
       .select("id", { count: "exact", head: true })
       .eq("status", "confirmed"),
-    supabase
-      .from("transactions")
-      .select(transactionSelect)
-      .order("created_at", { ascending: false })
-      .limit(10),
+    buildRecentSubmissionsQuery(supabase).range(recentOffset, recentOffset + dashboardRecentPageSize - 1),
   ]);
 
   if (pendingResult.error || confirmedResult.error || confirmedCountResult.error || recentResult.error) {
@@ -398,7 +425,19 @@ export async function getAdminTransactionDashboardData(): Promise<AdminTransacti
 
   const pendingRows = (pendingResult.data ?? []) as unknown as TransactionRow[];
   const confirmedRows = (confirmedResult.data ?? []) as unknown as TransactionRow[];
-  const recentRows = (recentResult.data ?? []) as unknown as TransactionRow[];
+  const recentPagination = getPagination(recentResult.count ?? 0, recentPage, dashboardRecentPageSize);
+  let recentRows = (recentResult.data ?? []) as unknown as TransactionRow[];
+
+  if (recentRows.length === 0 && recentPagination.totalItems > 0 && recentPagination.page !== recentPage) {
+    const lastRecentOffset = (recentPagination.page - 1) * dashboardRecentPageSize;
+    const lastRecentResult = await buildRecentSubmissionsQuery(supabase).range(lastRecentOffset, lastRecentOffset + dashboardRecentPageSize - 1);
+
+    if (lastRecentResult.error) {
+      throw new Error("Transaction dashboard data could not be loaded.");
+    }
+
+    recentRows = (lastRecentResult.data ?? []) as unknown as TransactionRow[];
+  }
   const rowsById = new Map([...pendingRows, ...confirmedRows, ...recentRows].map((row) => [row.id, row]));
   const hydrated = await hydrateTransactions(supabase, [...rowsById.values()]);
   const hydratedById = new Map(hydrated.map((transaction) => [transaction.id, transaction]));
@@ -409,6 +448,7 @@ export async function getAdminTransactionDashboardData(): Promise<AdminTransacti
     pendingRequests: pendingRows.map((row) => hydratedById.get(row.id)).filter((transaction): transaction is AdminTransaction => Boolean(transaction)),
     confirmedRequests: confirmedRows.map((row) => hydratedById.get(row.id)).filter((transaction): transaction is AdminTransaction => Boolean(transaction)),
     recentSubmissions: recentRows.map((row) => hydratedById.get(row.id)).filter((transaction): transaction is AdminTransaction => Boolean(transaction)),
+    recentPagination,
   };
 }
 

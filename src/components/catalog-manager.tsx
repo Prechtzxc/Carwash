@@ -8,8 +8,6 @@ import {
   ArrowRight,
   CheckCircle,
   CircleDashed,
-  Layers,
-  Sparkles,
 } from "@/components/icons";
 import {
   saveServiceAction,
@@ -119,7 +117,7 @@ function StatusBadge({ active }: { active: boolean }) {
 
 function SectionHeading({ index, title, description, count }: { index: string; title: string; description: string; count: number }) {
   return (
-    <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-3 border-b border-[#dfddd4] pb-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-xs font-black text-[#a77f00]">
           {index}
@@ -261,7 +259,7 @@ function CategoryEditor({ category }: { category?: VehicleCategoryDto }) {
 
 function CategorySection({ categories }: { categories: VehicleCategoryDto[] }) {
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="vehicle-categories">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6" id="vehicle-categories">
       <SectionHeading
         count={categories.length}
         description="Keep the vehicle choices clear for operators and map each category to a default pricing size."
@@ -375,7 +373,7 @@ function ServiceEditor({ service }: { service?: ServiceDto }) {
 
 function ServiceSection({ services }: { services: ServiceDto[] }) {
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="services">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6" id="services">
       <SectionHeading
         count={services.length}
         description="Define the wash and add-on services that will later be offered to customers and operators."
@@ -457,7 +455,7 @@ function PricingSection({ services, prices }: { services: ServiceDto[]; prices: 
   }
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7" id="pricing">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6" id="pricing">
       <SectionHeading
         count={prices.length}
         description="Set one amount per service and vehicle size. Empty cells are intentionally left unset until an admin configures them."
@@ -509,26 +507,8 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
   const activeServices = services.filter((service) => service.active).length;
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <header className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Configuration</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">Catalog and pricing</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#65635d] sm:mt-4 sm:text-base sm:leading-7">
-            Set the services, vehicle rules, and prices used for customer check-in. This page stores configuration only.
-          </p>
-        </div>
-        <div className="flex w-full shrink-0 items-center gap-3 rounded-2xl border border-[#dfddd4] bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)] md:w-auto">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">
-            <Sparkles className="h-5 w-5" />
-          </span>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#89867d]">Access level</p>
-            <p className="mt-1 text-sm font-bold text-[#292929]">Admin editing</p>
-          </div>
-        </div>
-      </header>
-
+    <div className="space-y-5 sm:space-y-6">
+      <h1 className="sr-only">Catalog</h1>
       <section className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl border border-[#ead98a] bg-[#fff7cc] p-4 sm:p-5">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Active categories</p>
@@ -544,25 +524,6 @@ export function CatalogManager({ categories, prices, recipeData, services }: Cat
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#756000]">Price points</p>
           <p className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#171717]">{prices.length}</p>
           <p className="mt-1 text-xs text-[#756000]">of {services.length * vehicleSizes.length} possible</p>
-        </div>
-      </section>
-
-      <section className="rounded-[1.5rem] bg-[#171717] p-5 text-white shadow-[0_18px_45px_rgba(0,0,0,0.12)] sm:p-7">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f4c400]/15 text-[#f4c400]">
-              <Layers className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#f4c400]">Configuration rules</p>
-              <h2 className="mt-1 text-xl font-bold tracking-[-0.03em]">Keep the catalog deliberate.</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Disable records instead of deleting them, and leave prices unset until the operator has approved the amount.</p>
-            </div>
-          </div>
-          <a className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-[#ffe67a] transition-colors hover:bg-white/15 md:w-auto" href="#vehicle-categories">
-            Start with categories
-            <ArrowRight className="h-4 w-4" />
-          </a>
         </div>
       </section>
 

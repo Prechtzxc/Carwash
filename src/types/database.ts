@@ -725,6 +725,15 @@ export type Database = {
         };
         Returns: Json;
       };
+      get_admin_sales_report_page: {
+        Args: {
+          p_start_date?: string | null;
+          p_end_date?: string | null;
+          p_page?: number;
+          p_page_size?: number;
+        };
+        Returns: Json;
+      };
       get_admin_client_directory: {
         Args: {
           p_search?: string | null;

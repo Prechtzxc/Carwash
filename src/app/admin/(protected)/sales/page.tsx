@@ -26,6 +26,12 @@ function isIsoDate(value: string) {
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
+function resolvePage(value: string) {
+  const page = Number(value);
+
+  return Number.isInteger(page) && page > 0 && page <= 100000 ? page : 1;
+}
+
 function shiftDate(value: string, days: number) {
   const date = new Date(`${value}T00:00:00.000Z`);
   date.setUTCDate(date.getUTCDate() + days);
@@ -106,10 +112,12 @@ function resolveSelection(searchParams: Record<string, string | string[] | undef
 }
 
 export default async function SalesPage({ searchParams }: { searchParams: SalesSearchParams }) {
-  const selection = resolveSelection(await searchParams);
+  const params = await searchParams;
+  const selection = resolveSelection(params);
+  const page = resolvePage(searchParamValue(params, "page"));
   const report = selection.error
     ? null
-    : await getAdminSalesReport(selection.startDate, selection.endDate);
+    : await getAdminSalesReport(selection.startDate, selection.endDate, page);
 
   return <AdminSalesDashboard report={report} selection={selection} />;
 }

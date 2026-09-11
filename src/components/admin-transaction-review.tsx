@@ -109,7 +109,7 @@ function FormButton({ children, pendingLabel, tone = "primary" }: { children: Re
 
 function SectionHeading({ eyebrow, title, description, icon }: { eyebrow: string; title: string; description: string; icon: ReactNode }) {
   return (
-    <div className="flex items-start gap-3 border-b border-[#dfddd4] pb-5">
+    <div className="flex items-start gap-3 border-b border-[#dfddd4] pb-4">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]">{icon}</span>
       <div>
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">{eyebrow}</p>
@@ -240,7 +240,7 @@ function TransactionEditForm({ data }: { data: AdminTransactionReviewPageData })
   }
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
       <SectionHeading
         description="Pending requests can be corrected before confirmation. Prices are recalculated from the active catalog when you save."
         eyebrow="Editable while pending"
@@ -248,7 +248,7 @@ function TransactionEditForm({ data }: { data: AdminTransactionReviewPageData })
         title="Review and revise details"
       />
 
-      <form action={formAction} className="mt-5 space-y-6 sm:mt-6 sm:space-y-8">
+      <form action={formAction} className="mt-5 space-y-5 sm:space-y-6">
         <input name="transactionId" type="hidden" value={transaction.id} />
         <input name="serviceIds" type="hidden" value={JSON.stringify(serviceIds)} readOnly />
         <input name="productLines" type="hidden" value={JSON.stringify(productLines)} readOnly />
@@ -428,7 +428,7 @@ function serviceSalesTotal(transaction: AdminTransaction) {
 
 function StaffAssignmentReadOnly({ transaction }: { transaction: AdminTransaction }) {
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-7">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-[#f7f6f1] p-4 sm:p-6">
       <SectionHeading
         description="Final transaction assignments cannot be changed. Earnings use the service sales snapshot captured at completion."
         eyebrow="Read-only assignment"
@@ -506,7 +506,7 @@ function StaffAssignmentEditor({ data }: { data: AdminTransactionReviewPageData 
   }
 
   return (
-    <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-7">
+    <section className="rounded-[1.5rem] border border-[#ead98a] bg-[#fff9d9] p-4 sm:p-6">
       <SectionHeading
         description="Assign one or more active staff members to this service transaction. Their shares must total exactly 40% before completion."
         eyebrow="Editable until completion"
@@ -665,7 +665,7 @@ function TransactionActions({ transaction }: { transaction: AdminTransaction }) 
   }
 
   return (
-    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-7">
+    <section className="rounded-[1.5rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#a77f00]">Decision</p>
@@ -727,7 +727,7 @@ function TransactionActions({ transaction }: { transaction: AdminTransaction }) 
 
 function TransactionTimeline({ transaction }: { transaction: AdminTransaction }) {
   return (
-      <section className="rounded-2xl border border-[#dfddd4] bg-white p-4 sm:p-6">
+    <section className="rounded-2xl border border-[#dfddd4] bg-white p-4 sm:p-5">
       <div className="flex items-center gap-3">
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff7cc] text-[#a77f00]"><Clock className="h-4 w-4" /></span>
         <div>
@@ -752,10 +752,10 @@ export function TransactionReview({ data }: { data: AdminTransactionReviewPageDa
   const editable = transaction.status === "pending";
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-5 sm:space-y-6">
       <header>
         <Link className="inline-flex min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-bold text-[#a77f00] hover:text-[#756000]" href="/admin"><ChevronRight className="h-4 w-4 rotate-180" />Back to incoming check-ins</Link>
-        <div className="mt-4 flex flex-col gap-4 sm:mt-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-4 flex flex-col gap-4 sm:mt-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#a77f00]">Transaction review</p>
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.05em] text-[#171717] sm:text-4xl">{transaction.transactionNumber}</h1>
@@ -765,19 +765,19 @@ export function TransactionReview({ data }: { data: AdminTransactionReviewPageDa
         </div>
       </header>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_350px]">
-        <div className="space-y-5">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="space-y-4">
           {editable ? <TransactionEditForm data={data} /> : <ReadOnlyDetails transaction={transaction} />}
 
-          <section className="rounded-[1.5rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-7">
+          <section className="rounded-[1.5rem] border border-[#dfddd4] bg-white p-4 shadow-[0_12px_35px_rgba(0,0,0,0.04)] sm:p-6">
             <SectionHeading
               description="These are the service and product snapshots currently stored on the request."
               eyebrow="Request contents"
               icon={<Sparkles className="h-4 w-4" />}
               title="Selected services and products"
             />
-            <div className="mt-6"><SummaryLines transaction={transaction} /></div>
-            <div className="mt-6 grid gap-3 border-t border-[#e8e5dc] pt-5 sm:grid-cols-3">
+            <div className="mt-5"><SummaryLines transaction={transaction} /></div>
+            <div className="mt-5 grid gap-3 border-t border-[#e8e5dc] pt-5 sm:grid-cols-3">
               <div><p className="text-xs text-[#89867d]">Services</p><p className="mt-1 font-bold text-[#3f3f3f]">{formatCurrency(transaction.serviceSubtotal)}</p></div>
               <div><p className="text-xs text-[#89867d]">Products</p><p className="mt-1 font-bold text-[#3f3f3f]">{formatCurrency(transaction.productSubtotal)}</p></div>
                <div><p className="text-xs text-[#89867d]">{transaction.status === "completed" ? "Total" : "Request total"}</p><p className="mt-1 text-lg font-black text-[#171717]">{formatCurrency(transaction.total)}</p></div>
@@ -786,7 +786,7 @@ export function TransactionReview({ data }: { data: AdminTransactionReviewPageDa
           <StaffAssignmentSection data={data} />
         </div>
 
-        <aside className="space-y-5">
+        <aside className="space-y-4">
           <div className="rounded-[1.5rem] bg-[#171717] p-5 text-white shadow-[0_18px_42px_rgba(0,0,0,0.14)] sm:p-6">
             <div className="flex items-start justify-between gap-4"><div><p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#f4c400]">Current total</p><p className="mt-3 text-3xl font-black tracking-[-0.05em]">{formatCurrency(transaction.total)}</p></div><CarFront className="h-6 w-6 text-[#f4c400]" /></div>
             <div className="mt-6 border-t border-white/10 pt-4 text-sm text-slate-300"><p>{transaction.vehicle.categoryName}</p><p className="mt-1">{transaction.services.length} service{transaction.services.length === 1 ? "" : "s"} · {transaction.products.length} product{transaction.products.length === 1 ? "" : "s"}</p></div>

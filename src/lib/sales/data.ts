@@ -50,12 +50,19 @@ const salesReportSchema = z.object({
     products: z.array(salesLineSchema),
     total: z.number(),
   })),
+  transactionPagination: z.object({
+    page: z.number().int().positive(),
+    pageSize: z.number().int().positive(),
+    totalItems: z.number().int().nonnegative(),
+    totalPages: z.number().int().positive(),
+  }),
 });
 
 export type SalesReport = z.infer<typeof salesReportSchema>;
 
 export const salesFilterKeys = ["today", "week", "month", "all", "custom"] as const;
 export type SalesFilterKey = (typeof salesFilterKeys)[number];
+export const salesTransactionPageSize = 20;
 
 export type SalesFilterSelection = {
   key: SalesFilterKey;
@@ -67,7 +74,7 @@ export type SalesFilterSelection = {
   error: string | null;
 };
 
-export async function getAdminSalesReport(startDate: string | null, endDate: string | null): Promise<SalesReport> {
+export async function getAdminSalesReport(startDate: string | null, endDate: string | null, page = 1): Promise<SalesReport> {
   await requireAdminProfile();
   const supabase = await createClient();
 
@@ -75,9 +82,11 @@ export async function getAdminSalesReport(startDate: string | null, endDate: str
     throw new Error("Supabase is not configured.");
   }
 
-  const { data, error } = await supabase.rpc("get_admin_sales_report", {
+  const { data, error } = await supabase.rpc("get_admin_sales_report_page", {
     p_start_date: startDate,
     p_end_date: endDate,
+    p_page: page,
+    p_page_size: salesTransactionPageSize,
   });
 
   if (error || !data) {
