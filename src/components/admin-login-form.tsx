@@ -4,7 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ArrowRight, ShieldCheck } from "@/components/icons";
+import { ArrowRight, Eye, EyeOff, ShieldCheck } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
 import { SUPABASE_CONFIGURATION_ERROR } from "@/lib/supabase/config";
 
@@ -29,6 +29,7 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(() => getInitialErrorMessage(initialError));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isFormIncomplete = email.trim() === "" || password === "";
@@ -89,17 +90,28 @@ export function AdminLoginForm({ initialError, returnTo }: AdminLoginFormProps) 
         <div className="flex items-center justify-between gap-3">
           <label className="text-sm font-bold text-[#292929]" htmlFor="password">Password</label>
         </div>
-        <input
-          autoComplete="current-password"
-          className="mt-2 min-h-13 w-full rounded-xl border border-[#d7d4ca] bg-white px-4 text-sm text-[#171717] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]"
-          id="password"
-          name="password"
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Enter your password"
-          required
-          type="password"
-          value={password}
-        />
+        <div className="relative mt-2">
+          <input
+            autoComplete="current-password"
+            className="min-h-13 w-full rounded-xl border border-[#d7d4ca] bg-white px-4 pr-14 text-sm text-[#171717] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]"
+            id="password"
+            name="password"
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter your password"
+            required
+            type={showPassword ? "text" : "password"}
+            value={password}
+          />
+          <button
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+            className="absolute inset-y-1 right-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[#65635d] transition-colors hover:bg-[#f2f1eb] hover:text-[#292929] focus-visible:ring-4 focus-visible:ring-[#f4c400]/40"
+            onClick={() => setShowPassword((current) => !current)}
+            type="button"
+          >
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {error && (

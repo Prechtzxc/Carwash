@@ -478,9 +478,9 @@ function PricingSection({ services, prices }: { services: ServiceDto[]; prices: 
                   </div>
                   <p className="mt-1 text-sm text-[#706e67]">{service.description || "No description provided."}</p>
                 </div>
-                <span className="rounded-lg bg-[#f2f1eb] px-3 py-2 text-xs font-bold text-[#65635d]">{prices.filter((price) => price.service_id === service.id).length}/4 set</span>
+                <span className="rounded-lg bg-[#f2f1eb] px-3 py-2 text-xs font-bold text-[#65635d]">{prices.filter((price) => price.service_id === service.id).length}/{vehicleSizes.length} set</span>
               </div>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
                 {vehicleSizes.map((sizeClass) => (
                   <PriceCell
                     key={sizeClass}

@@ -8,7 +8,9 @@ import Link from "next/link";
 import { ArrowRight, CarFront, CheckCircle, ChevronRight, ClipboardCheck, Droplets, Sparkles } from "@/components/icons";
 import { submitPublicCheckInAction } from "@/app/check-in/actions";
 import { BrandMark } from "@/components/brand-mark";
+import { PhilippineMobileInput } from "@/components/philippine-mobile-input";
 import { initialCheckInActionState, type CheckInActionState } from "@/lib/check-in/state";
+import { formatPhilippineMobile, PHILIPPINE_MOBILE_PLACEHOLDER, validatePhilippineMobile } from "@/lib/mobile-number";
 import type {
   CheckInProductLine,
   CheckInSuccessResult,
@@ -210,21 +212,19 @@ function CustomerDetailsStep({
         </div>
         <div>
           <label className={labelClass} htmlFor="check-in-mobile">Mobile number</label>
-          <input
-            aria-describedby={getFieldError(state, "mobileNumber") ? "check-in-mobile-error" : undefined}
-            aria-invalid={Boolean(getFieldError(state, "mobileNumber"))}
+          <PhilippineMobileInput
             autoComplete="tel"
-            className={`${inputClass} mt-2`}
+            className="mt-2 min-h-12"
+            describedBy={["check-in-mobile-help", getFieldError(state, "mobileNumber") ? "check-in-mobile-error" : ""].filter(Boolean).join(" ")}
             id="check-in-mobile"
-            inputMode="tel"
-            onChange={(event) => onChange("mobileNumber", event.target.value)}
-            placeholder="09XX XXX XXXX"
+            invalid={Boolean(getFieldError(state, "mobileNumber"))}
+            onChange={(value) => onChange("mobileNumber", value)}
+            placeholder={PHILIPPINE_MOBILE_PLACEHOLDER}
             required
-            type="tel"
             value={details.mobileNumber}
           />
-           <p className="mt-2 text-xs leading-5 text-[#817e75]">Philippine mobile numbers only. We use this privately to avoid duplicate customer records.</p>
-          <FieldError id="check-in-mobile-error" message={getFieldError(state, "mobileNumber")} />
+          <p className="mt-2 text-xs leading-5 text-[#817e75]" id="check-in-mobile-help">Enter your 10-digit Philippine mobile number.</p>
+           <FieldError id="check-in-mobile-error" message={getFieldError(state, "mobileNumber")} />
         </div>
         <div>
            <label className={labelClass} htmlFor="check-in-email">Email <span className="font-medium normal-case tracking-normal text-[#9a978d]">(optional)</span></label>
@@ -503,7 +503,7 @@ function ReviewStep({
       <div className="mt-8 space-y-4">
         <ReviewBlock actionLabel="Edit" onEdit={() => onEdit(1)} title="Customer details">
            <p className="font-bold text-[#292929]">{details.firstName} {details.lastName}</p>
-           <p className="mt-1 text-sm text-[#706e67]">{details.mobileNumber}{details.email ? ` · ${details.email}` : ""}</p>
+           <p className="mt-1 text-sm text-[#706e67]">{formatPhilippineMobile(details.mobileNumber)}{details.email ? ` · ${details.email}` : ""}</p>
         </ReviewBlock>
         <ReviewBlock actionLabel="Edit" onEdit={() => onEdit(2)} title="Vehicle">
            <p className="font-bold text-[#292929]">{category?.name ?? "Vehicle category not selected"}</p>
@@ -738,7 +738,7 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
   const serviceSubtotal = selectedServices.reduce((sum, line) => sum + (line.price ?? 0), 0);
   const productSubtotal = selectedProducts.reduce((sum, line) => sum + line.product.sellingPrice * line.quantity, 0);
   const total = serviceSubtotal + productSubtotal;
-  const canSubmit = Boolean(categoryId && selectedServices.length > 0 && selectedServices.every((line) => line.price !== null));
+  const canSubmit = Boolean(categoryId && selectedServices.length > 0 && selectedServices.every((line) => line.price !== null) && validatePhilippineMobile(details.mobileNumber).valid);
 
   useEffect(() => {
     function updateNetworkStatus() {
@@ -811,9 +811,18 @@ function CheckInWizardSession({ catalog, idempotencyKey, onReset }: { catalog: P
   function continueToNextStep() {
     setStepNotice("");
 
-    if (step === 1 && (!details.firstName.trim() || !details.lastName.trim() || !details.mobileNumber.trim())) {
-      setStepNotice("Add your first name, last name, and mobile number to continue.");
-      return;
+    if (step === 1) {
+      if (!details.firstName.trim() || !details.lastName.trim()) {
+        setStepNotice("Add your first name, last name, and mobile number to continue.");
+        return;
+      }
+
+      const mobileValidation = validatePhilippineMobile(details.mobileNumber);
+
+      if (!mobileValidation.valid) {
+        setStepNotice(mobileValidation.message);
+        return;
+      }
     }
 
     if (step === 2 && !categoryId) {

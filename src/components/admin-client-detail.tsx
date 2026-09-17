@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -15,6 +15,7 @@ import {
   Sparkles,
   Users,
 } from "@/components/icons";
+import { PhilippineMobileInput } from "@/components/philippine-mobile-input";
 import {
   updateCustomerProfileAction,
   updateCustomerVehicleAction,
@@ -22,6 +23,7 @@ import {
 } from "@/app/admin/(protected)/clients/actions";
 import { initialFormActionState } from "@/lib/form-action-state";
 import type { ClientDetail } from "@/lib/clients/data";
+import { getPhilippineMobileLocal } from "@/lib/mobile-number";
 
 const inputClass =
   "min-h-11 w-full rounded-xl border border-[#dedbd1] bg-white px-3.5 text-sm text-[#292929] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8]";
@@ -100,6 +102,7 @@ function SectionHeading({ description, eyebrow, icon, title }: { description: st
 function CustomerProfileForm({ customer }: { customer: ClientDetail["customer"] }) {
   const router = useRouter();
   const [state, formAction] = useActionState(updateCustomerProfileAction, initialFormActionState);
+  const [mobileNumber, setMobileNumber] = useState(() => getPhilippineMobileLocal(customer.mobileNumber));
 
   useEffect(() => {
     if (state.status === "success") {
@@ -123,7 +126,17 @@ function CustomerProfileForm({ customer }: { customer: ClientDetail["customer"] 
         </div>
         <div>
           <label className={labelClass} htmlFor="client-mobile">Mobile number</label>
-          <input aria-describedby={state.fieldErrors.mobileNumber ? "client-mobile-error" : undefined} aria-invalid={Boolean(state.fieldErrors.mobileNumber)} className={`${inputClass} mt-1.5`} defaultValue={customer.mobileNumber} id="client-mobile" inputMode="tel" name="mobileNumber" required />
+          <PhilippineMobileInput
+            className="mt-1.5"
+            describedBy={["client-mobile-help", state.fieldErrors.mobileNumber ? "client-mobile-error" : ""].filter(Boolean).join(" ")}
+            id="client-mobile"
+            invalid={Boolean(state.fieldErrors.mobileNumber)}
+            name="mobileNumber"
+            onChange={setMobileNumber}
+            required
+            value={mobileNumber}
+          />
+          <p className="mt-2 text-xs leading-5 text-[#89867d]" id="client-mobile-help">Enter your 10-digit Philippine mobile number.</p>
           <FieldError id="client-mobile-error" message={state.fieldErrors.mobileNumber} />
         </div>
         <div>

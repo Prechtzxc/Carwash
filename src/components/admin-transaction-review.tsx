@@ -17,6 +17,7 @@ import {
   Sparkles,
   Users,
 } from "@/components/icons";
+import { PhilippineMobileInput } from "@/components/philippine-mobile-input";
 import {
   cancelTransactionAction,
   completeConfirmedTransactionAction,
@@ -32,6 +33,7 @@ import type {
   AdminTransactionReviewPageData,
   TransactionStatus,
 } from "@/lib/transactions/data";
+import { getPhilippineMobileLocal } from "@/lib/mobile-number";
 
 const inputClass =
   "min-h-11 w-full rounded-xl border border-[#dedbd1] bg-white px-3.5 text-sm text-[#292929] shadow-sm outline-none transition-colors placeholder:text-[#9a978d] focus:border-[#c7a900] focus:ring-4 focus:ring-[#fff0a8] disabled:cursor-not-allowed disabled:bg-[#f7f6f1] disabled:text-[#89867d]";
@@ -193,7 +195,7 @@ function TransactionEditForm({ data }: { data: AdminTransactionReviewPageData })
   const [state, formAction] = useActionState(revisePendingTransactionAction, initialFormActionState);
   const [firstName, setFirstName] = useState(transaction.customer.first_name);
   const [lastName, setLastName] = useState(transaction.customer.last_name);
-  const [mobileNumber, setMobileNumber] = useState(transaction.customer.mobile_number);
+  const [mobileNumber, setMobileNumber] = useState(() => getPhilippineMobileLocal(transaction.customer.mobile_number));
   const [email, setEmail] = useState(transaction.customer.email ?? "");
   const [vehicleCategoryId, setVehicleCategoryId] = useState(transaction.vehicle.vehicle_category_id);
   const [plateNumber, setPlateNumber] = useState(transaction.vehicle.plate_number ?? "");
@@ -268,7 +270,16 @@ function TransactionEditForm({ data }: { data: AdminTransactionReviewPageData })
             </div>
             <div>
               <label className={labelClass} htmlFor="transaction-mobile">Mobile number</label>
-              <input aria-describedby={state.fieldErrors.mobileNumber ? "transaction-mobile-error" : undefined} aria-invalid={Boolean(state.fieldErrors.mobileNumber)} className={inputClass} id="transaction-mobile" inputMode="tel" name="mobileNumber" onChange={(event) => setMobileNumber(event.target.value)} required value={mobileNumber} />
+              <PhilippineMobileInput
+                describedBy={["transaction-mobile-help", state.fieldErrors.mobileNumber ? "transaction-mobile-error" : ""].filter(Boolean).join(" ")}
+                id="transaction-mobile"
+                invalid={Boolean(state.fieldErrors.mobileNumber)}
+                name="mobileNumber"
+                onChange={setMobileNumber}
+                required
+                value={mobileNumber}
+              />
+              <p className="mt-2 text-xs leading-5 text-[#89867d]" id="transaction-mobile-help">Enter your 10-digit Philippine mobile number.</p>
               <FieldError id="transaction-mobile-error" message={state.fieldErrors.mobileNumber} />
             </div>
             <div>

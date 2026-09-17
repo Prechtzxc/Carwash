@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { requireAdminProfile } from "@/lib/auth/admin";
 import type { FormActionState } from "@/lib/form-action-state";
+import { validatePhilippineMobile } from "@/lib/mobile-number";
 import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/types/database";
 
@@ -12,25 +13,16 @@ export type TransactionActionState = FormActionState;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const mobileNumberField = z
-  .string()
-  .trim()
-  .min(7, "Enter a valid mobile number.")
-  .max(32, "Enter a valid mobile number.")
-  .transform((value) => {
-    const digits = value.replace(/\D/g, "");
+const mobileNumberField = z.string().trim().transform((value, context) => {
+  const result = validatePhilippineMobile(value);
 
-    if (digits.length === 12 && digits.startsWith("63")) {
-      return `0${digits.slice(2)}`;
-    }
+  if (!result.valid) {
+    context.addIssue({ code: "custom", message: result.message });
+    return z.NEVER;
+  }
 
-    if (digits.length === 10 && digits.startsWith("9")) {
-      return `0${digits}`;
-    }
-
-    return digits;
-  })
-  .refine((value) => /^09\d{9}$/.test(value), "Enter a valid Philippine mobile number.");
+  return result.normalized;
+});
 
 const optionalEmailField = z
   .string()
@@ -164,6 +156,10 @@ function databaseFailure(error: DatabaseError): TransactionActionState {
   }
 
   if (error.code === "22023") {
+    if (error.message === "Enter a valid mobile number." || error.message === "Enter a valid Philippine mobile number.") {
+      return failure("Check the highlighted details.", { mobileNumber: "Enter a complete 10-digit mobile number." });
+    }
+
     if (error.message?.startsWith("Insufficient stock:")) {
       return failure(error.message);
     }

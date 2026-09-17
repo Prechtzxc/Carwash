@@ -5,26 +5,23 @@ import { z } from "zod";
 
 import { requireAdminProfile } from "@/lib/auth/admin";
 import type { FormActionState } from "@/lib/form-action-state";
+import { validatePhilippineMobile } from "@/lib/mobile-number";
 import { createClient } from "@/lib/supabase/server";
 
 export type ClientActionState = FormActionState;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const mobileNumberField = z
-  .string()
-  .trim()
-  .min(7, "Enter a valid mobile number.")
-  .max(32, "Enter a valid mobile number.")
-  .refine((value) => {
-    const digits = value.replace(/\D/g, "");
-    const normalized = digits.startsWith("63") && digits.length === 12
-      ? `0${digits.slice(2)}`
-      : digits.startsWith("9") && digits.length === 10
-        ? `0${digits}`
-        : digits;
-    return /^09\d{9}$/.test(normalized);
-  }, "Enter a valid Philippine mobile number.");
+const mobileNumberField = z.string().trim().transform((value, context) => {
+  const result = validatePhilippineMobile(value);
+
+  if (!result.valid) {
+    context.addIssue({ code: "custom", message: result.message });
+    return z.NEVER;
+  }
+
+  return result.normalized;
+});
 
 const optionalEmailField = z
   .string()
@@ -105,9 +102,12 @@ function databaseFailure(error: DatabaseError, fallback: string): ClientActionSt
 
   if (error.code === "22023") {
     const message = error.message ?? "";
+
+    if (message === "Enter a valid mobile number." || message === "Enter a valid Philippine mobile number.") {
+      return failure("Check the highlighted fields.", { mobileNumber: "Enter a complete 10-digit mobile number." });
+    }
+
     const knownMessages = [
-      "Enter a valid mobile number.",
-      "Enter a valid Philippine mobile number.",
       "Enter a valid email address or leave it blank.",
       "Enter a valid plate number or leave it blank.",
       "One or more vehicle details are too long.",

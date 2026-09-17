@@ -119,6 +119,24 @@ export function Droplets(props: IconProps) {
   );
 }
 
+export function Eye(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M2.5 12s3.2-5 9.5-5 9.5 5 9.5 5-3.2 5-9.5 5-9.5-5-9.5-5Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="2.3" stroke="currentColor" strokeWidth="1.7" />
+    </Icon>
+  );
+}
+
+export function EyeOff(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m3 3 18 18" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" />
+      <path d="M10.6 7.2A10.7 10.7 0 0 1 12 7c6.3 0 9.5 5 9.5 5a16.6 16.6 0 0 1-3.1 3.3M6.2 6.3C3.8 8 2.5 12 2.5 12s3.2 5 9.5 5c1.2 0 2.3-.2 3.2-.6M9.7 9.7a3.2 3.2 0 0 0 4.6 4.6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+    </Icon>
+  );
+}
+
 export function LayoutDashboard(props: IconProps) {
   return (
     <Icon {...props}>
